@@ -32,14 +32,7 @@ const TopNav = () => {
                                 </a>
                                 {/* Menu */}
                                 <div className="dropdown-menu dropdown-menu-end">
-                                    <a href="./profile-posts.html" className="dropdown-item">
-                                        Profile
-                                    </a>
-                                    <a href="./account-general.html" className="dropdown-item">
-                                        Settings
-                                    </a>
-                                    <hr className="dropdown-divider" />
-                                    <a href="./sign-in.html" className="dropdown-item">
+                                    <a href="#" className="dropdown-item">
                                         Logout
                                     </a>
                                 </div>

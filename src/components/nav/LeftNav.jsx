@@ -107,7 +107,7 @@ const LeftNav = () => {
                                 <div className="collapse" id="sidebarDashboards">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <Link to="/explore-india" className="nav-link active">
+                                            <Link to="/explore-india" className="nav-link">
                                                 Explore India
                                             </Link>
                                         </li>
@@ -143,7 +143,7 @@ const LeftNav = () => {
                                 <div className="collapse" id="caterings">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <Link to="/vendor-list" className="nav-link active">
+                                            <Link to="/vendor-list" className="nav-link">
                                                 Vendor List
                                             </Link>
                                         </li>
@@ -179,11 +179,155 @@ const LeftNav = () => {
                                 </div>
                             </li>
 
+                            <li className="nav-item">
+                                <a
+                                    className="nav-link"
+                                    href="#tiffins"
+                                    data-bs-toggle="collapse"
+                                    role="button"
+                                    aria-expanded="true"
+                                    aria-controls="tiffins"
+                                >
+                                    <i className="fe fe-home" /> Tiffins
+                                </a>
+                                <div className="collapse" id="tiffins">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <Link to="/tiffin-vendor-list" className="nav-link">
+                                                Vendor List
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link
+                                                to="/tiffin-cuisines"
+                                                className="nav-link"
+                                            >
+                                                Cuisines
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/meal-time" className="nav-link">
+                                                Meal Time
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/kitchen-type" className="nav-link">
+                                                Kitchen Type
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/tiffin-budjet" className="nav-link">
+                                                Tiffin Budjet
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/tiffin-food-types" className="nav-link">
+                                                Tiffin Food Types
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/tiffin-faq" className="nav-link">
+                                                Tiffin Faq
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
 
                             <li className="nav-item">
                                 <Link className="nav-link " to="/users">
                                     <i className="fe fe-grid" /> Users
                                 </Link>
+                            </li>
+
+
+                            <li className="nav-item">
+                                <a
+                                    className="nav-link"
+                                    href="#ManageSubs"
+                                    data-bs-toggle="collapse"
+                                    role="button"
+                                    aria-expanded="true"
+                                    aria-controls="ManageSubs"
+                                >
+                                    <i className="fe fe-home" /> Subscription
+                                </a>
+                                <div className="collapse" id="ManageSubs">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <Link to="/subscriptions" className="nav-link">
+                                                Manage Subscription
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+
+                            <li className="nav-item">
+                                <Link className="nav-link " to="/discounts">
+                                    <i className="fe fe-grid" /> Discounts
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link className="nav-link " to="/notifications">
+                                    <i className="fe fe-grid" /> Notifications
+                                </Link>
+                            </li>
+
+
+                            <li className="nav-item">
+                                <a
+                                    className="nav-link"
+                                    href="#customercare"
+                                    data-bs-toggle="collapse"
+                                    role="button"
+                                    aria-expanded="true"
+                                    aria-controls="customercare"
+                                >
+                                    <i className="fe fe-home" /> Customer Care
+                                </a>
+                                <div className="collapse" id="customercare">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <Link to="/roles-access" className="nav-link">
+                                                Roles Access
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/employee-master" className="nav-link">
+                                                Employee Master
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/user-master" className="nav-link">
+                                                User Master
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/add-new" className="nav-link">
+                                                Add New
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/share-links" className="nav-link">
+                                                Share Links
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/follow-ups" className="nav-link">
+                                                Follow Ups
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link to="/support-tickets" className="nav-link">
+                                                Support Tickets
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
 
 
