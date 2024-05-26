@@ -19,3 +19,7 @@ input:focus {
 .cursor-pointer{
   cursor: pointer;
 }
+
+.fit-content{
+   width: fit-content;
+}

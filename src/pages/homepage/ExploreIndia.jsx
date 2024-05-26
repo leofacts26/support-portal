@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import DataTable from 'react-data-table-component';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 
 const rows = [
   {
@@ -61,6 +64,10 @@ const rows = [
 
 const ExploreIndia = () => {
   const [data, setData] = useState(rows);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
@@ -117,6 +124,13 @@ const ExploreIndia = () => {
   return (
     <>
       <div className="container my-5">
+
+        <div className="row mb-4 d-flex justify-content-end me-2">
+          <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
+            Create City
+          </button>
+        </div>
+
         <div className="card">
           <input
             type="search"
@@ -136,6 +150,30 @@ const ExploreIndia = () => {
       </div>
 
       <br />
+
+      <Modal centered show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create City</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <label for="name" className="form-label">Add City Name</label>
+            <input type="text" className="form-control" placeholder="City Name" />
+          </div>
+          <div className='mt-3'>
+            <label for="image" className="form-label">Add Image</label>
+            <input className="form-control" type="file" id="formFile" accept="image/*" />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }
