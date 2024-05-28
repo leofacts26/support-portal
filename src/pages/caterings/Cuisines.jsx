@@ -235,7 +235,7 @@ const Cuisines = () => {
         <Modal.Body>
           <div>
             <label for="name" className="form-label">Add Category</label>
-            <input type="text" className="form-control" placeholder="City Name" />
+            <input type="text" className="form-control" placeholder="Category" />
           </div>
           <div className='mt-3'>
             <label for="image" className="form-label">Add Image</label>
@@ -259,9 +259,18 @@ const Cuisines = () => {
           <Modal.Title>Add Sub Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div className="mb-3">
+            <label for="name" className="form-label">Select Main category</label>
+            <select className="form-select" data-choices>
+              <option>My first option</option>
+              <option>Another option</option>
+              <option>Third option is here</option>
+            </select>
+          </div>
+
           <div>
-            <label for="name" className="form-label">Add Category</label>
-            <input type="text" className="form-control" placeholder="City Name" />
+            <label for="name" className="form-label">Add Sub Category</label>
+            <input type="text" className="form-control" placeholder="Sub Category" />
           </div>
           <div className='mt-3'>
             <label for="image" className="form-label">Add Image</label>
