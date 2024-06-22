@@ -59,7 +59,7 @@ const NewsLetter = () => {
       <div className="container my-5">
 
 
-        <div className="row mb-4 d-flex justify-content-end me-2 w-75">
+        <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
             Send Offers
           </button>
@@ -67,7 +67,7 @@ const NewsLetter = () => {
             Export
           </button>
         </div>
-        <div className="card w-75">
+        <div className="card">
           <input
             type="search"
             className="form-control-sm border ps-3 py-3"

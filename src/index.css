@@ -16,10 +16,15 @@ input:focus {
   outline-width: 0 !important;
 }
 
-.cursor-pointer{
+.cursor-pointer {
   cursor: pointer;
 }
 
-.fit-content{
-   width: fit-content;
+.fit-content {
+  width: fit-content;
+}
+
+.active {
+  color: #000 !important;
+  font-weight: 400;
 }

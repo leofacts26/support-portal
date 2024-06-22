@@ -90,18 +90,18 @@ const ShareLinks = () => {
       selector: row => row.emailID,
       sortable: true,
     },
-    {
-      name: "Action",
-      cell: (row) => (
-        <>
-          <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
+    // {
+    //   name: "Action",
+    //   cell: (row) => (
+    //     <>
+    //       <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
+    //       <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
+    //     </>
+    //   ),
+    //   ignoreRowClick: true,
+    //   allowOverflow: true,
+    //   button: true,
+    // },
   ];
 
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 const LeftNav = () => {
     return (
@@ -88,9 +88,9 @@ const LeftNav = () => {
                         {/* Navigation */}
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <Link className="nav-link " to="/">
+                                <NavLink className="nav-link " to="/">
                                     <i className="fe fe-grid" /> Dashboard
-                                </Link>
+                                </NavLink>
                             </li>
 
                             <li className="nav-item">
@@ -107,22 +107,22 @@ const LeftNav = () => {
                                 <div className="collapse" id="sidebarDashboards">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <Link to="/explore-india" className="nav-link">
+                                            <NavLink to="/explore-india" className="nav-link">
                                                 Explore India
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link
+                                            <NavLink
                                                 to="/news-letter"
                                                 className="nav-link"
                                             >
                                                 News Letter
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/footer" className="nav-link">
+                                            <NavLink to="/footer" className="nav-link">
                                                 Footer
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     </ul>
                                 </div>
@@ -143,37 +143,37 @@ const LeftNav = () => {
                                 <div className="collapse" id="caterings">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <Link to="/vendor-list" className="nav-link">
+                                            <NavLink to="/vendor-list" className="nav-link">
                                                 Vendor List
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link
+                                            <NavLink
                                                 to="/cuisines"
                                                 className="nav-link"
                                             >
                                                 Cuisines
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/occasions" className="nav-link">
+                                            <NavLink to="/occasions" className="nav-link">
                                                 Occasions
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/budjet-filter" className="nav-link">
+                                            <NavLink to="/budjet-filter" className="nav-link">
                                                 Budjet Filter
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/food-types" className="nav-link">
+                                            <NavLink to="/food-types" className="nav-link">
                                                 Food Types
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/faq" className="nav-link">
+                                            <NavLink to="/faq" className="nav-link">
                                                 Faq
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     </ul>
                                 </div>
@@ -193,42 +193,42 @@ const LeftNav = () => {
                                 <div className="collapse" id="tiffins">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <Link to="/tiffin-vendor-list" className="nav-link">
+                                            <NavLink to="/tiffin-vendor-list" className="nav-link">
                                                 Vendor List
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link
+                                            <NavLink
                                                 to="/tiffin-cuisines"
                                                 className="nav-link"
                                             >
                                                 Cuisines
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/meal-time" className="nav-link">
+                                            <NavLink to="/meal-time" className="nav-link">
                                                 Meal Time
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/kitchen-type" className="nav-link">
+                                            <NavLink to="/kitchen-type" className="nav-link">
                                                 Kitchen Type
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/tiffin-budjet" className="nav-link">
+                                            <NavLink to="/tiffin-budjet" className="nav-link">
                                                 Tiffin Budjet
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/tiffin-food-types" className="nav-link">
+                                            <NavLink to="/tiffin-food-types" className="nav-link">
                                                 Tiffin Food Types
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/tiffin-faq" className="nav-link">
+                                            <NavLink to="/tiffin-faq" className="nav-link">
                                                 Tiffin Faq
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     </ul>
                                 </div>
@@ -236,9 +236,9 @@ const LeftNav = () => {
 
 
                             <li className="nav-item">
-                                <Link className="nav-link " to="/users">
+                                <NavLink className="nav-link " to="/users">
                                     <i className="fe fe-grid" /> Users
-                                </Link>
+                                </NavLink>
                             </li>
 
 
@@ -256,9 +256,9 @@ const LeftNav = () => {
                                 <div className="collapse" id="ManageSubs">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <Link to="/subscriptions" className="nav-link">
+                                            <NavLink to="/subscriptions" className="nav-link">
                                                 Manage Subscription
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     </ul>
                                 </div>
@@ -266,15 +266,15 @@ const LeftNav = () => {
 
 
                             <li className="nav-item">
-                                <Link className="nav-link " to="/discounts">
+                                <NavLink className="nav-link " to="/discounts">
                                     <i className="fe fe-grid" /> Discounts
-                                </Link>
+                                </NavLink>
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link " to="/notifications">
+                                <NavLink className="nav-link " to="/notifications">
                                     <i className="fe fe-grid" /> Notifications
-                                </Link>
+                                </NavLink>
                             </li>
 
 
@@ -292,47 +292,43 @@ const LeftNav = () => {
                                 <div className="collapse" id="customercare">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <Link to="/roles-access" className="nav-link">
+                                            <NavLink to="/roles-access" className="nav-link">
                                                 Roles Access
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/employee-master" className="nav-link">
+                                            <NavLink to="/employee-master" className="nav-link">
                                                 Employee Master
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/user-master" className="nav-link">
+                                            <NavLink to="/user-master" className="nav-link">
                                                 User Master
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/add-new" className="nav-link">
+                                            <NavLink to="/add-new" className="nav-link">
                                                 Add New
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/share-links" className="nav-link">
+                                            <NavLink to="/share-links" className="nav-link">
                                                 Share Links
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/follow-ups" className="nav-link">
+                                            <NavLink to="/follow-ups" className="nav-link">
                                                 Follow Ups
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <Link to="/support-tickets" className="nav-link">
+                                            <NavLink to="/support-tickets" className="nav-link">
                                                 Support Tickets
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
-
-
-
-
                         </ul>
                         {/* Divider */}
                         {/* <hr className="navbar-divider my-3" /> */}
