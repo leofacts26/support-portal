@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 
 
 const rows = [
@@ -104,8 +107,15 @@ const ExploreIndia = () => {
       name: "Action",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
+          <button className="btn btn-success me-1" onClick={() => handleEdit(row.personID)}>
+            <FaEdit />
+          </button>
+          <button className="btn btn-danger" onClick={() => handleDelete(row.personID)}>
+            <MdDeleteForever />
+          </button>
+
+          {/* <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span> */}
+          {/* <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span> */}
         </>
       ),
       ignoreRowClick: true,
@@ -115,6 +125,7 @@ const ExploreIndia = () => {
   ];
 
   const handleEdit = (event) => {
+    handleShow()
     console.log(event, "event");
   }
   const handleDelete = (event) => {
@@ -132,18 +143,32 @@ const ExploreIndia = () => {
         </div>
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+
+          <div className="card-header">
+            <div className="row align-items-center">
+              <div className="col">
+                <div className="input-group input-group-flush input-group-merge input-group-reverse">
+                  <input
+                    className="form-control list-search"
+                    type="search"
+                    placeholder="Search"
+                    onChange={handleSearch}
+                  />
+                  <span className="input-group-text">
+                    <i className="fe fe-search" />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <DataTable
             columns={columns}
             data={data}
             fixedHeader
             pagination
             selectableRows
+            customStyles={tableCustomStyles}
           // title="React-Data-Table-Component Tutorial."
           />
         </div>
