@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -6,6 +6,8 @@ import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import GlobalSearch from '../../components/common/GlobalSearch';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchexplorecitiesData } from '../../features/homepage/homeSlice';
 
 
 const rows = [
@@ -67,39 +69,64 @@ const rows = [
 ];
 
 const ExploreIndia = () => {
-  const [data, setData] = useState(rows);
-  const [show, setShow] = useState(false);
+  const dispatch = useDispatch()
+  const { exploreCities } = useSelector((state) => state.homepage)
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  useEffect(() => {
+    dispatch(fetchexplorecitiesData());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    if (exploreCities) {
+      const formattedData = exploreCities.map((city, index) => ({
+        sNO: index + 1,
+        name: city?.name,
+        image: city?.file_name,
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [exploreCities]);
+
+
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data.filter((row) => {
       return (
-        row.personID.toString().toLowerCase().includes(searchValue) ||
-        row.fullName.toLowerCase().includes(searchValue)
+        row?.sNO?.toString().toLowerCase().includes(searchValue) ||
+        row?.name?.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
 
   const columns = [
     {
-      name: "ID",
-      selector: row => row.personID,
+      name: "S.NO",
+      selector: (row) => row.sNO,
       sortable: true,
     },
     {
       name: "City Name",
-      selector: row => row.fullName,
+      selector: row => row.name,
       sortable: true,
     },
     {
       name: "Image Preview",
       cell: row => (
-        <a href={row.image} target="_blank" rel="noopener noreferrer">
-          Image
+        <a href={row?.image} target="_blank" rel="noopener noreferrer">
+          {/* <img src={row?.image} alt="" /> */} Image
         </a>
       ),
       sortable: false,
@@ -133,6 +160,9 @@ const ExploreIndia = () => {
     console.log(event, "event");
   }
 
+
+  console.log(exploreCities, "exploreCities exploreCities");
+
   return (
     <>
       <div className="container-fluid my-5">
@@ -150,7 +180,7 @@ const ExploreIndia = () => {
 
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows
