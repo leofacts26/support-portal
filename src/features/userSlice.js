@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 const initialState = {
     isLoading: true,
     userList: [],
+    cuisineId: null,
 }
 
 
@@ -26,7 +27,12 @@ export const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-
+        setIsLoading: (state, action) => {
+            state.isLoading = action.payload;
+        },
+        setCuisineId: (state, action) => {
+            state.cuisineId = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -45,6 +51,6 @@ export const usersSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { } = usersSlice.actions
+export const { setIsLoading, setCuisineId } = usersSlice.actions
 
 export default usersSlice.reducer

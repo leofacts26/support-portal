@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api, BASE_URL } from '../../api/apiConfig';
-import { datavalidationerror } from '../../utils';
+import { datavalidationerror, successToast } from '../../utils';
 import toast from 'react-hot-toast';
 
 const initialState = {
@@ -40,6 +40,18 @@ export const fetchCateringCuisines = createAsyncThunk(
         try {
             const response = await api.get(`${BASE_URL}/admin-list-cuisines`);
             return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+export const editCateringParentCuisine = createAsyncThunk(
+    'catering/editCateringParentCuisine',
+    async (catering, thunkAPI) => {
+        try {
+            const response = await api.post(`${BASE_URL}/admin-update-cuisine`, catering);
+            toast.success(successToast(response))
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
         }
@@ -89,6 +101,17 @@ export const cateringSlice = createSlice({
                 state.cuisineList = payload;
             })
             .addCase(fetchCateringCuisines.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // editCateringParentCuisine 
+            .addCase(editCateringParentCuisine.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(editCateringParentCuisine.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+            })
+            .addCase(editCateringParentCuisine.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })

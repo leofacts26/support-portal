@@ -3,7 +3,16 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchCateringCuisines } from '../../features/catering/cateringSlice';
+import { editCateringParentCuisine, fetchCateringCuisines } from '../../features/catering/cateringSlice';
+import { FaCloudUploadAlt } from "react-icons/fa";
+import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
+import GlobalSearch from '../../components/common/GlobalSearch';
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { tableCustomStyles } from '../../components/tableCustomStyles';
+import { setCuisineId } from '../../features/userSlice';
+
+
 
 const rows = [
   {
@@ -39,13 +48,23 @@ const rowsSubCategory = [
 ];
 
 const Cuisines = () => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
+  const { onUploadParentCuisine } = useUploadCusinePhotoos()
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => {
+    setShow(false)
+    setMainCategory("")
+    setMainCategoryId(null)
+  };
+  const handleShow = () => {
+    setShow(true)
+  };
+  const [mainCategory, setMainCategory] = useState("")
+  const [mainCategoryId, setMainCategoryId] = useState(null)
 
   const dispatch = useDispatch()
-  const { cuisineList } = useSelector((state) => state.catering)
+  const { cuisineList, isLoading } = useSelector((state) => state.catering)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
@@ -57,8 +76,8 @@ const Cuisines = () => {
   const childList = cuisineList?.filter((item) => item?.parent_id !== null)
 
   useEffect(() => {
-    dispatch(fetchCateringCuisines());
-  }, [dispatch]);
+    dispatch(fetchCateringCuisines())
+  }, [])
 
   // const count = useSelector((state) => state.cuisine.value)
 
@@ -91,7 +110,17 @@ const Cuisines = () => {
   }, [cuisineList]);
 
   const [showSubCategory, setSubCategory] = useState(false);
-  const handleSubClose = () => setSubCategory(false);
+  const [mainCategoryChild, setMainCategoryChild] = useState("")
+  const [mainCategorySubChild, setMainCategorySubChild] = useState("")
+  const [mainCategoryChildId, setMainCategoryChildId] = useState(null)
+
+
+  const handleSubClose = () => {
+    setSubCategory(false)
+    setMainCategoryChild("")
+    setMainCategorySubChild("")
+    setMainCategoryChildId(null)
+  };
   const handleSubShow = () => setSubCategory(true);
 
 
@@ -139,11 +168,45 @@ const Cuisines = () => {
       sortable: true,
     },
     {
-      name: "Image",
+      name: "Image Upload",
       cell: row => (
-        <a href={row.image} target="_blank" rel="noopener noreferrer">
-          <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
-        </a>
+        row.image ? (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadParentCuisine"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => onUploadParentCuisine(e)}
+            />
+            <label htmlFor="onUploadParentCuisine">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                onClick={() => dispatch(setCuisineId(row?.personID))}
+              >
+                <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
+              </span>
+            </label>
+          </>
+        ) : (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadParentCuisine"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => onUploadParentCuisine(e)}
+            />
+            <label htmlFor="onUploadParentCuisine">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                onClick={() => dispatch(setCuisineId(row?.personID))}
+              >
+                <FaCloudUploadAlt size={30} />
+              </span>
+            </label>
+          </>
+        )
       ),
       sortable: false,
     },
@@ -156,8 +219,15 @@ const Cuisines = () => {
       name: "Action",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
+          <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
+            <FaEdit />
+          </button>
+          <button className="btn btn-danger" onClick={() => handleDelete(row.personID)}>
+            <MdDeleteForever />
+          </button>
+
+          {/* <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
+          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span> */}
         </>
       ),
       ignoreRowClick: true,
@@ -184,11 +254,45 @@ const Cuisines = () => {
       sortable: true,
     },
     {
-      name: "Image",
+      name: "Image Upload",
       cell: row => (
-        <a href={row.image} target="_blank" rel="noopener noreferrer">
-          <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
-        </a>
+        row.image ? (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadParentCuisine"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => onUploadParentCuisine(e)}
+            />
+            <label htmlFor="onUploadParentCuisine">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                onClick={() => dispatch(setCuisineId(row?.personID))}
+              >
+                <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
+              </span>
+            </label>
+          </>
+        ) : (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadParentCuisine"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => onUploadParentCuisine(e)}
+            />
+            <label htmlFor="onUploadParentCuisine">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                onClick={() => dispatch(setCuisineId(row?.personID))}
+              >
+                <FaCloudUploadAlt size={30} />
+              </span>
+            </label>
+          </>
+        )
       ),
       sortable: false,
     },
@@ -201,8 +305,16 @@ const Cuisines = () => {
       name: "Action",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
+
+          <button className="btn btn-success me-1" onClick={() => handleEditChild(row)}>
+            <FaEdit />
+          </button>
+          <button className="btn btn-danger" onClick={() => handleDeleteChild(row.personID)}>
+            <MdDeleteForever />
+          </button>
+
+          {/* <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
+          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span> */}
         </>
       ),
       ignoreRowClick: true,
@@ -212,15 +324,52 @@ const Cuisines = () => {
   ];
 
 
-  const handleEdit = (event) => {
-    console.log(event, "event");
+  // handleEditChild 
+  const handleEditChild = (row) => {
+    setMainCategoryChild(row.mainCategory)
+    setMainCategorySubChild(row.subCategory)
+    setMainCategoryChildId(row)
+    handleSubShow()
+    // handleSubClose()   
+  }
+
+  const handleDeleteChild = () => {
+
+  }
+
+  const handleEdit = (row) => {
+    setMainCategoryId(row.personID)
+    setMainCategory(row.mainCategory);
+    handleShow()
   }
   const handleDelete = (event) => {
     console.log(event, "event");
   }
 
 
-  console.log(childList, "childList");
+  const onSubmitMainCategory = async (e) => {
+    e.preventDefault();
+    const data = {
+      name: mainCategory,
+      id: mainCategoryId
+    }
+    await dispatch(editCateringParentCuisine(data))
+    dispatch(fetchCateringCuisines())
+    handleClose()
+  }
+
+
+  const onSubmitMainCategoryChild = async (e) => {
+    e.preventDefault();
+    console.log(mainCategoryChildId, "setMainCategoryChildId");
+    const data = {
+      name: mainCategorySubChild,
+      id: mainCategoryChildId.id,
+      parent_id: mainCategoryChildId.parent_id
+    }
+    await dispatch(editCateringParentCuisine(data))
+    handleSubClose()
+  }
 
   return (
     <>
@@ -241,18 +390,14 @@ const Cuisines = () => {
         <h2>Total Main Categories - {parentList?.length} </h2>
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
             data={filteredData}
             fixedHeader
             pagination
             selectableRows
+            customStyles={tableCustomStyles}
           // title="React-Data-Table-Component Tutorial."
           />
         </div>
@@ -262,18 +407,14 @@ const Cuisines = () => {
         <h2>Total Sub Categories - {childList?.length} </h2>
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSubCategorySearch}
-          />
+          <GlobalSearch handleSearch={handleSubCategorySearch} />
           <DataTable
             columns={columnsSubCategory}
             data={filteredSubcatData}
             fixedHeader
             pagination
             selectableRows
+            customStyles={tableCustomStyles}
           // title="React-Data-Table-Component Tutorial."
           />
         </div>
@@ -285,62 +426,55 @@ const Cuisines = () => {
       <br />
 
       <Modal centered show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Main Category</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <label for="name" className="form-label">Add Category</label>
-            <input type="text" className="form-control" placeholder="Category" />
-          </div>
-          <div className='mt-3'>
-            <label for="image" className="form-label">Add Image</label>
-            <input className="form-control" type="file" id="formFile" accept="image/*" />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+        <form onSubmit={onSubmitMainCategory}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Main Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>
+              <label for="name" className="form-label">Add Category</label>
+              <input type="text" className="form-control" placeholder="Category" value={mainCategory} onChange={(e) => setMainCategory(e.target.value)} />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit' disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
 
 
 
       <Modal centered show={showSubCategory} onHide={handleSubClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Sub Category</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="mb-3">
-            <label for="name" className="form-label">Select Main category</label>
-            <select className="form-select" data-choices>
-              <option>My first option</option>
-              <option>Another option</option>
-              <option>Third option is here</option>
-            </select>
-          </div>
+        <form onSubmit={onSubmitMainCategoryChild}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Sub Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className='mt-3'>
+              <label for="name" className="form-label">Add Category</label>
+              <input disabled type="text" className="form-control" placeholder="Category" value={mainCategoryChild} onChange={(e) => setMainCategoryChild(e.target.value)} />
+            </div>
 
-          <div>
-            <label for="name" className="form-label">Add Sub Category</label>
-            <input type="text" className="form-control" placeholder="Sub Category" />
-          </div>
-          <div className='mt-3'>
-            <label for="image" className="form-label">Add Image</label>
-            <input className="form-control" type="file" id="formFile" accept="image/*" />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleSubClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+            <div className='mt-3'>
+              <label for="name" className="form-label">Add Sub Category</label>
+              <input type="text" className="form-control" placeholder="Sub Category" value={mainCategorySubChild} onChange={(e) => setMainCategorySubChild(e.target.value)} />
+            </div>
+
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleSubClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit' disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   )
