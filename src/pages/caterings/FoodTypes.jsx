@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCateringFoodTypes } from '../../features/cuisine/cateringSlice';
 
 
 const rows = [
@@ -18,31 +20,66 @@ const rows = [
 ];
 
 const FoodTypes = () => {
-  const [data, setData] = useState(rows);
+  const dispatch = useDispatch()
+  const { cateringFoodTypes } = useSelector((state) => state.catering)
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  useEffect(() => {
+    dispatch(fetchCateringFoodTypes());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    if (cateringFoodTypes) {
+      const formattedData = cateringFoodTypes.map((foodType, index) => ({
+        name: foodType?.name,
+        status: foodType?.is_active,
+        order: foodType?.id,
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [cateringFoodTypes]);
+
+
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data.filter((row) => {
       return (
-        row.foodTypes.toLowerCase().includes(searchValue)
+        row?.name?.toLowerCase().includes(searchValue) ||
+        row?.status?.toLowerCase().includes(searchValue) ||
+        row?.order?.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
+
 
   const columns = [
     {
       name: "Food Type",
-      selector: row => row.foodTypes,
+      selector: row => row.name,
       sortable: true,
     },
     {
       name: "Status",
-      selector: row => row.status,
+      // selector: row => row.status,
+      cell: (row) => (
+        <>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={row?.is_active} />
+          </div>
+        </>
+      ),
       sortable: true,
     },
     {
@@ -70,6 +107,9 @@ const FoodTypes = () => {
   const handleDelete = (event) => {
     console.log(event, "event");
   }
+
+
+  console.log(cateringFoodTypes, "cateringFoodTypes");
 
   return (
     <>

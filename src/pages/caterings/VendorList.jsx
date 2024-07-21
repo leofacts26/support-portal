@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCateringVendors } from '../../features/cuisine/cateringSlice';
 
 const rows = [
   {
-    personID: 1,
+    businessID: 1,
     fullName: "Mumbai",
     phoneNo: "7896587458",
     planType: "Branded",
@@ -18,14 +20,45 @@ const rows = [
 
 
 const VendorList = () => {
+  const dispatch = useDispatch()
+  const { cateringVendors } = useSelector((state) => state.catering)
   const [data, setData] = useState(rows);
-  const [show, setShow] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
+
+
+  useEffect(() => {
+    dispatch(fetchCateringVendors());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (cateringVendors) {
+      const formattedData = cateringVendors.map((catering, index) => ({
+        businessID: index + 1,
+        fullName: catering?.vendor_service_name || 'N/A',
+        phoneNo: catering?.phone_number || 'N?A',
+        planType: "N/A",
+        subscription: "N/A",
+        status: catering?.status || 'N/A',
+        city: catering?.city || 'N/A',
+        startDate: new Date(catering?.created_at).toLocaleDateString(),
+        // sNO: index + 1,
+        // name: catering?.vendor_service_name,
+        // role: catering?.role || 'NA',
+        // phoneNo: catering?.phone_number,
+        // DateTime: new Date(catering?.created_at).toLocaleDateString(),
+        // EmailID: catering.email,
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [cateringVendors]);
+
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     const newRows = rows.filter((row) => {
       return (
-        row.personID.toString().toLowerCase().includes(searchValue) ||
+        row.businessID.toString().toLowerCase().includes(searchValue) ||
         row.fullName.toLowerCase().includes(searchValue)
       );
     });
@@ -35,7 +68,7 @@ const VendorList = () => {
   const columns = [
     {
       name: "Business ID",
-      selector: row => row.personID,
+      selector: row => row.businessID,
       sortable: true,
     },
     {
@@ -86,10 +119,11 @@ const VendorList = () => {
     },
   ];
 
+  console.log(cateringVendors, "cateringVendors");
 
   return (
     <>
-      <div className="container my-5">
+      <div className="container-fluid my-5">
 
 
         <h2>Total Registered Caterers - 18776</h2>

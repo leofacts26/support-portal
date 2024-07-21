@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../features/cuisine/userSlice';
 import Heading from '../../components/common/Heading';
-
 
 
 const Users = () => {
@@ -87,10 +84,6 @@ const Users = () => {
     }
   ];
 
-
-  console.log(userList, "userList userList");
-
-
   return (
     <>
       <div className="container-fluid my-5">
@@ -105,7 +98,6 @@ const Users = () => {
             fixedHeader
             pagination
             selectableRows
-          // title="React-Data-Table-Component Tutorial."
           />
         </div>
       </div>

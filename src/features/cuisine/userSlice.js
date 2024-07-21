@@ -4,6 +4,7 @@ import { datavalidationerror } from '../../utils';
 import toast from 'react-hot-toast';
 
 const initialState = {
+    isLoading: true,
     userList: [],
 }
 
