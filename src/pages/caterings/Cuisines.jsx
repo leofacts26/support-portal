@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux'
+import { fetchCateringCuisines } from '../../features/catering/cateringSlice';
 
 const rows = [
   {
@@ -38,14 +39,56 @@ const rowsSubCategory = [
 ];
 
 const Cuisines = () => {
-  const [data, setData] = useState(rows);
-  const [subCatdata, setSubCatData] = useState(rowsSubCategory);
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+
+  const dispatch = useDispatch()
+  const { cuisineList } = useSelector((state) => state.catering)
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
+  const [subCatdata, setSubCatData] = useState([]);
+  const [filteredSubcatData, setFilteredSubcatData] = useState([]);
+
+
+  const parentList = cuisineList?.filter((item) => item?.parent_id === null)
+  const childList = cuisineList?.filter((item) => item?.parent_id !== null)
+
+  useEffect(() => {
+    dispatch(fetchCateringCuisines());
+  }, [dispatch]);
+
   // const count = useSelector((state) => state.cuisine.value)
+
+  useEffect(() => {
+    if (cuisineList) {
+      const formattedData = parentList?.map((parent, index) => ({
+        personID: parent?.id,
+        mainCategory: parent?.name,
+        image: parent?.file_name?.medium,
+        status: "N/A",
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [cuisineList]);
+
+
+  useEffect(() => {
+    if (cuisineList) {
+      const formattedData = childList?.map((child, index) => ({
+        personID: child?.id,
+        mainCategory: child?.parent_name,
+        subCategory: child?.name,
+        image: child?.file_name?.medium,
+        status: "N/A",
+      }));
+      setSubCatData(formattedData);
+      setFilteredSubcatData(formattedData);
+    }
+  }, [cuisineList]);
 
   const [showSubCategory, setSubCategory] = useState(false);
   const handleSubClose = () => setSubCategory(false);
@@ -54,24 +97,34 @@ const Cuisines = () => {
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data.filter((row) => {
       return (
-        row.personID.toString().toLowerCase().includes(searchValue) ||
-        row.mainCategory.toLowerCase().includes(searchValue)
+        row?.personID?.toString().toLowerCase().includes(searchValue) ||
+        row?.mainCategory?.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
+
 
   const handleSubCategorySearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredSubcatData(subCatdata);
+      return;
+    }
+    const newFilteredData = subCatdata?.filter((row) => {
       return (
-        row.personID.toString().toLowerCase().includes(searchValue) ||
-        row.mainCategory.toLowerCase().includes(searchValue)
+        row?.personID?.toString().toLowerCase().includes(searchValue) ||
+        row?.mainCategory?.toLowerCase().includes(searchValue) ||
+        row?.subCategory?.toLowerCase().includes(searchValue)
       );
     });
-    setSubCatData(newRows);
+    setFilteredSubcatData(newFilteredData);
   };
 
   const columns = [
@@ -89,7 +142,7 @@ const Cuisines = () => {
       name: "Image",
       cell: row => (
         <a href={row.image} target="_blank" rel="noopener noreferrer">
-          Image
+          <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
         </a>
       ),
       sortable: false,
@@ -134,7 +187,7 @@ const Cuisines = () => {
       name: "Image",
       cell: row => (
         <a href={row.image} target="_blank" rel="noopener noreferrer">
-          Image
+          <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
         </a>
       ),
       sortable: false,
@@ -166,9 +219,12 @@ const Cuisines = () => {
     console.log(event, "event");
   }
 
+
+  console.log(childList, "childList");
+
   return (
     <>
-      <div className="container my-5">
+      <div className="container-fluid my-5">
 
         <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
@@ -182,7 +238,7 @@ const Cuisines = () => {
 
         <hr />
 
-        <h2>Total Main Categories - 6</h2>
+        <h2>Total Main Categories - {parentList?.length} </h2>
 
         <div className="card">
           <input
@@ -193,7 +249,7 @@ const Cuisines = () => {
           />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows
@@ -203,7 +259,7 @@ const Cuisines = () => {
 
         <hr />
 
-        <h2>Total Sub Categories - 26</h2>
+        <h2>Total Sub Categories - {childList?.length} </h2>
 
         <div className="card">
           <input
@@ -214,7 +270,7 @@ const Cuisines = () => {
           />
           <DataTable
             columns={columnsSubCategory}
-            data={subCatdata}
+            data={filteredSubcatData}
             fixedHeader
             pagination
             selectableRows

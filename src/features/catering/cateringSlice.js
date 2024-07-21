@@ -7,6 +7,7 @@ const initialState = {
     isLoading: true,
     cateringVendors: [],
     cateringFoodTypes: [],
+    cuisineList: [],
 }
 
 export const fetchCateringVendors = createAsyncThunk(
@@ -32,6 +33,19 @@ export const fetchCateringFoodTypes = createAsyncThunk(
         }
     }
 )
+
+export const fetchCateringCuisines = createAsyncThunk(
+    'catering/fetchCateringCuisines',
+    async (catering, thunkAPI) => {
+        try {
+            const response = await api.get(`${BASE_URL}/admin-list-cuisines`);
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
 
 
 export const cateringSlice = createSlice({
@@ -59,11 +73,22 @@ export const cateringSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(fetchCateringFoodTypes.fulfilled, (state, { payload }) => {
-                console.log(payload, "payload");
                 state.isLoading = false;
                 state.cateringFoodTypes = payload;
             })
             .addCase(fetchCateringFoodTypes.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // fetchCateringCuisines 
+            .addCase(fetchCateringCuisines.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchCateringCuisines.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.cuisineList = payload;
+            })
+            .addCase(fetchCateringCuisines.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })

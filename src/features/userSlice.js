@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { api, BASE_URL } from '../../api/apiConfig';
-import { datavalidationerror } from '../../utils';
+import { api, BASE_URL } from '../api/apiConfig';
+import { datavalidationerror } from '../utils';
 import toast from 'react-hot-toast';
 
 const initialState = {

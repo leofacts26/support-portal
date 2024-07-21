@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import userReducer from '../features/cuisine/userSlice'
-import cateringReducer from '../features/cuisine/cateringSlice'
+import userReducer from '../features/userSlice'
+import cateringReducer from '../features/catering/cateringSlice'
 import homeReducer from '../features/homepage/homeSlice'
 
 

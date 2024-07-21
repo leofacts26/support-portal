@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCateringVendors } from '../../features/cuisine/cateringSlice';
+import { fetchCateringVendors } from '../../features/catering/cateringSlice';
 
 const rows = [
   {
@@ -119,7 +119,6 @@ const VendorList = () => {
     },
   ];
 
-  console.log(cateringVendors, "cateringVendors");
 
   return (
     <>
