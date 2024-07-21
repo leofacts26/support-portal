@@ -30,6 +30,7 @@ import AddNewVendor from "./pages/customer-care/AddNewVendor";
 import ShareLinks from "./pages/customer-care/ShareLinks";
 import FollowUps from "./pages/customer-care/FollowUps";
 import SupportTickets from "./pages/customer-care/SupportTickets";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -87,6 +88,7 @@ function App() {
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
+          <Toaster />
     </BrowserRouter>
   );
 }

@@ -29,4 +29,7 @@ input:focus {
   font-weight: 400;
 }
 
-
+.heading{
+  font-size: 1.4em;
+  text-transform: capitalize;
+}

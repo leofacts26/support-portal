@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import GlobalSearch from '../../components/common/GlobalSearch';
 
 
 const rows = [
@@ -144,23 +145,8 @@ const ExploreIndia = () => {
 
         <div className="card">
 
-          <div className="card-header">
-            <div className="row align-items-center">
-              <div className="col">
-                <div className="input-group input-group-flush input-group-merge input-group-reverse">
-                  <input
-                    className="form-control list-search"
-                    type="search"
-                    placeholder="Search"
-                    onChange={handleSearch}
-                  />
-                  <span className="input-group-text">
-                    <i className="fe fe-search" />
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Search */}
+          <GlobalSearch handleSearch={handleSearch} />
 
           <DataTable
             columns={columns}

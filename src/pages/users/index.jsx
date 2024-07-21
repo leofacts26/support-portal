@@ -1,84 +1,107 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import GlobalSearch from '../../components/common/GlobalSearch';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserData } from '../../features/cuisine/userSlice';
+import Heading from '../../components/common/Heading';
 
 
-const rows = [
-  {
-    sNO: 1,
-    name: "Mumbai",
-    phoneNo: 9874684684,
-    DateTime: "02/15/2024",
-    EmailID: "test@gmail.com",
-  }
-];
 
 const Users = () => {
-  const [data, setData] = useState(rows);
+  const dispatch = useDispatch()
+  const { userList } = useSelector((state) => state.users)
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userList) {
+      const formattedData = userList.map((user, index) => ({
+        sNO: index + 1,
+        name: user.username,
+        role: user.role,
+        phoneNo: user.phone_extension + user.phone_number,
+        DateTime: new Date(user.created_at).toLocaleDateString(),
+        EmailID: user.email,
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [userList]);
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data.filter((row) => {
       return (
-        row.sNO.toString().toLowerCase().includes(searchValue) ||
-        row.fullName.toLowerCase().includes(searchValue)
+        row?.sNO?.toString().toLowerCase().includes(searchValue) ||
+        row?.name?.toLowerCase().includes(searchValue) ||
+        row?.role?.toLowerCase().includes(searchValue) ||
+        row?.phoneNo?.toLowerCase().includes(searchValue) ||
+        row?.DateTime?.toLowerCase().includes(searchValue) ||
+        row?.EmailID?.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
+
 
   const columns = [
     {
       name: "S.NO",
-      selector: row => row.sNO,
+      selector: (row) => row.sNO,
       sortable: true,
     },
     {
       name: "Name",
-      selector: row => row.name,
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: "Role",
+      selector: (row) => row.role,
       sortable: true,
     },
     {
       name: "Phone No",
-      selector: row => row.phoneNo,
+      selector: (row) => row.phoneNo,
       sortable: true,
     },
     {
       name: "Date Time",
-      selector: row => row.DateTime,
+      selector: (row) => row.DateTime,
       sortable: true,
     },
     {
       name: "Email ID",
-      selector: row => row.EmailID,
+      selector: (row) => row.EmailID,
       sortable: true,
     }
   ];
 
-  const handleEdit = (event) => {
-    console.log(event, "event");
-  }
-  const handleDelete = (event) => {
-    console.log(event, "event");
-  }
+
+  console.log(userList, "userList userList");
+
 
   return (
     <>
-      <div className="container my-5">
-
-        <h4>Total Registered Users - 12500</h4>
+      <div className="container-fluid my-5">
+       <Heading length={userList?.length} />
         <hr />
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          {/* Search */}
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows
@@ -86,10 +109,7 @@ const Users = () => {
           />
         </div>
       </div>
-
       <br />
-
-
     </>
   )
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
+import { useSelector, useDispatch } from 'react-redux'
 
 const rows = [
   {
@@ -45,7 +45,7 @@ const Cuisines = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
+  // const count = useSelector((state) => state.cuisine.value)
 
   const [showSubCategory, setSubCategory] = useState(false);
   const handleSubClose = () => setSubCategory(false);
