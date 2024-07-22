@@ -99,6 +99,7 @@ const Cuisines = () => {
     if (cuisineList) {
       const formattedData = childList?.map((child, index) => ({
         personID: child?.id,
+        parentID: child?.parent_id,
         mainCategory: child?.parent_name,
         subCategory: child?.name,
         image: child?.file_name?.medium,
@@ -326,6 +327,7 @@ const Cuisines = () => {
 
   // handleEditChild 
   const handleEditChild = (row) => {
+    console.log(row, "row row");
     setMainCategoryChild(row.mainCategory)
     setMainCategorySubChild(row.subCategory)
     setMainCategoryChildId(row)
@@ -358,16 +360,18 @@ const Cuisines = () => {
     handleClose()
   }
 
+  // console.log(mainCategoryChildId, "mainCategoryChildId");
 
   const onSubmitMainCategoryChild = async (e) => {
     e.preventDefault();
-    console.log(mainCategoryChildId, "setMainCategoryChildId");
     const data = {
       name: mainCategorySubChild,
-      id: mainCategoryChildId.id,
-      parent_id: mainCategoryChildId.parent_id
+      id: mainCategoryChildId.personID,
+      parent_id: mainCategoryChildId?.parentID
     }
+    console.log(data, "DATAAA");
     await dispatch(editCateringParentCuisine(data))
+    dispatch(fetchCateringCuisines())
     handleSubClose()
   }
 
