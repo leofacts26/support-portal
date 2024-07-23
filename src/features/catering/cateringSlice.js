@@ -58,6 +58,18 @@ export const editCateringParentCuisine = createAsyncThunk(
     }
 )
 
+export const addCateringParentCuisine = createAsyncThunk(
+    'catering/addCateringParentCuisine',
+    async (catering, thunkAPI) => {
+        try {
+            const response = await api.post(`${BASE_URL}/admin-create-cuisine`, catering);
+            toast.success(successToast(response))
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
 
 
 export const cateringSlice = createSlice({
@@ -112,6 +124,17 @@ export const cateringSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(editCateringParentCuisine.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // addCateringParentCuisine 
+            .addCase(addCateringParentCuisine.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(addCateringParentCuisine.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+            })
+            .addCase(addCateringParentCuisine.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })

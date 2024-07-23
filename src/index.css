@@ -33,3 +33,7 @@ input:focus {
   font-size: 1.4em;
   text-transform: capitalize;
 }
+
+.bg-dark-select{
+  background-color: #000 !important;
+}

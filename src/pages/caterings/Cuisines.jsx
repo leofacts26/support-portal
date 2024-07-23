@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux'
-import { editCateringParentCuisine, fetchCateringCuisines } from '../../features/catering/cateringSlice';
+import { addCateringParentCuisine, editCateringParentCuisine, fetchCateringCuisines } from '../../features/catering/cateringSlice';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
 import GlobalSearch from '../../components/common/GlobalSearch';
@@ -71,9 +71,9 @@ const Cuisines = () => {
   const [subCatdata, setSubCatData] = useState([]);
   const [filteredSubcatData, setFilteredSubcatData] = useState([]);
 
-
   const parentList = cuisineList?.filter((item) => item?.parent_id === null)
   const childList = cuisineList?.filter((item) => item?.parent_id !== null)
+  console.log(parentList, "parentList parentList");
 
   useEffect(() => {
     dispatch(fetchCateringCuisines())
@@ -115,6 +115,11 @@ const Cuisines = () => {
   const [mainCategorySubChild, setMainCategorySubChild] = useState("")
   const [mainCategoryChildId, setMainCategoryChildId] = useState(null)
 
+  console.log(mainCategoryChild, "mainCategoryChild mainCategoryChild");
+
+  const handleImageError = (e) => {
+    e.target.src = 'https://www.cateringsandtiffins.com/img/no-image.jpg'; // Provide the path to your error image here
+  };
 
   const handleSubClose = () => {
     setSubCategory(false)
@@ -185,7 +190,7 @@ const Cuisines = () => {
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
                 onClick={() => dispatch(setCuisineId(row?.personID))}
               >
-                <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
+                <img onError={handleImageError} src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
               </span>
             </label>
           </>
@@ -271,7 +276,7 @@ const Cuisines = () => {
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
                 onClick={() => dispatch(setCuisineId(row?.personID))}
               >
-                <img src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
+                <img onError={handleImageError} src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
               </span>
             </label>
           </>
@@ -339,6 +344,8 @@ const Cuisines = () => {
 
   }
 
+  // console.log(mainCategoryId, "mainCategoryId mainCategoryId");
+
   const handleEdit = (row) => {
     setMainCategoryId(row.personID)
     setMainCategory(row.mainCategory);
@@ -351,11 +358,19 @@ const Cuisines = () => {
 
   const onSubmitMainCategory = async (e) => {
     e.preventDefault();
+    const addData = {
+      name: mainCategory,
+      id: parentList.length + 1
+    }
     const data = {
       name: mainCategory,
       id: mainCategoryId
     }
-    await dispatch(editCateringParentCuisine(data))
+    if (mainCategoryId === null) {
+      await dispatch(addCateringParentCuisine(addData))
+    } else {
+      await dispatch(editCateringParentCuisine(data))
+    }
     dispatch(fetchCateringCuisines())
     handleClose()
   }
@@ -369,8 +384,12 @@ const Cuisines = () => {
       id: mainCategoryChildId.personID,
       parent_id: mainCategoryChildId?.parentID
     }
-    console.log(data, "DATAAA");
-    await dispatch(editCateringParentCuisine(data))
+
+    if (mainCategoryChildId === null) {
+      alert("test")
+    } else {
+      await dispatch(editCateringParentCuisine(data))
+    }
     dispatch(fetchCateringCuisines())
     handleSubClose()
   }
@@ -422,22 +441,18 @@ const Cuisines = () => {
           // title="React-Data-Table-Component Tutorial."
           />
         </div>
-
-
-
       </div>
-
       <br />
 
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onSubmitMainCategory}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Main Category</Modal.Title>
+            <Modal.Title> {mainCategoryId ? 'Edit Main Category' : 'Add Main Category'} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div>
-              <label for="name" className="form-label">Add Category</label>
-              <input type="text" className="form-control" placeholder="Category" value={mainCategory} onChange={(e) => setMainCategory(e.target.value)} />
+              <label for="name" className="form-label"> {mainCategoryId ? 'Edit Category' : 'Add Category'} </label>
+              <input required type="text" className="form-control" placeholder="Category" value={mainCategory} onChange={(e) => setMainCategory(e.target.value)} />
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -456,17 +471,33 @@ const Cuisines = () => {
       <Modal centered show={showSubCategory} onHide={handleSubClose}>
         <form onSubmit={onSubmitMainCategoryChild}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Sub Category</Modal.Title>
+            <Modal.Title> {mainCategoryChildId ? 'Edit Sub Category' : 'Add Sub Category'}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className='mt-3'>
-              <label for="name" className="form-label">Add Category</label>
-              <input disabled type="text" className="form-control" placeholder="Category" value={mainCategoryChild} onChange={(e) => setMainCategoryChild(e.target.value)} />
-            </div>
+            {/* <div className='mt-3'>
+              <label for="name" className="form-label">{mainCategoryChildId ? 'Edit Category' : 'Add Category'}</label>
+              <input type="text" className="form-control" placeholder="Category" value={mainCategoryChild} onChange={(e) => setMainCategoryChild(e.target.value)} />
+            </div> */}
+
+            <select
+              style={{ backgroundColor: `${mainCategoryChildId !== null && 'rgb(0 0 0 / 4%)'}` }}
+              disabled={mainCategoryChildId !== null}
+              className="form-select"
+              value={mainCategoryChild}
+              onChange={(e) => setMainCategoryChild(e.target.value)}
+            >
+              {parentList?.map((item) => {
+                return (
+                  <>
+                    <option value={item?.id} disabled={mainCategoryChildId !== null}>{item?.name}</option>
+                  </>
+                )
+              })}
+            </select>
 
             <div className='mt-3'>
-              <label for="name" className="form-label">Add Sub Category</label>
-              <input type="text" className="form-control" placeholder="Sub Category" value={mainCategorySubChild} onChange={(e) => setMainCategorySubChild(e.target.value)} />
+              <label for="name" className="form-label"> {mainCategoryChildId ? 'Edit Sub Category' : 'Add Sub Category'} </label>
+              <input required type="text" className="form-control" placeholder="Sub Category" value={mainCategorySubChild} onChange={(e) => setMainCategorySubChild(e.target.value)} />
             </div>
 
           </Modal.Body>
