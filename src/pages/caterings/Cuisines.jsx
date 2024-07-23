@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux'
-import { addCateringParentCuisine, editCateringParentCuisine, fetchCateringCuisines } from '../../features/catering/cateringSlice';
+import { addCateringParentCuisine, deleteCateringCuisine, editCateringParentCuisine, fetchCateringCuisines } from '../../features/catering/cateringSlice';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
 import GlobalSearch from '../../components/common/GlobalSearch';
@@ -11,6 +11,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { setCuisineId } from '../../features/userSlice';
+import useToggle from '../../hooks/useToggle';
 
 
 
@@ -49,6 +50,7 @@ const rowsSubCategory = [
 
 const Cuisines = () => {
 
+  const { onHandleToggleStatus, toggleStatus } = useToggle()
   const { onUploadParentCuisine } = useUploadCusinePhotoos()
 
   const [show, setShow] = useState(false);
@@ -73,7 +75,7 @@ const Cuisines = () => {
 
   const parentList = cuisineList?.filter((item) => item?.parent_id === null)
   const childList = cuisineList?.filter((item) => item?.parent_id !== null)
-  console.log(parentList, "parentList parentList");
+  // console.log(parentList, "parentList parentList");
 
   useEffect(() => {
     dispatch(fetchCateringCuisines())
@@ -115,7 +117,7 @@ const Cuisines = () => {
   const [mainCategorySubChild, setMainCategorySubChild] = useState("")
   const [mainCategoryChildId, setMainCategoryChildId] = useState(null)
 
-  console.log(mainCategoryChild, "mainCategoryChild mainCategoryChild");
+  // console.log(mainCategoryChild, "mainCategoryChild mainCategoryChild");
 
   const handleImageError = (e) => {
     e.target.src = 'https://www.cateringsandtiffins.com/img/no-image.jpg'; // Provide the path to your error image here
@@ -351,8 +353,13 @@ const Cuisines = () => {
     setMainCategory(row.mainCategory);
     handleShow()
   }
-  const handleDelete = (event) => {
-    console.log(event, "event");
+  const handleDelete = (cusineId) => {
+    // console.log(cusineId, "cusineId");
+    const data = {
+      is_active: '',
+      id: cusineId
+    }
+    // dispatch(deleteCateringCuisine(data)) 
   }
 
 

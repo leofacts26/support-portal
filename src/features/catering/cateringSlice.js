@@ -70,6 +70,18 @@ export const addCateringParentCuisine = createAsyncThunk(
     }
 )
 
+export const deleteCateringCuisine = createAsyncThunk(
+    'catering/deleteCateringCuisine',
+    async (catering, thunkAPI) => {
+        try {
+            const response = await api.post(`${BASE_URL}/admin-toggle-cuisine`, catering);
+            toast.success(successToast(response))
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
 
 
 export const cateringSlice = createSlice({

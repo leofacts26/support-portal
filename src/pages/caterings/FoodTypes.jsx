@@ -6,18 +6,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCateringFoodTypes } from '../../features/catering/cateringSlice';
 
 
-const rows = [
-  {
-    foodTypes: "Veg",
-    status: 'active',
-    order: 1
-  },
-  {
-    foodTypes: "Non Veg",
-    status: 'active',
-    order: 2
-  },
-];
+// const rows = [
+//   {
+//     foodTypes: "Veg",
+//     status: 'active',
+//     order: 1
+//   },
+//   {
+//     foodTypes: "Non Veg",
+//     status: 'active',
+//     order: 2
+//   },
+// ];
 
 const FoodTypes = () => {
   const dispatch = useDispatch()
@@ -53,11 +53,11 @@ const FoodTypes = () => {
       setFilteredData(data);
       return;
     }
-    const newFilteredData = data.filter((row) => {
+    const newFilteredData = data?.filter((row) => {
       return (
-        row?.name?.toLowerCase().includes(searchValue) ||
-        row?.status?.toLowerCase().includes(searchValue) ||
-        row?.order?.toLowerCase().includes(searchValue)
+        row?.name?.toLowerCase().includes(searchValue) 
+        // row?.status?.toLowerCase().includes(searchValue)
+        // row?.order?.toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);
@@ -130,7 +130,7 @@ const FoodTypes = () => {
           />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows

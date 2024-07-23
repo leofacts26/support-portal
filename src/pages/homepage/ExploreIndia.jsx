@@ -10,69 +10,70 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchexplorecitiesData } from '../../features/homepage/homeSlice';
 
 
-const rows = [
-  {
-    personID: 1,
-    fullName: "Mumbai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 2,
-    fullName: "Bangalore",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 3,
-    fullName: "Chennai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 4,
-    fullName: "Hyderabad",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 5,
-    fullName: "Pune",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 6,
-    fullName: "Gurgaon",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 7,
-    fullName: "Ranchi",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 8,
-    fullName: "Kolkata",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 9,
-    fullName: "Goa",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 10,
-    fullName: "Madurai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 11,
-    fullName: "Coiambator",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-];
+// const rows = [
+//   {
+//     personID: 1,
+//     fullName: "Mumbai",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 2,
+//     fullName: "Bangalore",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 3,
+//     fullName: "Chennai",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 4,
+//     fullName: "Hyderabad",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 5,
+//     fullName: "Pune",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 6,
+//     fullName: "Gurgaon",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 7,
+//     fullName: "Ranchi",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 8,
+//     fullName: "Kolkata",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 9,
+//     fullName: "Goa",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 10,
+//     fullName: "Madurai",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+//   {
+//     personID: 11,
+//     fullName: "Coiambator",
+//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
+//   },
+// ];
 
 const ExploreIndia = () => {
   const dispatch = useDispatch()
   const { exploreCities } = useSelector((state) => state.homepage)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  console.log(exploreCities, "exploreCities exploreCities");
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
