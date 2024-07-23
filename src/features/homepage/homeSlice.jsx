@@ -22,6 +22,34 @@ export const fetchexplorecitiesData = createAsyncThunk(
 )
 
 
+export const createExplorecity = createAsyncThunk(
+    'user/createExplorecity',
+    async (cityData, thunkAPI) => {
+        try {
+            const response = await api.post(`${BASE_URL}/admin-create-new-explore-city`, cityData);
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+export const updateExplorecity = createAsyncThunk(
+    'user/updateExplorecity',
+    async (cityData, thunkAPI) => {
+        try {
+            const response = await api.post(`${BASE_URL}/admin-update-explore-city`, cityData);
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+
+
 export const homeSlice = createSlice({
     name: 'homepage',
     initialState,
@@ -30,6 +58,7 @@ export const homeSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // fetchexplorecitiesData 
             .addCase(fetchexplorecitiesData.pending, (state) => {
                 state.isLoading = true;
             })
@@ -38,6 +67,28 @@ export const homeSlice = createSlice({
                 state.exploreCities = payload;
             })
             .addCase(fetchexplorecitiesData.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // createExplorecity 
+            .addCase(createExplorecity.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(createExplorecity.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+            })
+            .addCase(createExplorecity.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // updateExplorecity 
+            .addCase(updateExplorecity.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateExplorecity.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+            })
+            .addCase(updateExplorecity.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })

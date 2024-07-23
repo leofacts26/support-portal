@@ -7,8 +7,12 @@ import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchexplorecitiesData } from '../../features/homepage/homeSlice';
-
+import { createExplorecity, fetchexplorecitiesData, updateExplorecity } from '../../features/homepage/homeSlice';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { setCuisineId } from '../../features/userSlice';
+import { FaCloudUploadAlt } from "react-icons/fa";
+import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
 
 // const rows = [
 //   {
@@ -68,15 +72,31 @@ import { fetchexplorecitiesData } from '../../features/homepage/homeSlice';
 //   },
 // ];
 
+const initialState = {
+  name: '',
+  state: '',
+  country: '',
+  latitude: '',
+  longitude: ''
+}
+
 const ExploreIndia = () => {
   const dispatch = useDispatch()
-  const { exploreCities } = useSelector((state) => state.homepage)
+  const { exploreCities, isLoading } = useSelector((state) => state.homepage)
   const [data, setData] = useState([]);
+  const [values, setValues] = useState(initialState)
   const [filteredData, setFilteredData] = useState([]);
-  console.log(exploreCities, "exploreCities exploreCities");
+  const [editId, setEditId] = useState(null)
+  const { onUploadCityImage } = useUploadCusinePhotoos()
+
+  // console.log(exploreCities, "exploreCities exploreCities");
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+    setEditId(null)
+    setValues(initialState)
+  };
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -84,12 +104,20 @@ const ExploreIndia = () => {
   }, [dispatch]);
 
 
+  const handleImageError = (e) => {
+    e.target.src = 'https://www.cateringsandtiffins.com/img/no-image.jpg'; // Provide the path to your error image here
+  };
+
   useEffect(() => {
     if (exploreCities) {
       const formattedData = exploreCities.map((city, index) => ({
-        sNO: index + 1,
+        id: city?.id,
         name: city?.name,
         image: city?.file_name,
+        state: city?.state,
+        country: city?.country,
+        latitude: city?.latitude,
+        longitude: city?.longitude,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -105,7 +133,7 @@ const ExploreIndia = () => {
     }
     const newFilteredData = data.filter((row) => {
       return (
-        row?.sNO?.toString().toLowerCase().includes(searchValue) ||
+        row?.id?.toString().toLowerCase().includes(searchValue) ||
         row?.name?.toLowerCase().includes(searchValue)
       );
     });
@@ -115,7 +143,7 @@ const ExploreIndia = () => {
   const columns = [
     {
       name: "S.NO",
-      selector: (row) => row.sNO,
+      selector: (row) => row.id,
       sortable: true,
     },
     {
@@ -126,9 +154,43 @@ const ExploreIndia = () => {
     {
       name: "Image Preview",
       cell: row => (
-        <a href={row?.image} target="_blank" rel="noopener noreferrer">
-          {/* <img src={row?.image} alt="" /> */} Image
-        </a>
+        row.image ? (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadCityImage"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => onUploadCityImage(e)}
+            />
+            <label htmlFor="onUploadCityImage">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                onClick={() => dispatch(setCuisineId(row?.id))}
+              >
+                <img onError={handleImageError} src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
+              </span>
+            </label>
+          </>
+        ) : (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadCityImage"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => onUploadCityImage(e)}
+            />
+            <label htmlFor="onUploadCityImage">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                onClick={() => dispatch(setCuisineId(row?.id))}
+              >
+                <FaCloudUploadAlt size={30} />
+              </span>
+            </label>
+          </>
+        )
       ),
       sortable: false,
     },
@@ -136,15 +198,12 @@ const ExploreIndia = () => {
       name: "Action",
       cell: (row) => (
         <>
-          <button className="btn btn-success me-1" onClick={() => handleEdit(row.personID)}>
+          <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
             <FaEdit />
           </button>
-          <button className="btn btn-danger" onClick={() => handleDelete(row.personID)}>
+          <button className="btn btn-danger" onClick={() => handleDelete(row.id)}>
             <MdDeleteForever />
           </button>
-
-          {/* <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span> */}
-          {/* <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span> */}
         </>
       ),
       ignoreRowClick: true,
@@ -153,16 +212,56 @@ const ExploreIndia = () => {
     },
   ];
 
-  const handleEdit = (event) => {
-    handleShow()
-    console.log(event, "event");
+  // validation schema
+  const schema = Yup.object().shape({
+    name: Yup.string()
+      .required('Name is required')
+      .min(2, 'Name must be at least 2 characters')
+      .max(50, 'Name must be at most 50 characters'),
+    state: Yup.string()
+      .required('State is required')
+      .min(2, 'State must be at least 2 characters')
+      .max(50, 'State must be at most 50 characters'),
+    country: Yup.string()
+      .required('Country is required')
+      .min(2, 'Country must be at least 2 characters')
+      .max(50, 'Country must be at most 50 characters'),
+    latitude: Yup.number()
+      .required('Latitude is required'),
+    longitude: Yup.number()
+      .required('Longitude is required')
+  });
+
+  const handleEdit = async (data) => {
+    setEditId(data?.id)
+    handleShow();
+    setValues((prevValues) => ({
+      ...prevValues,
+      name: data?.name,
+      state: data?.state,
+      country: data?.country,
+      latitude: data?.latitude,
+      longitude: data?.longitude,
+      id: data?.id
+    }))
   }
+
   const handleDelete = (event) => {
     console.log(event, "event");
   }
 
+  const handleSubmit = async (data, resetForm) => {
+    if (editId === null) {
+      await dispatch(createExplorecity(data))
+    } else {
+      await dispatch(updateExplorecity(data))
+    }
+    await dispatch(fetchexplorecitiesData())
+    handleClose()
+    resetForm(initialState);
+  }
 
-  console.log(exploreCities, "exploreCities exploreCities");
+  // console.log(exploreCities, "exploreCities exploreCities"); 
 
   return (
     <>
@@ -194,27 +293,54 @@ const ExploreIndia = () => {
       <br />
 
       <Modal centered show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create City</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <label for="name" className="form-label">Add City Name</label>
-            <input type="text" className="form-control" placeholder="City Name" />
-          </div>
-          <div className='mt-3'>
+        <Formik enableReinitialize={true} initialValues={values} validationSchema={schema} onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}>
+          {({ values, errors, handleChange, handleSubmit }) => (
+            <form onSubmit={handleSubmit} autocomplete="off">
+              <Modal.Header closeButton>
+                <Modal.Title> {editId ? 'Edit City' : 'Create City'}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div>
+                  <label for="name" className="form-label">{editId ? 'Edit City' : 'Add City'}</label>
+                  <input type="text" className="form-control" placeholder="City Name" name="name" value={values.name} onChange={handleChange} />
+                  {errors.name && <small className='text-danger mb-2 ms-1'>{errors.name}</small>}
+                </div>
+                <div className='mt-3'>
+                  <label for="name" className="form-label">Add State</label>
+                  <input type="text" className="form-control" placeholder="State Name" name="state" value={values.state} onChange={handleChange} />
+                  {errors.name && <small className='text-danger mb-2 ms-1'>{errors.state}</small>}
+                </div>
+                <div className='mt-3'>
+                  <label for="name" className="form-label">Add Country</label>
+                  <input type="text" className="form-control" placeholder="Country Name" name="country" value={values.country} onChange={handleChange} />
+                  {errors.name && <small className='text-danger mb-2 ms-1'>{errors.country}</small>}
+                </div>
+                <div className='mt-3'>
+                  <label for="name" className="form-label">Add Latitude</label>
+                  <input type="text" className="form-control" placeholder="Enter Latitude" name="latitude" value={values.latitude} onChange={handleChange} />
+                  {errors.name && <small className='text-danger mb-2 ms-1'>{errors.latitude}</small>}
+                </div>
+                <div className='mt-3'>
+                  <label for="name" className="form-label">Add Longitude</label>
+                  <input type="text" className="form-control" placeholder="Enter longitude" name="longitude" value={values.longitude} onChange={handleChange} />
+                  {errors.name && <small className='text-danger mb-2 ms-1'>{errors.longitude}</small>}
+                </div>
+                {/* <div className='mt-3'>
             <label for="image" className="form-label">Add Image</label>
             <input className="form-control" type="file" id="formFile" accept="image/*" />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+          </div> */}
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button variant="primary" type='submit'>
+                  {isLoading ? 'Loading...' : 'Save Changes'}
+                </Button>
+              </Modal.Footer>
+            </form>
+          )}
+        </Formik>
       </Modal>
     </>
   )
