@@ -335,8 +335,8 @@ const Cuisines = () => {
   // handleEditChild 
   const handleEditChild = (row) => {
     console.log(row, "row row");
-    setMainCategoryChild(row.mainCategory)
-    setMainCategorySubChild(row.subCategory)
+    setMainCategoryChild(row?.mainCategory)
+    setMainCategorySubChild(row?.subCategory)
     setMainCategoryChildId(row)
     handleSubShow()
     // handleSubClose()   
@@ -496,7 +496,9 @@ const Cuisines = () => {
               {parentList?.map((item) => {
                 return (
                   <>
-                    <option value={item?.id} disabled={mainCategoryChildId !== null}>{item?.name}</option>
+                    <option key={item.id} value={item.name}
+                      disabled={mainCategoryChildId !== null}
+                    >{item?.name}</option>
                   </>
                 )
               })}
