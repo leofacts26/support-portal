@@ -70,7 +70,7 @@ import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
 //     fullName: "Coiambator",
 //     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
 //   },
-// ];
+// ];      
 
 const initialState = {
   name: '',
