@@ -261,7 +261,7 @@ const ExploreIndia = () => {
     resetForm(initialState);
   }
 
-  
+
   // console.log(exploreCities, "exploreCities exploreCities"); 
 
   return (
@@ -270,7 +270,7 @@ const ExploreIndia = () => {
 
         <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-            Create City test
+            Create City testt
           </button>
         </div>
 
