@@ -269,7 +269,7 @@ const ExploreIndia = () => {
 
         <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-            Create Cityy
+            Create City
           </button>
         </div>
 
