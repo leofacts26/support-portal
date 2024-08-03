@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCateringVendors } from '../../features/catering/cateringSlice';
+import * as XLSX from "xlsx";
+
 
 const rows = [
   {
@@ -120,6 +122,15 @@ const VendorList = () => {
   ];
 
 
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "data.xlsx");
+  };
+  
+
+
   return (
     <>
       <div className="container-fluid my-5">
@@ -127,7 +138,7 @@ const VendorList = () => {
 
         <h2>Total Registered Caterers - 18776</h2>
         <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-secondary fit-content' variant="primary">
+          <button className='btn btn-secondary fit-content' variant="primary" onClick={exportToExcel}>
             Export
           </button>
         </div>
