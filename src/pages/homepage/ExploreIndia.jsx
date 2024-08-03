@@ -64,7 +64,7 @@ import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
 //     personID: 10,
 //     fullName: "Madurai",
 //     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
+//   },  
 //   {
 //     personID: 11,
 //     fullName: "Coiambator",
@@ -269,7 +269,7 @@ const ExploreIndia = () => {
 
         <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-            Create City
+            Create Cityy
           </button>
         </div>
 
