@@ -302,7 +302,7 @@ const ExploreIndia = () => {
               </Modal.Header>
               <Modal.Body>
                 <div>
-                  <label for="name" className="form-label">{editId ? 'Edit City' : 'Add City'}</label>
+                  <label for="name" className="form-label">{editId ? 'Edit Name' : 'Add Name'}</label>
                   <input type="text" className="form-control" placeholder="City Name" name="name" value={values.name} onChange={handleChange} />
                   {errors.name && <small className='text-danger mb-2 ms-1'>{errors.name}</small>}
                 </div>
