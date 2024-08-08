@@ -7,70 +7,13 @@ import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { useDispatch, useSelector } from 'react-redux';
-import { createExplorecity, fetchexplorecitiesData, updateExplorecity } from '../../features/homepage/homeSlice';
+import { createExplorecity, fetchexplorecitiesData, updateExplorecity, updateToggleExplorecity } from '../../features/homepage/homeSlice';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { setCuisineId } from '../../features/userSlice';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
 
-// const rows = [
-//   {
-//     personID: 1,
-//     fullName: "Mumbai",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 2,
-//     fullName: "Bangalore",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 3,
-//     fullName: "Chennai",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 4,
-//     fullName: "Hyderabad",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 5,
-//     fullName: "Pune",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 6,
-//     fullName: "Gurgaon",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 7,
-//     fullName: "Ranchi",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 8,
-//     fullName: "Kolkata",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 9,
-//     fullName: "Goa",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-//   {
-//     personID: 10,
-//     fullName: "Madurai",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },  
-//   {
-//     personID: 11,
-//     fullName: "Coiambator",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   },
-// ];      
 
 const initialState = {
   name: '',
@@ -89,7 +32,7 @@ const ExploreIndia = () => {
   const [editId, setEditId] = useState(null)
   const { onUploadCityImage } = useUploadCusinePhotoos()
 
-  // console.log(exploreCities, "exploreCities exploreCities");
+  console.log(filteredData, "filteredData filteredData");
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -110,14 +53,15 @@ const ExploreIndia = () => {
 
   useEffect(() => {
     if (exploreCities) {
-      const formattedData = exploreCities.map((city, index) => ({
+      const formattedData = exploreCities?.map((city, index) => ({
         id: city?.id,
         name: city?.name,
-        image: city?.file_name,
+        image: city?.file_name?.medium,
         state: city?.state,
         country: city?.country,
         latitude: city?.latitude,
         longitude: city?.longitude,
+        is_active: city?.is_active
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -140,6 +84,16 @@ const ExploreIndia = () => {
     setFilteredData(newFilteredData);
   };
 
+
+  const handleStatusToggle = async (city) => {
+    const updatedCity = {
+      ...city,
+      is_active: city.is_active === 1 ? 0 : 1
+    }
+    await dispatch(updateToggleExplorecity(updatedCity))
+    await dispatch(fetchexplorecitiesData());
+  }
+
   const columns = [
     {
       name: "S.NO",
@@ -149,6 +103,24 @@ const ExploreIndia = () => {
     {
       name: "City Name",
       selector: row => row.name,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      cell: row => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`status-${row.id}`}
+            checked={row.is_active === 1}
+            onChange={() => handleStatusToggle(row)}
+          />
+          <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label>
+        </div>
+      ),
       sortable: true,
     },
     {
@@ -168,7 +140,7 @@ const ExploreIndia = () => {
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
                 onClick={() => dispatch(setCuisineId(row?.id))}
               >
-                <img onError={handleImageError} src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
+                <img onError={handleImageError} src={row?.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
               </span>
             </label>
           </>
@@ -201,9 +173,9 @@ const ExploreIndia = () => {
           <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
             <FaEdit />
           </button>
-          <button className="btn btn-danger" onClick={() => handleDelete(row.id)}>
+          {/* <button className="btn btn-danger" onClick={() => handleDelete(row.id)}>
             <MdDeleteForever />
-          </button>
+          </button> */}
         </>
       ),
       ignoreRowClick: true,
