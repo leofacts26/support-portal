@@ -98,26 +98,26 @@ const FoodTypes = () => {
           </label>
         </div>
       ),
-      sortable: true,
+      sortable: false,
     },
     {
       name: "Order",
       selector: row => row.order,
       sortable: true,
     },
-    {
-      name: "Action",
-      cell: (row) => (
-        <>
-          <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
-            <FaEdit />
-          </button>
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
+    // {
+    //   name: "Action",
+    //   cell: (row) => (
+    //     <>
+    //       <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
+    //         <FaEdit />
+    //       </button>
+    //     </>
+    //   ),
+    //   ignoreRowClick: true,
+    //   allowOverflow: true,
+    //   button: true,
+    // },
   ];
 
   const handleEdit = (event) => {
@@ -132,13 +132,13 @@ const FoodTypes = () => {
 
   return (
     <>
-      <div className="container my-5">
+      <div className="container-fluid my-5">
 
-        <div className="row mb-4 d-flex justify-content-end me-2">
+        {/* <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
             Add Food Types
           </button>
-        </div>
+        </div> */}
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
