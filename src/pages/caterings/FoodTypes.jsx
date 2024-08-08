@@ -4,6 +4,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCateringFoodTypes } from '../../features/catering/cateringSlice';
+import GlobalSearch from '../../components/common/GlobalSearch';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
+import { FaEdit } from "react-icons/fa";
 
 
 // const rows = [
@@ -34,11 +37,21 @@ const FoodTypes = () => {
   }, [dispatch]);
 
 
+  const handleStatusToggle = async (city) => {
+    // const updatedCity = {
+    //   ...city,
+    //   is_active: city.is_active === 1 ? 0 : 1
+    // }
+    // await dispatch(updateToggleExplorecity(updatedCity))
+    // await dispatch(fetchexplorecitiesData());
+  }
+
+
   useEffect(() => {
     if (cateringFoodTypes) {
       const formattedData = cateringFoodTypes.map((foodType, index) => ({
         name: foodType?.name,
-        status: foodType?.is_active,
+        is_active: foodType?.is_active,
         order: foodType?.id,
       }));
       setData(formattedData);
@@ -55,7 +68,7 @@ const FoodTypes = () => {
     }
     const newFilteredData = data?.filter((row) => {
       return (
-        row?.name?.toLowerCase().includes(searchValue) 
+        row?.name?.toLowerCase().includes(searchValue)
         // row?.status?.toLowerCase().includes(searchValue)
         // row?.order?.toLowerCase().includes(searchValue)
       );
@@ -70,15 +83,32 @@ const FoodTypes = () => {
       selector: row => row.name,
       sortable: true,
     },
+    // {
+    //   name: "Status",
+    //   cell: (row) => (
+    //     <>
+    //       <div class="form-check form-switch">
+    //         <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={row?.status} />
+    //       </div>
+    //     </>
+    //   ),
+    //   sortable: true,
+    // },
     {
       name: "Status",
-      // selector: row => row.status,
-      cell: (row) => (
-        <>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={row?.is_active} />
-          </div>
-        </>
+      cell: row => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`status-${row.id}`}
+            checked={row.is_active === 1}
+            onChange={() => handleStatusToggle(row)}
+          />
+          <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label>
+        </div>
       ),
       sortable: true,
     },
@@ -91,8 +121,9 @@ const FoodTypes = () => {
       name: "Action",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
+          <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
+            <FaEdit />
+          </button>
         </>
       ),
       ignoreRowClick: true,
@@ -122,18 +153,14 @@ const FoodTypes = () => {
         </div>
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
             data={filteredData}
             fixedHeader
             pagination
             selectableRows
+            customStyles={tableCustomStyles}
           // title="React-Data-Table-Component Tutorial."
           />
         </div>

@@ -8,6 +8,8 @@ import * as XLSX from "xlsx";
 import useExportData from '../../hooks/useExportData';
 import toast from 'react-hot-toast';
 import Table from 'react-bootstrap/Table';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
+import GlobalSearch from '../../components/common/GlobalSearch';
 
 
 const rows = [
@@ -164,19 +166,14 @@ const VendorList = () => {
         </div>
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
             data={filteredData}
             fixedHeader
             pagination
             selectableRows
-          // title="React-Data-Table-Component Tutorial."
+            customStyles={tableCustomStyles}
           />
         </div>
       </div>
@@ -305,7 +302,7 @@ const VendorList = () => {
             </Table>
           </div>
 
-  <hr />
+          <hr />
 
           <div className="row">
             <div className="col-lg-6">
@@ -386,9 +383,6 @@ const VendorList = () => {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Send Email
           </Button>
         </Modal.Footer>
       </Modal>
