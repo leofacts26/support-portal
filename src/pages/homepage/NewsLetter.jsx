@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchNewsletter } from '../../features/homepage/homeSlice';
 import * as XLSX from "xlsx";
 import GlobalSearch from '../../components/common/GlobalSearch';
+import useExportData from '../../hooks/useExportData';
 
 
 const NewsLetter = () => {
   const dispatch = useDispatch()
   const { newsLetters, isLoading } = useSelector((state) => state.homepage)
+  const { exportToExcel } = useExportData()
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -74,15 +76,6 @@ const NewsLetter = () => {
     console.log(event, "event");
   }
 
-  const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, "newsletter.xlsx");
-  };
-
-  // console.log(tableCustomStyles, "tableCustomStyles");
-  
 
   return (
     <>
@@ -92,7 +85,7 @@ const NewsLetter = () => {
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
             Send Offers
           </button>
-          <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={exportToExcel}>
+          <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={()=> exportToExcel(filteredData, 'newsletter')}>
             Export
           </button>
         </div>

@@ -4,6 +4,8 @@ import GlobalSearch from '../../components/common/GlobalSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../features/userSlice';
 import Heading from '../../components/common/Heading';
+import useExportData from '../../hooks/useExportData';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
 
 
 const Users = () => {
@@ -11,6 +13,7 @@ const Users = () => {
   const { userList } = useSelector((state) => state.users)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const { exportToExcel } = useExportData()
 
   useEffect(() => {
     dispatch(fetchUserData());
@@ -84,11 +87,20 @@ const Users = () => {
     }
   ];
 
+
   return (
     <>
       <div className="container-fluid my-5">
-       <Heading length={userList?.length} />
+        <Heading length={userList?.length} />
         <hr />
+
+        <div className="row mb-4 d-flex justify-content-end me-2">
+          <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={()=> exportToExcel(filteredData, 'users')}>
+            Export
+          </button>
+        </div>
+
+
         <div className="card">
           {/* Search */}
           <GlobalSearch handleSearch={handleSearch} />
@@ -98,6 +110,7 @@ const Users = () => {
             fixedHeader
             pagination
             selectableRows
+            customStyles={tableCustomStyles}
           />
         </div>
       </div>
