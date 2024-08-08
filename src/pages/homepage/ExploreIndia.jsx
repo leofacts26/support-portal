@@ -27,8 +27,8 @@ const ExploreIndia = () => {
   const dispatch = useDispatch()
   const { exploreCities, isLoading } = useSelector((state) => state.homepage)
   const [data, setData] = useState([]);
-  const [values, setValues] = useState(initialState)
   const [filteredData, setFilteredData] = useState([]);
+  const [values, setValues] = useState(initialState)
   const [editId, setEditId] = useState(null)
   const { onUploadCityImage } = useUploadCusinePhotoos()
 
@@ -247,10 +247,8 @@ const ExploreIndia = () => {
         </div>
 
         <div className="card">
-
           {/* Search */}
           <GlobalSearch handleSearch={handleSearch} />
-
           <DataTable
             columns={columns}
             data={filteredData}
@@ -258,11 +256,10 @@ const ExploreIndia = () => {
             pagination
             selectableRows
             customStyles={tableCustomStyles}
-          // title="React-Data-Table-Component Tutorial."
           />
         </div>
-      </div>
 
+      </div>
       <br />
 
       <Modal centered show={show} onHide={handleClose}>

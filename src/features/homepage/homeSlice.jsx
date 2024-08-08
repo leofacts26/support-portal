@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 const initialState = {
     isLoading: true,
     exploreCities: [],
+    newsLetters: [],
 }
 
 
@@ -62,6 +63,18 @@ export const updateToggleExplorecity = createAsyncThunk(
     }
 )
 
+// fetchNewsletter 
+export const fetchNewsletter = createAsyncThunk(
+    'user/fetchNewsletter',
+    async (user, thunkAPI) => {
+        try {
+            const response = await api.get(`${BASE_URL}/admin-list-email-subscriptions`);
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
 
 
 
@@ -107,7 +120,18 @@ export const homeSlice = createSlice({
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })
-           
+            // fetchNewsletter 
+            .addCase(fetchNewsletter.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchNewsletter.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.newsLetters = payload;
+            })
+            .addCase(fetchNewsletter.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
     }
 })
 
