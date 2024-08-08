@@ -153,11 +153,11 @@ const Occasions = () => {
               multiple
               type="file"
               style={{ display: 'none' }}
-              // onChange={(e) => onUploadCityImage(e)}
+            // onChange={(e) => onUploadCityImage(e)}
             />
             <label htmlFor="onUploadCityImage">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-                // onClick={() => dispatch(setCuisineId(row?.id))}
+              // onClick={() => dispatch(setCuisineId(row?.id))}
               >
                 <img onError={handleImageError} src={row?.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
               </span>
@@ -171,11 +171,11 @@ const Occasions = () => {
               multiple
               type="file"
               style={{ display: 'none' }}
-              // onChange={(e) => onUploadCityImage(e)}
+            // onChange={(e) => onUploadCityImage(e)}
             />
             <label htmlFor="onUploadCityImage">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-                // onClick={() => dispatch(setCuisineId(row?.id))}
+              // onClick={() => dispatch(setCuisineId(row?.id))}
               >
                 <FaCloudUploadAlt size={30} />
               </span>
@@ -184,6 +184,24 @@ const Occasions = () => {
         )
       ),
       sortable: false,
+    },
+    {
+      name: "Status",
+      cell: row => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`status-${row.occasion_id}`}
+            checked={row.is_active === 1}
+            // onChange={() => handleStatusToggle(row)}
+          />
+          {/* <label className="form-check-label" htmlFor={`status-${row.occasion_id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label> */}
+        </div>
+      ),
+      sortable: true,
     },
     {
       name: "Action",
