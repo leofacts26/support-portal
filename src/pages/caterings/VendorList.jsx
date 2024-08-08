@@ -3,8 +3,11 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCateringVendors } from '../../features/catering/cateringSlice';
+import { fetchCateringVendorDetails, fetchCateringVendors } from '../../features/catering/cateringSlice';
 import * as XLSX from "xlsx";
+import useExportData from '../../hooks/useExportData';
+import toast from 'react-hot-toast';
+import Table from 'react-bootstrap/Table';
 
 
 const rows = [
@@ -23,16 +26,24 @@ const rows = [
 
 const VendorList = () => {
   const dispatch = useDispatch()
-  const { cateringVendors } = useSelector((state) => state.catering)
+  const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const { exportToExcel } = useExportData()
+  // console.log(cateringVendorsDetail.vendorDetails, "cateringVendorsDetail");
+  const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
-  // console.log(cateringVendors, "cateringVendors");
-  
+  console.log(foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails, "foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails");
+
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     dispatch(fetchCateringVendors());
   }, [dispatch]);
+
 
   useEffect(() => {
     if (cateringVendors) {
@@ -44,6 +55,7 @@ const VendorList = () => {
         subscription: "N/A",
         status: catering?.status || 'N/A',
         city: catering?.city || 'N/A',
+        company_id: catering?.company_id,
         startDate: new Date(catering?.created_at).toLocaleDateString(),
         // sNO: index + 1,
         // name: catering?.vendor_service_name,
@@ -73,7 +85,14 @@ const VendorList = () => {
     setFilteredData(newFilteredData);
   };
 
-
+  const onHandleCateringDetails = (companyId) => {
+    if (!companyId) {
+      toast.error('Vendor Not Found')
+      return
+    }
+    handleShow()
+    dispatch(fetchCateringVendorDetails(companyId));
+  }
 
   const columns = [
     {
@@ -120,7 +139,9 @@ const VendorList = () => {
       name: "Details",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer'>View</span>
+          <span className='text-primary cursor-pointer'
+            onClick={() => onHandleCateringDetails(row?.company_id)}
+          >View</span>
         </>
       ),
       ignoreRowClick: true,
@@ -130,15 +151,6 @@ const VendorList = () => {
   ];
 
 
-  const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, "vendorlist.xlsx");
-  };
-  
-
-
   return (
     <>
       <div className="container-fluid my-5">
@@ -146,7 +158,7 @@ const VendorList = () => {
 
         <h2>Total Registered Caterers - {cateringVendors?.length} </h2>
         <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-secondary fit-content' variant="primary" onClick={exportToExcel}>
+          <button className='btn btn-secondary fit-content' variant="primary" onClick={() => exportToExcel(filteredData, 'vendorlist')}>
             Export
           </button>
         </div>
@@ -170,6 +182,219 @@ const VendorList = () => {
       </div>
 
       <br />
+
+
+
+      <Modal centered show={show} onHide={handleClose} size="xl">
+        <Modal.Header closeButton>
+          <Modal.Title>Vendor Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+          <div>
+            <Table responsive="xl">
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>vendor_service_name</th>
+                  <th style={{ fontSize: '10px' }}>vendor_type</th>
+                  <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
+                  <th style={{ fontSize: '10px' }}>working_days_hours</th>
+                  <th style={{ fontSize: '10px' }}>working_since</th>
+                  <th style={{ fontSize: '10px' }}>about_description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{vendorDetails?.vendor_service_name ? vendorDetails?.vendor_service_name : 'N/A'}</td>
+                  <td>{vendorDetails?.vendor_type ? vendorDetails?.vendor_type : 'N/A'}</td>
+                  <td>{vendorDetails?.point_of_contact_name ? vendorDetails?.point_of_contact_name : 'N/A'}</td>
+                  <td>{vendorDetails?.working_days_hours ? vendorDetails?.working_days_hours : 'N/A'}</td>
+                  <td>{vendorDetails?.working_since ? vendorDetails?.working_since : 'N/A'}</td>
+                  <td>{vendorDetails?.about_description ? vendorDetails?.about_description : 'N/A'}</td>
+                </tr>
+              </tbody>
+            </Table>
+
+            <Table responsive="xl">
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>total_staffs_approx</th>
+                  <th style={{ fontSize: '10px' }}>pincode</th>
+                  <th style={{ fontSize: '10px' }}>business_email</th>
+                  <th style={{ fontSize: '10px' }}>business_phone_number</th>
+                  <th style={{ fontSize: '10px' }}>landline_number</th>
+                  <th style={{ fontSize: '10px' }}>whatsapp_business_phone_number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{vendorDetails?.total_staffs_approx ? vendorDetails?.total_staffs_approx : 'N/A'}</td>
+                  <td>{vendorDetails?.pincode ? vendorDetails?.pincode : 'N/A'}</td>
+                  <td>{vendorDetails?.business_email ? vendorDetails?.business_email : 'N/A'}</td>
+                  <td>{vendorDetails?.business_phone_number ? vendorDetails?.business_phone_number : 'N/A'}</td>
+                  <td>{vendorDetails?.landline_number ? vendorDetails?.landline_number : 'N/A'}</td>
+                  <td>{vendorDetails?.whatsapp_business_phone_number ? vendorDetails?.whatsapp_business_phone_number : 'N/A'}</td>
+                </tr>
+              </tbody>
+            </Table>
+
+            <Table responsive="xl">
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>website_link</th>
+                  <th style={{ fontSize: '10px' }}>twitter_id</th>
+                  <th style={{ fontSize: '10px' }}>instagram_link</th>
+                  <th style={{ fontSize: '10px' }}>facebook_link</th>
+                  <th style={{ fontSize: '10px' }}>latitude</th>
+                  <th style={{ fontSize: '10px' }}>longitude</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{vendorDetails?.website_link ? vendorDetails?.website_link : 'N/A'}</td>
+                  <td>{vendorDetails?.twitter_id ? vendorDetails?.twitter_id : 'N/A'}</td>
+                  <td>{vendorDetails?.instagram_link ? vendorDetails?.instagram_link : 'N/A'}</td>
+                  <td>{vendorDetails?.facebook_link ? vendorDetails?.facebook_link : 'N/A'}</td>
+                  <td>{vendorDetails?.latitude ? vendorDetails?.latitude : 'N/A'}</td>
+                  <td>{vendorDetails?.longitude ? vendorDetails?.longitude : 'N/A'}</td>
+                </tr>
+              </tbody>
+            </Table>
+
+
+            <Table responsive="xl">
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>area</th>
+                  <th style={{ fontSize: '10px' }}>street_name</th>
+                  <th style={{ fontSize: '10px' }}>country</th>
+                  <th style={{ fontSize: '10px' }}>state</th>
+                  <th style={{ fontSize: '10px' }}>formatted_address</th>
+                  <th style={{ fontSize: '10px' }}>city</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{vendorDetails?.area ? vendorDetails?.area : 'N/A'}</td>
+                  <td>{vendorDetails?.street_name ? vendorDetails?.street_name : 'N/A'}</td>
+                  <td>{vendorDetails?.country ? vendorDetails?.country : 'N/A'}</td>
+                  <td>{vendorDetails?.state ? vendorDetails?.state : 'N/A'}</td>
+                  <td>{vendorDetails?.formatted_address ? vendorDetails?.formatted_address : 'N/A'}</td>
+                  <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
+                </tr>
+              </tbody>
+            </Table>
+
+            <Table responsive="xl">
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>place_id</th>
+                  <th style={{ fontSize: '10px' }}>minimum_capacity</th>
+                  <th style={{ fontSize: '10px' }}>maximum_capacity</th>
+                  <th style={{ fontSize: '10px' }}>start_price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{vendorDetails?.place_id ? vendorDetails?.place_id : 'N/A'}</td>
+                  <td>{vendorDetails?.minimum_capacity ? vendorDetails?.minimum_capacity : 'N/A'}</td>
+                  <td>{vendorDetails?.maximum_capacity ? vendorDetails?.maximum_capacity : 'N/A'}</td>
+                  <td>{vendorDetails?.start_price ? vendorDetails?.start_price : 'N/A'}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+
+  <hr />
+
+          <div className="row">
+            <div className="col-lg-6">
+              <div>
+                <h2 className='vd-detail-headings'>Food Types</h2>
+                <p>{foodTypes?.map((item) => {
+                  return (
+                    <span>
+                      {item?.food_type_name}, {" "}
+                    </span>
+                  )
+                })}</p>
+              </div>
+            </div>
+            <div className="col-lg-6">
+              <div>
+                <h2 className='vd-detail-headings'>kitchen Types</h2>
+                <p>{kitchenTypes?.map((item) => {
+                  return (
+                    <span>
+                      {item?.kitchen_type_name}, {" "}
+                    </span>
+                  )
+                })}</p>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+
+
+          <div className="row">
+            <div className="col-lg-6">
+              <div>
+                <h2 className='vd-detail-headings'>Meal Types</h2>
+                <p>{mealTimes?.map((item) => {
+                  return (
+                    <span>
+                      {item?.meal_time_name}, {" "}
+                    </span>
+                  )
+                })}</p>
+              </div>
+            </div>
+            <div className="col-lg-6">
+              <div>
+                <h2 className='vd-detail-headings'>Service Types</h2>
+                <p>{serviceTypes?.map((item) => {
+                  return (
+                    <span>
+                      {item?.service_type_name}, {" "}
+                    </span>
+                  )
+                })}</p>
+              </div>
+
+            </div>
+          </div>
+
+          <hr />
+
+
+          <div>
+            <h2 className='vd-detail-headings'>Serving Types</h2>
+            <p>{servingTypes?.map((item) => {
+              return (
+                <span>
+                  {item?.serving_type_name}, {" "}
+                </span>
+              )
+            })}</p>
+          </div>
+
+
+
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Send Email
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
+
     </>
   )
 }
