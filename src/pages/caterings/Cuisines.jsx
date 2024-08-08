@@ -77,6 +77,24 @@ const Cuisines = () => {
   const childList = cuisineList?.filter((item) => item?.parent_id !== null)
   // console.log(parentList, "parentList parentList");
 
+  const handleParentStatusToggle = async (city) => {
+    // const updatedCity = {
+    //   ...city,
+    //   is_active: city.is_active === 1 ? 0 : 1
+    // }
+    // await dispatch(updateToggleExplorecity(updatedCity))
+    // await dispatch(fetchexplorecitiesData());
+  }
+
+  const handleChildStatusToggle = async (city) => {
+    // const updatedCity = {
+    //   ...city,
+    //   is_active: city.is_active === 1 ? 0 : 1
+    // }
+    // await dispatch(updateToggleExplorecity(updatedCity))
+    // await dispatch(fetchexplorecitiesData());
+  }
+
   useEffect(() => {
     dispatch(fetchCateringCuisines())
   }, [])
@@ -89,7 +107,7 @@ const Cuisines = () => {
         personID: parent?.id,
         mainCategory: parent?.name,
         image: parent?.file_name?.medium,
-        status: "N/A",
+        is_active: parent?.id,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -105,7 +123,7 @@ const Cuisines = () => {
         mainCategory: child?.parent_name,
         subCategory: child?.name,
         image: child?.file_name?.medium,
-        status: "N/A",
+        is_active: child?.id,
       }));
       setSubCatData(formattedData);
       setFilteredSubcatData(formattedData);
@@ -220,7 +238,20 @@ const Cuisines = () => {
     },
     {
       name: "Status",
-      selector: row => row.status,
+      cell: row => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`status-${row.id}`}
+            checked={row.is_active === 1}
+            onChange={() => handleParentStatusToggle(row)}
+          />
+          <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label>
+        </div>
+      ),
       sortable: true,
     },
     {
@@ -230,12 +261,9 @@ const Cuisines = () => {
           <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
             <FaEdit />
           </button>
-          <button className="btn btn-danger" onClick={() => handleDelete(row.personID)}>
+          {/* <button className="btn btn-danger" onClick={() => handleDelete(row.personID)}>
             <MdDeleteForever />
-          </button>
-
-          {/* <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span> */}
+          </button> */}
         </>
       ),
       ignoreRowClick: true,
@@ -306,7 +334,20 @@ const Cuisines = () => {
     },
     {
       name: "Status",
-      selector: row => row.status,
+      cell: row => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`status-${row.id}`}
+            checked={row.is_active === 1}
+            onChange={() => handleChildStatusToggle(row)}
+          />
+          <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label>
+        </div>
+      ),
       sortable: true,
     },
     {
@@ -317,12 +358,11 @@ const Cuisines = () => {
           <button className="btn btn-success me-1" onClick={() => handleEditChild(row)}>
             <FaEdit />
           </button>
-          <button className="btn btn-danger" onClick={() => handleDeleteChild(row.personID)}>
+          {/* <button className="btn btn-danger" onClick={() => handleDeleteChild(row.personID)}>
             <MdDeleteForever />
-          </button>
+          </button> */}
 
-          {/* <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span> */}
+        
         </>
       ),
       ignoreRowClick: true,

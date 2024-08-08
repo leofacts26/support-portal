@@ -9,18 +9,6 @@ import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 
 
-// const rows = [
-//   {
-//     foodTypes: "Veg",
-//     status: 'active',
-//     order: 1
-//   },
-//   {
-//     foodTypes: "Non Veg",
-//     status: 'active',
-//     order: 2
-//   },
-// ];
 
 const FoodTypes = () => {
   const dispatch = useDispatch()
