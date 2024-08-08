@@ -24,9 +24,11 @@ const rows = [
 const VendorList = () => {
   const dispatch = useDispatch()
   const { cateringVendors } = useSelector((state) => state.catering)
-  const [data, setData] = useState(rows);
+  const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
+  // console.log(cateringVendors, "cateringVendors");
+  
 
   useEffect(() => {
     dispatch(fetchCateringVendors());
@@ -58,14 +60,20 @@ const VendorList = () => {
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data?.filter((row) => {
       return (
         row.businessID.toString().toLowerCase().includes(searchValue) ||
         row.fullName.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
+
+
 
   const columns = [
     {
@@ -123,10 +131,10 @@ const VendorList = () => {
 
 
   const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, "data.xlsx");
+    XLSX.writeFile(workbook, "vendorlist.xlsx");
   };
   
 
@@ -136,7 +144,7 @@ const VendorList = () => {
       <div className="container-fluid my-5">
 
 
-        <h2>Total Registered Caterers - 18776</h2>
+        <h2>Total Registered Caterers - {cateringVendors?.length} </h2>
         <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-secondary fit-content' variant="primary" onClick={exportToExcel}>
             Export
@@ -152,7 +160,7 @@ const VendorList = () => {
           />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows

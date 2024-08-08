@@ -81,7 +81,7 @@ const NewsLetter = () => {
     XLSX.writeFile(workbook, "newsletter.xlsx");
   };
 
-  console.log(tableCustomStyles, "tableCustomStyles");
+  // console.log(tableCustomStyles, "tableCustomStyles");
   
 
   return (
