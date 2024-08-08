@@ -1,7 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchOccasionList } from '../../features/catering/occasionSlice';
+import GlobalSearch from '../../components/common/GlobalSearch';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
+import { FaEdit } from "react-icons/fa";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 
 const rows = [
@@ -63,40 +69,119 @@ const rows = [
 ];
 
 const Occasions = () => {
+  const dispatch = useDispatch()
+  const { occasionsList, isLoading } = useSelector((state) => state.occasion)
+  // console.log(occasionsList, "occasionsList");
+
+
+  useEffect(() => {
+    dispatch(fetchOccasionList());
+  }, [dispatch]);
+
+
   const [data, setData] = useState(rows);
+  const [filteredData, setFilteredData] = useState([]);
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const handleImageError = (e) => {
+    e.target.src = 'https://www.cateringsandtiffins.com/img/no-image.jpg'; // Provide the path to your error image here
+  };
+
+  useEffect(() => {
+    if (occasionsList) {
+      const formattedData = occasionsList?.map((occasion, index) => ({
+        id: occasion?.occasion_id,
+        name: occasion?.occasion_name,
+        image: occasion?.file_name?.medium
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [occasionsList]);
+
+
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data.filter((row) => {
       return (
-        row.personID.toString().toLowerCase().includes(searchValue) ||
-        row.fullName.toLowerCase().includes(searchValue)
+        row?.id?.toString().toLowerCase().includes(searchValue) ||
+        row?.name?.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
+
+
+  // const handleSearch = (e) => {
+  //   const searchValue = e.target.value.toLowerCase();
+  //   const newRows = rows.filter((row) => {
+  //     return (
+  //       row.id.toString().toLowerCase().includes(searchValue) ||
+  //       row.name.toLowerCase().includes(searchValue)
+  //     );
+  //   });
+  //   setData(newRows);
+  // };
 
   const columns = [
     {
       name: "ID",
-      selector: row => row.personID,
+      selector: row => row.id,
       sortable: true,
     },
     {
       name: "City Name",
-      selector: row => row.fullName,
+      selector: row => row.name,
       sortable: true,
     },
     {
       name: "Image Preview",
       cell: row => (
-        <a href={row.image} target="_blank" rel="noopener noreferrer">
-          Image
-        </a>
+        row.image ? (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadCityImage"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              // onChange={(e) => onUploadCityImage(e)}
+            />
+            <label htmlFor="onUploadCityImage">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                // onClick={() => dispatch(setCuisineId(row?.id))}
+              >
+                <img onError={handleImageError} src={row?.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
+              </span>
+            </label>
+          </>
+        ) : (
+          <>
+            <input
+              accept="image/*"
+              id="onUploadCityImage"
+              multiple
+              type="file"
+              style={{ display: 'none' }}
+              // onChange={(e) => onUploadCityImage(e)}
+            />
+            <label htmlFor="onUploadCityImage">
+              <span variant="contained" component="span" style={{ cursor: 'pointer' }}
+                // onClick={() => dispatch(setCuisineId(row?.id))}
+              >
+                <FaCloudUploadAlt size={30} />
+              </span>
+            </label>
+          </>
+        )
       ),
       sortable: false,
     },
@@ -104,8 +189,12 @@ const Occasions = () => {
       name: "Action",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
+          <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
+            <FaEdit />
+          </button>
+          {/* <button className="btn btn-danger" onClick={() => handleDelete(row.id)}>
+            <MdDeleteForever />
+          </button> */}
         </>
       ),
       ignoreRowClick: true,
@@ -135,18 +224,14 @@ const Occasions = () => {
         <h4>Total Occasions - 12</h4>
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows
+            customStyles={tableCustomStyles}
           // title="React-Data-Table-Component Tutorial."
           />
         </div>
