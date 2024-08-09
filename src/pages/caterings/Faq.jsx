@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCatteringFaqs } from '../../features/catering/cateringFaq';
+import { FaEdit } from "react-icons/fa";
 
 
 const rows = [
@@ -13,7 +16,10 @@ const rows = [
 ];
 
 const Faq = () => {
+  const { faqList } = useSelector((state) => state.faq)
+  const dispatch = useDispatch()
   const [data, setData] = useState(rows);
+  const [filteredData, setFilteredData] = useState([]);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -25,16 +31,38 @@ const Faq = () => {
   const handleShowUserShow = () => setShowUser(true);
 
 
+  useEffect(() => {
+    dispatch(fetchCatteringFaqs())
+  }, [])
+
+
+  useEffect(() => {
+    if (faqList) {
+      const formattedData = faqList?.map((item, index) => ({
+        question_id: item?.question_id,
+        answer_id: item?.answer_id,
+        question_text: item?.question_text,
+        answer_text: item?.answer_text
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [faqList]);
+
+
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data?.filter((row) => {
       return (
-        row.personID.toString().toLowerCase().includes(searchValue) ||
-        row.question.toLowerCase().includes(searchValue) ||
-        row.answer.toLowerCase().includes(searchValue)
+        row?.question_text?.toString().toLowerCase().includes(searchValue) ||
+        row?.answer_text?.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
 
 
@@ -53,25 +81,46 @@ const Faq = () => {
   const columns = [
     {
       name: "S.No",
-      selector: row => row.personID,
+      selector: row => row.question_id,
       sortable: true,
+      width: '10%',
     },
     {
       name: "Question",
-      selector: row => row.question,
+      selector: row => row.question_text,
       sortable: true,
+      width: '20%',
     },
     {
       name: "Answer",
-      selector: row => row.answer,
+      selector: row => row.answer_text,
+      sortable: true,
+      width: '30%',
+    },
+    {
+      name: "Status",
+      width: '10%',
+      cell: row => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`status-${row.id}`}
+            checked={row.is_active === 1}
+          // onChange={() => handleStatusToggle(row)}
+          />
+        </div>
+      ),
       sortable: true,
     },
     {
       name: "Action",
+      width: '5%',
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer' onClick={() => handleEdit(row.personID)}>Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => handleDelete(row.personID)}> {" "} Delete </span>
+          <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
+            <FaEdit />
+          </button>
         </>
       ),
       ignoreRowClick: true,
@@ -87,12 +136,15 @@ const Faq = () => {
     console.log(event, "event");
   }
 
+  console.log(faqList, "faqList faqList");
+
+
   return (
     <>
-      <div className="container my-5">
+      <div className="container-fluid my-5">
 
         <div className="row mb-4 d-flex justify-content-between me-2">
-          <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
+          <button className='btn btn-primary fit-content ms-3' variant="primary" onClick={handleShow}>
             Create Vendor FAQ's
           </button>
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShowUserShow}>
@@ -112,7 +164,7 @@ const Faq = () => {
           />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows
@@ -121,7 +173,7 @@ const Faq = () => {
         </div>
 
 
-        <h4>Vendor User FAQ's</h4>
+        {/* <h4>Vendor User FAQ's</h4>
         <div className="card">
           <input
             type="search"
@@ -137,7 +189,7 @@ const Faq = () => {
             selectableRows
           // title="React-Data-Table-Component Tutorial."
           />
-        </div>
+        </div> */}
 
 
       </div>
