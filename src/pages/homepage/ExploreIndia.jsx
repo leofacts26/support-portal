@@ -32,7 +32,7 @@ const ExploreIndia = () => {
   const [editId, setEditId] = useState(null)
   const { onUploadCityImage } = useUploadCusinePhotoos()
 
-  console.log(filteredData, "filteredData filteredData");
+  // console.log(filteredData, "filteredData filteredData");
 
   const [show, setShow] = useState(false);
   const handleClose = () => {

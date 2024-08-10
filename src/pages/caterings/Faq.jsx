@@ -3,32 +3,50 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCatteringFaqs } from '../../features/catering/cateringFaq';
+import { createCateringFaq, fetchCatteringFaqs, updateCateringFaq } from '../../features/catering/cateringFaq';
 import { FaEdit } from "react-icons/fa";
 
 
-const rows = [
-  {
-    personID: 1,
-    question: "How can i register as a Caterer",
-    answer: "Simple, Just Open the Given URl and Register yourself",
-  }
-];
+// const rows = [
+//   {
+//     personID: 1,
+//     question: "How can i register as a Caterer",
+//     answer: "Simple, Just Open the Given URl and Register yourself",
+//   }
+// ];
+
+
+const vendorFaqState = {
+  question_text: '',
+  answer_text: '',
+}
+
 
 const Faq = () => {
-  const { faqList } = useSelector((state) => state.faq)
+  const { faqList, isLoading } = useSelector((state) => state.faq)
   const dispatch = useDispatch()
-  const [data, setData] = useState(rows);
+  const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [editId, setEditId] = useState(null)
+  const [values, setValues] = useState(vendorFaqState)
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+    setEditId(null)
+    setValues(vendorFaqState)
+  };
   const handleShow = () => setShow(true);
 
 
   const [showUser, setShowUser] = useState(false);
   const handleShowUserClose = () => setShowUser(false);
   const handleShowUserShow = () => setShowUser(true);
+
+  const onHandleChange = (event) => {
+    const { name, value } = event.target;
+    setValues({ ...values, [name]: value })
+  }
 
 
   useEffect(() => {
@@ -66,40 +84,49 @@ const Faq = () => {
   };
 
 
-  const handleUserSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
-      return (
-        row.personID.toString().toLowerCase().includes(searchValue) ||
-        row.question.toLowerCase().includes(searchValue) ||
-        row.answer.toLowerCase().includes(searchValue)
-      );
-    });
-    setData(newRows);
-  };
+  // const handleUserSearch = (e) => {
+  //   const searchValue = e.target.value.toLowerCase();
+  //   const newRows = rows.filter((row) => {
+  //     return (
+  //       row.personID.toString().toLowerCase().includes(searchValue) ||
+  //       row.question.toLowerCase().includes(searchValue) ||
+  //       row.answer.toLowerCase().includes(searchValue)
+  //     );
+  //   });
+  //   setData(newRows);
+  // };
+
+  const handleStatusToggle = async (city) => {
+    // const updatedCity = {
+    //   ...city,
+    //   is_active: city.is_active === 1 ? 0 : 1
+    // }
+    // await dispatch(updateToggleExplorecity(updatedCity))
+    // await dispatch(fetchexplorecitiesData());
+  }
+
 
   const columns = [
     {
-      name: "S.No",
-      selector: row => row.question_id,
+      name: "S.NO",
+      selector: (row) => row.question_id,
       sortable: true,
-      width: '10%',
+      width: '100px'
     },
     {
       name: "Question",
       selector: row => row.question_text,
       sortable: true,
-      width: '20%',
+      width: '250px'
     },
     {
       name: "Answer",
       selector: row => row.answer_text,
       sortable: true,
-      width: '30%',
     },
     {
       name: "Status",
-      width: '10%',
+      width: '120px',
       cell: row => (
         <div className="form-check form-switch">
           <input
@@ -107,15 +134,17 @@ const Faq = () => {
             type="checkbox"
             id={`status-${row.id}`}
             checked={row.is_active === 1}
-          // onChange={() => handleStatusToggle(row)}
+            onChange={() => handleStatusToggle(row)}
           />
+          {/* <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label> */}
         </div>
       ),
       sortable: true,
     },
     {
       name: "Action",
-      width: '5%',
       cell: (row) => (
         <>
           <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
@@ -129,14 +158,46 @@ const Faq = () => {
     },
   ];
 
-  const handleEdit = (event) => {
-    console.log(event, "event");
-  }
+  const handleEdit = (data) => {
+    setEditId(data?.question_id)
+    handleShow()
+    if (data) {
+      setValues(prevValues => ({
+        ...prevValues,
+        question_text: data.question_text || prevValues.question_text,
+        answer_text: data.answer_text || prevValues.answer_text,
+      }));
+    }
+  };
+
+
+
   const handleDelete = (event) => {
     console.log(event, "event");
   }
 
-  console.log(faqList, "faqList faqList");
+  // console.log(faqList, "faqList faqList");
+
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+    const data = {
+      ...values,
+      type: 'vendor'
+    }
+    const updateData = {
+      ...values,
+      question_id: editId,
+      type: 'vendor'
+    }
+
+    if (editId === null) {
+      await dispatch(createCateringFaq(data))
+    } else {
+      await dispatch(updateCateringFaq(updateData))
+    }
+    await dispatch(fetchCatteringFaqs())
+    handleClose()
+  }
 
 
   return (
@@ -197,32 +258,37 @@ const Faq = () => {
       <br />
 
       <Modal centered show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create Vendor FAQ's</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <label for="name" className="form-label">Add Question</label>
-            <input type="text" className="form-control" placeholder="City Name" />
-          </div>
-          <div className='mt-4'>
-            <label for="name" className="form-label">Write Answer</label>
-            <textarea class="form-control" data-autosize rows="1" placeholder="Try typing something..."></textarea>
-          </div>
-
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Add FAQ
-          </Button>
-        </Modal.Footer>
+        <form onSubmit={onHandleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> {editId ? "Edit" : 'Create'}  Vendor FAQ's</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>
+              <label for="name" className="form-label"> {editId ? "Edit" : "Add"}  Question</label>
+              <input type="text" className="form-control" placeholder="City Name" required
+                name='question_text' value={values.question_text} onChange={onHandleChange}
+              />
+            </div>
+            <div className='mt-4'>
+              <label for="name" className="form-label">Write Answer</label>
+              <textarea class="form-control" data-autosize rows="3" placeholder="Try typing something..." required
+                name='answer_text' value={values.answer_text} onChange={onHandleChange}
+              ></textarea>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
 
 
-
+      {/* 
       <Modal centered show={showUser} onHide={handleShowUserClose}>
         <Modal.Header closeButton>
           <Modal.Title>Create User FAQ's</Modal.Title>
@@ -241,11 +307,11 @@ const Faq = () => {
           <Button variant="secondary" onClick={handleShowUserClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleShowUserClose}>
+          <Button variant="primary" type='submit'>
             Add FAQ
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </>
   )
 }

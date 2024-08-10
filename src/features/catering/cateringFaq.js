@@ -20,6 +20,30 @@ export const fetchCatteringFaqs = createAsyncThunk(
   }
 )
 
+export const createCateringFaq = createAsyncThunk(
+  'user/createCateringFaq',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-faq-create`, data);
+      toast.success(successToast(response))
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const updateCateringFaq = createAsyncThunk(
+  'user/updateCateringFaq',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-faq-update`, data);
+      toast.success(successToast(response))
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 
 export const faqSlice = createSlice({
   name: 'faq',
@@ -38,6 +62,28 @@ export const faqSlice = createSlice({
         state.faqList = payload;
       })
       .addCase(fetchCatteringFaqs.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // createCateringFaq 
+      .addCase(createCateringFaq.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createCateringFaq.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(createCateringFaq.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // updateCateringFaq 
+      .addCase(updateCateringFaq.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateCateringFaq.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(updateCateringFaq.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

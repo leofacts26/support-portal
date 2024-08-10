@@ -20,6 +20,19 @@ export const fetchOccasionList = createAsyncThunk(
   }
 )
 
+export const updateToggleOccasion = createAsyncThunk(
+  'user/updateToggleOccasion',
+  async (occasionData, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-toggle-occasion`, occasionData);
+      toast.success(successToast(response))
+      // return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 
 export const occasionSlice = createSlice({
   name: 'occasion',

@@ -3,70 +3,15 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchOccasionList } from '../../features/catering/occasionSlice';
+import { fetchOccasionList, updateToggleOccasion } from '../../features/catering/occasionSlice';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { FaCloudUploadAlt } from "react-icons/fa";
+// import { updateToggleOccasion } from '../../features/catering/cateringFaq';
 
 
-const rows = [
-  {
-    personID: 1,
-    fullName: "Mumbai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 2,
-    fullName: "Bangalore",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 3,
-    fullName: "Chennai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 4,
-    fullName: "Hyderabad",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 5,
-    fullName: "Pune",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 6,
-    fullName: "Gurgaon",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 7,
-    fullName: "Ranchi",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 8,
-    fullName: "Kolkata",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 9,
-    fullName: "Goa",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 10,
-    fullName: "Madurai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-  {
-    personID: 11,
-    fullName: "Coiambator",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-  },
-];
+
 
 const Occasions = () => {
   const dispatch = useDispatch()
@@ -79,13 +24,13 @@ const Occasions = () => {
   }, [dispatch]);
 
 
-  const [data, setData] = useState(rows);
+  const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
 
   const handleImageError = (e) => {
     e.target.src = 'https://www.cateringsandtiffins.com/img/no-image.jpg'; // Provide the path to your error image here
@@ -96,7 +41,8 @@ const Occasions = () => {
       const formattedData = occasionsList?.map((occasion, index) => ({
         id: occasion?.occasion_id,
         name: occasion?.occasion_name,
-        image: occasion?.file_name?.medium
+        image: occasion?.file_name?.medium,
+        is_active: occasion?.is_active
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -120,16 +66,15 @@ const Occasions = () => {
   };
 
 
-  // const handleSearch = (e) => {
-  //   const searchValue = e.target.value.toLowerCase();
-  //   const newRows = rows.filter((row) => {
-  //     return (
-  //       row.id.toString().toLowerCase().includes(searchValue) ||
-  //       row.name.toLowerCase().includes(searchValue)
-  //     );
-  //   });
-  //   setData(newRows);
-  // };
+  const handleStatusToggle = async (occasion) => {
+    const updatedOccastion = {
+      ...occasion,
+      is_active: occasion.is_active === 1 ? 0 : 1
+    }
+    await dispatch(updateToggleOccasion(updatedOccastion))
+    await dispatch(fetchOccasionList());
+  }
+
 
   const columns = [
     {
@@ -194,11 +139,8 @@ const Occasions = () => {
             type="checkbox"
             id={`status-${row.occasion_id}`}
             checked={row.is_active === 1}
-            // onChange={() => handleStatusToggle(row)}
+            onChange={() => handleStatusToggle(row)}
           />
-          {/* <label className="form-check-label" htmlFor={`status-${row.occasion_id}`}>
-            {row.is_active === 1 ? 'Active' : 'Inactive'}
-          </label> */}
         </div>
       ),
       sortable: true,
@@ -220,6 +162,8 @@ const Occasions = () => {
       button: true,
     },
   ];
+
+
 
   const handleEdit = (event) => {
     console.log(event, "event");
