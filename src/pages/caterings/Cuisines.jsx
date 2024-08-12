@@ -135,7 +135,7 @@ const Cuisines = () => {
   const [mainCategorySubChild, setMainCategorySubChild] = useState("")
   const [mainCategoryChildId, setMainCategoryChildId] = useState(null)
 
-  // console.log(mainCategoryChild, "mainCategoryChild mainCategoryChild");
+  console.log(mainCategoryChild, "mainCategoryChild mainCategoryChild");
 
   const handleImageError = (e) => {
     e.target.src = 'https://www.cateringsandtiffins.com/img/no-image.jpg'; // Provide the path to your error image here
@@ -362,7 +362,7 @@ const Cuisines = () => {
             <MdDeleteForever />
           </button> */}
 
-        
+
         </>
       ),
       ignoreRowClick: true,
@@ -426,14 +426,19 @@ const Cuisines = () => {
 
   const onSubmitMainCategoryChild = async (e) => {
     e.preventDefault();
+    const addData = {
+      name: mainCategorySubChild,
+      id: mainCategoryChild
+    }
+
     const data = {
       name: mainCategorySubChild,
-      id: mainCategoryChildId.personID,
+      id: mainCategoryChildId?.personID,
       parent_id: mainCategoryChildId?.parentID
     }
 
     if (mainCategoryChildId === null) {
-      alert("test")
+      await dispatch(addCateringParentCuisine(addData))
     } else {
       await dispatch(editCateringParentCuisine(data))
     }
@@ -536,7 +541,7 @@ const Cuisines = () => {
               {parentList?.map((item) => {
                 return (
                   <>
-                    <option key={item.id} value={item.name}
+                    <option key={item.id} value={item.id}
                       disabled={mainCategoryChildId !== null}
                     >{item?.name}</option>
                   </>
