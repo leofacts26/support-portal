@@ -4,6 +4,7 @@ import cateringReducer from '../features/catering/cateringSlice'
 import homeReducer from '../features/homepage/homeSlice'
 import occasionReducer from '../features/catering/occasionSlice'
 import faqSliceReducer from '../features/catering/cateringFaq'
+import priceReducer from '../features/catering/priceSlice'
 
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
     users: userReducer,
     homepage: homeReducer,
     occasion: occasionReducer,
-    faq: faqSliceReducer
+    faq: faqSliceReducer,
+    priceranges: priceReducer
   },
 })
