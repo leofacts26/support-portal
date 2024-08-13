@@ -3,14 +3,18 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchOccasionList, updateToggleOccasion } from '../../features/catering/occasionSlice';
+import { createOccasionData, fetchOccasionList, updateOccasionData, updateToggleOccasion } from '../../features/catering/occasionSlice';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { updatePriceRanges } from '../../features/catering/priceSlice';
 // import { updateToggleOccasion } from '../../features/catering/cateringFaq';
 
 
+const initialState = {
+  name: '',
+}
 
 
 const Occasions = () => {
@@ -23,13 +27,23 @@ const Occasions = () => {
     dispatch(fetchOccasionList());
   }, [dispatch]);
 
-
+  const [values, setValues] = useState(initialState)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [editId, setEditId] = useState(null)
+
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+    setEditId(null)
+  };
   const handleShow = () => setShow(true);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value })
+  }
 
 
   const handleImageError = (e) => {
@@ -68,8 +82,8 @@ const Occasions = () => {
 
   const handleStatusToggle = async (occasion) => {
     const updatedOccastion = {
-      ...occasion,
-      is_active: occasion.is_active === 1 ? 0 : 1
+      id: occasion?.id,
+      is_active: occasion?.is_active === 1 ? 0 : 1
     }
     await dispatch(updateToggleOccasion(updatedOccastion))
     await dispatch(fetchOccasionList());
@@ -137,10 +151,13 @@ const Occasions = () => {
           <input
             className="form-check-input"
             type="checkbox"
-            id={`status-${row.occasion_id}`}
+            id={`status-${row.id}`}
             checked={row.is_active === 1}
             onChange={() => handleStatusToggle(row)}
           />
+          {/* <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label> */}
         </div>
       ),
       sortable: true,
@@ -165,25 +182,56 @@ const Occasions = () => {
 
 
 
-  const handleEdit = (event) => {
-    console.log(event, "event");
+  const handleEdit = (data) => {
+    console.log(data, "data");
+    setEditId(data?.id)
+    handleShow();
+    setValues((prevValues) => ({
+      ...prevValues,
+      id: data?.id,
+      name: data?.name,
+    }))
   }
   const handleDelete = (event) => {
     console.log(event, "event");
+  }
+
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { name } = values;
+    const data = {
+      // vendor_type: cater_vendor_type,
+      name,
+      id: editId
+    }
+
+    if (editId === null) {
+      await dispatch(createOccasionData(data))
+    } else {
+      await dispatch(updateOccasionData(data))
+    }
+    await dispatch(fetchOccasionList());
+    setValues(initialState)
+    handleClose()
+
   }
 
   return (
     <>
       <div className="container-fluid my-5">
 
-        <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-            Create Occasion
-          </button>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h2>Total Occasions - 12</h2>
+            <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
+              Create Occasion
+            </button>
+          </div>
         </div>
         <hr />
 
-        <h4>Total Occasions - 12</h4>
+
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
@@ -202,27 +250,27 @@ const Occasions = () => {
       <br />
 
       <Modal centered show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create City</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <label for="name" className="form-label">Add Occasion</label>
-            <input type="text" className="form-control" placeholder="City Name" />
-          </div>
-          <div className='mt-3'>
-            <label for="image" className="form-label">Add Image</label>
-            <input className="form-control" type="file" id="formFile" accept="image/*" />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+        <form onSubmit={onHandleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> {editId ? 'Update' : 'Create'} Occasion</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>
+              <label for="name" name="name" value={values.name} onChange={handleChange} className="form-label"> {editId ? 'Update' : 'Create'} Occasion</label>
+              <input type="text" className="form-control" placeholder="Add Occasion"
+                name="name" required onChange={handleChange} value={values.name}
+              />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   )
