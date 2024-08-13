@@ -73,33 +73,22 @@ const FoodTypes = () => {
     },
     // {
     //   name: "Status",
-    //   cell: (row) => (
-    //     <>
-    //       <div class="form-check form-switch">
-    //         <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked={row?.status} />
-    //       </div>
-    //     </>
+    //   cell: row => (
+    //     <div className="form-check form-switch">
+    //       <input
+    //         className="form-check-input"
+    //         type="checkbox"
+    //         id={`status-${row.id}`}
+    //         checked={row.is_active === 1}
+    //         onChange={() => handleStatusToggle(row)}
+    //       />
+    //       <label className="form-check-label" htmlFor={`status-${row.id}`}>
+    //         {row.is_active === 1 ? 'Active' : 'Inactive'}
+    //       </label>
+    //     </div>
     //   ),
-    //   sortable: true,
+    //   sortable: false,
     // },
-    {
-      name: "Status",
-      cell: row => (
-        <div className="form-check form-switch">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            id={`status-${row.id}`}
-            checked={row.is_active === 1}
-            onChange={() => handleStatusToggle(row)}
-          />
-          <label className="form-check-label" htmlFor={`status-${row.id}`}>
-            {row.is_active === 1 ? 'Active' : 'Inactive'}
-          </label>
-        </div>
-      ),
-      sortable: false,
-    },
     {
       name: "Order",
       selector: row => row.order,
