@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createPriceRanges, fetchpriceRangesList } from '../../features/catering/priceSlice';
+import { createPriceRanges, fetchpriceRangesList, updatePriceRanges, updateTogglePriceRanges } from '../../features/catering/priceSlice';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
@@ -32,9 +32,13 @@ const BudjetFilter = () => {
   const [values, setValues] = useState(initialState)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [editId, setEditId] = useState(null)
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+    setEditId(null)
+  };
   const handleShow = () => setShow(true);
 
   const handleChange = (e) => {
@@ -53,6 +57,7 @@ const BudjetFilter = () => {
         id: price?.id,
         startprice: price?.start_price,
         endprice: price?.end_price,
+        is_active: price?.is_active
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -78,6 +83,16 @@ const BudjetFilter = () => {
   };
 
 
+  const handleStatusToggle = async (item) => {
+    const data = {
+      ...item,
+      is_active: item.is_active === 1 ? 0 : 1
+    }
+    await dispatch(updateTogglePriceRanges(data))
+    await dispatch(fetchpriceRangesList());
+  }
+
+
   const columns = [
     {
       name: "ID",
@@ -95,6 +110,24 @@ const BudjetFilter = () => {
       sortable: true,
     },
     {
+      name: "Status",
+      cell: row => (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`status-${row.id}`}
+            checked={row.is_active === 1}
+            onChange={() => handleStatusToggle(row)}
+          />
+          <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'Inactive'}
+          </label>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
       name: "Action",
       cell: (row) => (
         <>
@@ -109,9 +142,19 @@ const BudjetFilter = () => {
     },
   ];
 
-  const handleEdit = (event) => {
-    console.log(event, "event");
+  const handleEdit = (data) => {
+    console.log(data, "data");
+    setEditId(data?.id)
+    handleShow();
+    setValues((prevValues) => ({
+      ...prevValues,
+      id: data?.id,
+      start_price: data?.startprice,
+      end_price: data?.endprice,
+    }))
   }
+
+
   const handleDelete = (event) => {
     console.log(event, "event");
   }
@@ -121,10 +164,18 @@ const BudjetFilter = () => {
     e.preventDefault();
     const { start_price, end_price } = values;
     const data = {
+      vendor_type: 'Caterer',
       start_price,
-      end_price
+      end_price,
+      id: editId
     }
-    await dispatch(createPriceRanges(data))
+
+    if (editId === null) {
+      await dispatch(createPriceRanges(data))
+    } else {
+      await dispatch(updatePriceRanges(data))
+    }
+    await dispatch(fetchpriceRangesList());
     setValues(initialState)
     handleClose()
   }
@@ -159,7 +210,7 @@ const BudjetFilter = () => {
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onHandleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>Create Budget</Modal.Title>
+            <Modal.Title> {editId ? 'Edit Budget' : 'Create Budget'} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="row">
@@ -178,7 +229,7 @@ const BudjetFilter = () => {
               Close
             </Button>
             <Button variant="primary" type='submit'>
-              {isLoading ? 'Loading...' : 'Add Budjet'}
+              {isLoading ? 'Loading...' : 'Save Changes'}
             </Button>
           </Modal.Footer>
         </form>

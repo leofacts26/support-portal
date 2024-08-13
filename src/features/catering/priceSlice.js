@@ -32,18 +32,30 @@ export const createPriceRanges = createAsyncThunk(
   }
 )
 
-// export const updateToggleOccasion = createAsyncThunk(
-//   'user/updateToggleOccasion',
-//   async (occasionData, thunkAPI) => {
-//     try {
-//       const response = await api.post(`${BASE_URL}/admin-toggle-occasion`, occasionData);
-//       toast.success(successToast(response))
-//       // return response?.data?.data;
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error.response.data.msg);
-//     }
-//   }
-// )
+export const updateTogglePriceRanges = createAsyncThunk(
+  'user/updateTogglePriceRanges',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-toggle-price-range`, data);
+      toast.success(successToast(response))
+      // return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const updatePriceRanges = createAsyncThunk(
+  'user/updatePriceRanges',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-update-price-range`, data);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
 
 
 export const priceSlice = createSlice({
