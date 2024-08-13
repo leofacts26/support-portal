@@ -7,6 +7,7 @@ import { createPriceRanges, fetchpriceRangesList, updatePriceRanges, updateToggl
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
+import { cater_vendor_type } from '../../constants';
 
 
 // const rows = [
@@ -143,7 +144,7 @@ const BudjetFilter = () => {
   ];
 
   const handleEdit = (data) => {
-    console.log(data, "data");
+    // console.log(data, "data");
     setEditId(data?.id)
     handleShow();
     setValues((prevValues) => ({
@@ -164,7 +165,7 @@ const BudjetFilter = () => {
     e.preventDefault();
     const { start_price, end_price } = values;
     const data = {
-      vendor_type: 'Caterer',
+      vendor_type: cater_vendor_type,
       start_price,
       end_price,
       id: editId
