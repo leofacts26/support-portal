@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createCateringFaq, fetchCatteringFaqs, updateCateringFaq } from '../../features/catering/cateringFaq';
+import { createCateringFaq, fetchCatteringFaqs, updateCateringFaq, updateToggleFaq } from '../../features/catering/cateringFaq';
 import { FaEdit } from "react-icons/fa";
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
@@ -62,7 +62,8 @@ const Faq = () => {
         question_id: item?.question_id,
         answer_id: item?.answer_id,
         question_text: item?.question_text,
-        answer_text: item?.answer_text
+        answer_text: item?.answer_text,
+        is_active: item?.is_active
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -98,13 +99,13 @@ const Faq = () => {
   //   setData(newRows);
   // };
 
-  const handleStatusToggle = async (city) => {
-    // const updatedCity = {
-    //   ...city,
-    //   is_active: city.is_active === 1 ? 0 : 1
-    // }
-    // await dispatch(updateToggleExplorecity(updatedCity))
-    // await dispatch(fetchexplorecitiesData());
+  const handleStatusToggle = async (item) => {
+    const data = {
+      ...item,
+      is_active: item.is_active === 1 ? 0 : 1
+    }
+    await dispatch(updateToggleFaq(data))
+    await dispatch(fetchCatteringFaqs());
   }
 
 

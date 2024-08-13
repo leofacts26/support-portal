@@ -51,6 +51,20 @@ export const updateCateringFaq = createAsyncThunk(
 )
 
 
+export const updateToggleFaq = createAsyncThunk(
+  'user/updateToggleFaq',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-toggle-faq`, data);
+      toast.success(successToast(response))
+      // return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
 export const faqSlice = createSlice({
   name: 'faq',
   initialState,
