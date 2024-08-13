@@ -5,6 +5,8 @@ import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCateringFaq, fetchCatteringFaqs, updateCateringFaq } from '../../features/catering/cateringFaq';
 import { FaEdit } from "react-icons/fa";
+import GlobalSearch from '../../components/common/GlobalSearch';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
 
 
 // const rows = [
@@ -217,18 +219,14 @@ const Faq = () => {
 
         <h4>Vendor Catering FAQ's</h4>
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
             data={filteredData}
             fixedHeader
             pagination
             selectableRows
+            customStyles={tableCustomStyles}
           // title="React-Data-Table-Component Tutorial."
           />
         </div>
