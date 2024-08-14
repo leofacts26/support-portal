@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 const initialState = {
   isLoading: true,
   occasionsList: [],
+  occasionId: null,
 }
 
 export const fetchOccasionList = createAsyncThunk(
@@ -65,7 +66,9 @@ export const occasionSlice = createSlice({
   name: 'occasion',
   initialState,
   reducers: {
-
+    setOccasionId: (state, action) => {
+      state.occasionId = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -108,6 +111,6 @@ export const occasionSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { } = occasionSlice.actions
+export const { setOccasionId } = occasionSlice.actions
 
 export default occasionSlice.reducer

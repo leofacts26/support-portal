@@ -3,12 +3,13 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createOccasionData, fetchOccasionList, updateOccasionData, updateToggleOccasion } from '../../features/catering/occasionSlice';
+import { createOccasionData, fetchOccasionList, setOccasionId, updateOccasionData, updateToggleOccasion } from '../../features/catering/occasionSlice';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { updatePriceRanges } from '../../features/catering/priceSlice';
+// import { updatePriceRanges } from '../../features/catering/priceSlice';
+import useUploadOccasionPhotoos from '../../hooks/useUploadOccasionPhotos';
 // import { updateToggleOccasion } from '../../features/catering/cateringFaq';
 
 
@@ -21,6 +22,7 @@ const Occasions = () => {
   const dispatch = useDispatch()
   const { occasionsList, isLoading } = useSelector((state) => state.occasion)
   // console.log(occasionsList, "occasionsList");
+  const { onUploadOccasionImage } = useUploadOccasionPhotoos()
 
 
   useEffect(() => {
@@ -108,15 +110,15 @@ const Occasions = () => {
           <>
             <input
               accept="image/*"
-              id="onUploadCityImage"
+              id="onUploadOccasionImage"
               multiple
               type="file"
               style={{ display: 'none' }}
-            // onChange={(e) => onUploadCityImage(e)}
+              onChange={(e) => onUploadOccasionImage(e)}
             />
-            <label htmlFor="onUploadCityImage">
+            <label htmlFor="onUploadOccasionImage">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-              // onClick={() => dispatch(setCuisineId(row?.id))}
+                onClick={() => dispatch(setOccasionId(row?.id))}
               >
                 <img onError={handleImageError} src={row?.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
               </span>
@@ -126,15 +128,15 @@ const Occasions = () => {
           <>
             <input
               accept="image/*"
-              id="onUploadCityImage"
+              id="onUploadOccasionImage"
               multiple
               type="file"
               style={{ display: 'none' }}
-            // onChange={(e) => onUploadCityImage(e)}
+              onChange={(e) => onUploadOccasionImage(e)}
             />
-            <label htmlFor="onUploadCityImage">
+            <label htmlFor="onUploadOccasionImage">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-              // onClick={() => dispatch(setCuisineId(row?.id))}
+                onClick={() => dispatch(setOccasionId(row?.id))}
               >
                 <FaCloudUploadAlt size={30} />
               </span>
