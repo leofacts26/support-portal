@@ -12,7 +12,7 @@ export const fetchOccasionList = createAsyncThunk(
   'catering/fetchOccasionList',
   async (catering, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/get-all-occasions?current_page=1&limit=1000`);
+      const response = await api.get(`${BASE_URL}/admin-list-occasions?current_page=1&limit=100`);
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
