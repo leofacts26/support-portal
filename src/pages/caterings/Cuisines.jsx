@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux'
-import { addCateringParentCuisine, deleteCateringCuisine, editCateringParentCuisine, fetchCateringCuisines } from '../../features/catering/cateringSlice';
+import { addCateringParentCuisine, deleteCateringCuisine, editCateringParentCuisine, fetchCateringCuisines, updateToggleCuisine } from '../../features/catering/cateringSlice';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import useUploadCusinePhotoos from '../../hooks/useUploadCusinePhotoos';
 import GlobalSearch from '../../components/common/GlobalSearch';
@@ -12,41 +12,10 @@ import { MdDeleteForever } from "react-icons/md";
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { setCuisineId } from '../../features/userSlice';
 import useToggle from '../../hooks/useToggle';
+import { fetchexplorecitiesData, updateToggleExplorecity } from '../../features/homepage/homeSlice';
 
 
 
-const rows = [
-  {
-    personID: 1,
-    mainCategory: "Mumbai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-    status: "Active",
-  },
-  {
-    personID: 2,
-    mainCategory: "Bangalore",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-    status: "De Active",
-  }
-];
-
-
-const rowsSubCategory = [
-  {
-    personID: 1,
-    mainCategory: "Mumbai",
-    subCategory: "Mumbai",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-    status: "Active",
-  },
-  {
-    personID: 2,
-    mainCategory: "Bangalore",
-    subCategory: "Bangalore",
-    image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-    status: "De Active",
-  }
-];
 
 const Cuisines = () => {
 
@@ -77,53 +46,68 @@ const Cuisines = () => {
   const childList = cuisineList?.filter((item) => item?.parent_id !== null)
   // console.log(parentList, "parentList parentList");
 
-  const handleParentStatusToggle = async (city) => {
-    // const updatedCity = {
-    //   ...city,
-    //   is_active: city.is_active === 1 ? 0 : 1
-    // }
-    // await dispatch(updateToggleExplorecity(updatedCity))
-    // await dispatch(fetchexplorecitiesData());
-  }
-
-  const handleChildStatusToggle = async (city) => {
-    // const updatedCity = {
-    //   ...city,
-    //   is_active: city.is_active === 1 ? 0 : 1
-    // }
-    // await dispatch(updateToggleExplorecity(updatedCity))
-    // await dispatch(fetchexplorecitiesData());
-  }
 
   useEffect(() => {
     dispatch(fetchCateringCuisines())
   }, [])
+
+  // const handleParentStatusToggle = async (city) => {
+  // const updatedCity = {
+  //   ...city,
+  //   is_active: city.is_active === 1 ? 0 : 1
+  // }
+  // await dispatch(updateToggleExplorecity(updatedCity))
+  // await dispatch(fetchexplorecitiesData());
+  // }
+
+  // const handleChildStatusToggle = async (city) => {
+  // const updatedCity = {
+  //   ...city,
+  //   is_active: city.is_active === 1 ? 0 : 1
+  // }
+  // await dispatch(updateToggleExplorecity(updatedCity))
+  // await dispatch(fetchexplorecitiesData());
+  // }
+
+  const handleStatusToggle = async (item) => {
+    const data = {
+      ...item,
+      is_active: item.is_active === 1 ? 0 : 1
+    }
+    await dispatch(updateToggleCuisine(data))
+    await dispatch(fetchCateringCuisines());
+  }
+
+
 
   // const count = useSelector((state) => state.cuisine.value)
 
   useEffect(() => {
     if (cuisineList) {
       const formattedData = parentList?.map((parent, index) => ({
-        personID: parent?.id,
+        id: parent?.id,
         mainCategory: parent?.name,
         image: parent?.file_name?.medium,
-        is_active: parent?.id,
+        is_active: parent?.is_active,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
     }
   }, [cuisineList]);
 
+  console.log(parentList, "parentList parentList");
+
+
 
   useEffect(() => {
     if (cuisineList) {
       const formattedData = childList?.map((child, index) => ({
-        personID: child?.id,
+        id: child?.id,
         parentID: child?.parent_id,
         mainCategory: child?.parent_name,
         subCategory: child?.name,
         image: child?.file_name?.medium,
-        is_active: child?.id,
+        is_active: child?.is_active,
       }));
       setSubCatData(formattedData);
       setFilteredSubcatData(formattedData);
@@ -158,7 +142,7 @@ const Cuisines = () => {
     }
     const newFilteredData = data.filter((row) => {
       return (
-        row?.personID?.toString().toLowerCase().includes(searchValue) ||
+        row?.id?.toString().toLowerCase().includes(searchValue) ||
         row?.mainCategory?.toLowerCase().includes(searchValue)
       );
     });
@@ -174,7 +158,7 @@ const Cuisines = () => {
     }
     const newFilteredData = subCatdata?.filter((row) => {
       return (
-        row?.personID?.toString().toLowerCase().includes(searchValue) ||
+        row?.id?.toString().toLowerCase().includes(searchValue) ||
         row?.mainCategory?.toLowerCase().includes(searchValue) ||
         row?.subCategory?.toLowerCase().includes(searchValue)
       );
@@ -185,7 +169,7 @@ const Cuisines = () => {
   const columns = [
     {
       name: "ID",
-      selector: row => row.personID,
+      selector: row => row.id,
       sortable: true,
     },
     {
@@ -208,7 +192,7 @@ const Cuisines = () => {
             />
             <label htmlFor="onUploadParentCuisine">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-                onClick={() => dispatch(setCuisineId(row?.personID))}
+                onClick={() => dispatch(setCuisineId(row?.id))}
               >
                 <img onError={handleImageError} src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
               </span>
@@ -226,7 +210,7 @@ const Cuisines = () => {
             />
             <label htmlFor="onUploadParentCuisine">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-                onClick={() => dispatch(setCuisineId(row?.personID))}
+                onClick={() => dispatch(setCuisineId(row?.id))}
               >
                 <FaCloudUploadAlt size={30} />
               </span>
@@ -245,7 +229,7 @@ const Cuisines = () => {
             type="checkbox"
             id={`status-${row.id}`}
             checked={row.is_active === 1}
-            onChange={() => handleParentStatusToggle(row)}
+            onChange={() => handleStatusToggle(row)}
           />
           <label className="form-check-label" htmlFor={`status-${row.id}`}>
             {row.is_active === 1 ? 'Active' : 'Inactive'}
@@ -276,7 +260,7 @@ const Cuisines = () => {
   const columnsSubCategory = [
     {
       name: "ID",
-      selector: row => row.personID,
+      selector: row => row.id,
       sortable: true,
     },
     {
@@ -304,7 +288,7 @@ const Cuisines = () => {
             />
             <label htmlFor="onUploadParentCuisine">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-                onClick={() => dispatch(setCuisineId(row?.personID))}
+                onClick={() => dispatch(setCuisineId(row?.id))}
               >
                 <img onError={handleImageError} src={row.image} style={{ width: '30px', borderRadius: '5px' }} alt="" className="img-fluid" />
               </span>
@@ -322,7 +306,7 @@ const Cuisines = () => {
             />
             <label htmlFor="onUploadParentCuisine">
               <span variant="contained" component="span" style={{ cursor: 'pointer' }}
-                onClick={() => dispatch(setCuisineId(row?.personID))}
+                onClick={() => dispatch(setCuisineId(row?.id))}
               >
                 <FaCloudUploadAlt size={30} />
               </span>
@@ -341,7 +325,7 @@ const Cuisines = () => {
             type="checkbox"
             id={`status-${row.id}`}
             checked={row.is_active === 1}
-            onChange={() => handleChildStatusToggle(row)}
+            onChange={() => handleStatusToggle(row)}
           />
           <label className="form-check-label" htmlFor={`status-${row.id}`}>
             {row.is_active === 1 ? 'Active' : 'Inactive'}
@@ -389,7 +373,7 @@ const Cuisines = () => {
   // console.log(mainCategoryId, "mainCategoryId mainCategoryId");
 
   const handleEdit = (row) => {
-    setMainCategoryId(row.personID)
+    setMainCategoryId(row.id)
     setMainCategory(row.mainCategory);
     handleShow()
   }
@@ -433,7 +417,7 @@ const Cuisines = () => {
 
     const data = {
       name: mainCategorySubChild,
-      id: mainCategoryChildId?.personID,
+      id: mainCategoryChildId?.id,
       parent_id: mainCategoryChildId?.parentID
     }
 
