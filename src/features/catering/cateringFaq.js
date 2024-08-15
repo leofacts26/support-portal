@@ -10,9 +10,9 @@ const initialState = {
 
 export const fetchCatteringFaqs = createAsyncThunk(
   'catering/fetchCatteringFaqs',
-  async (catering, thunkAPI) => {
+  async (type, thunkAPI) => {    
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-faqs?limit=100&current_page=1&type=vendor`);
+      const response = await api.get(`${BASE_URL}/admin-list-faqs?limit=100&current_page=1&type=${type}`);
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);

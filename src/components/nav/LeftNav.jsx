@@ -197,14 +197,14 @@ const LeftNav = () => {
                                                 Vendor List
                                             </NavLink>
                                         </li>
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <NavLink
                                                 to="/tiffin-cuisines"
                                                 className="nav-link"
                                             >
                                                 Cuisines
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                         <li className="nav-item">
                                             <NavLink to="/meal-time" className="nav-link">
                                                 Meal Time
@@ -220,11 +220,11 @@ const LeftNav = () => {
                                                 Tiffin Budjet
                                             </NavLink>
                                         </li>
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <NavLink to="/tiffin-food-types" className="nav-link">
                                                 Tiffin Food Types
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                         <li className="nav-item">
                                             <NavLink to="/tiffin-faq" className="nav-link">
                                                 Tiffin Faq

@@ -7,15 +7,7 @@ import { createCateringFaq, fetchCatteringFaqs, updateCateringFaq, updateToggleF
 import { FaEdit } from "react-icons/fa";
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
-
-
-// const rows = [
-//   {
-//     personID: 1,
-//     question: "How can i register as a Caterer",
-//     answer: "Simple, Just Open the Given URl and Register yourself",
-//   }
-// ];
+import { cater_Faq_type } from '../../constants';
 
 
 const vendorFaqState = {
@@ -52,7 +44,7 @@ const Faq = () => {
 
 
   useEffect(() => {
-    dispatch(fetchCatteringFaqs())
+    dispatch(fetchCatteringFaqs(cater_Faq_type))
   }, [])
 
 
@@ -105,7 +97,7 @@ const Faq = () => {
       is_active: item.is_active === 1 ? 0 : 1
     }
     await dispatch(updateToggleFaq(data))
-    await dispatch(fetchCatteringFaqs());
+    await dispatch(fetchCatteringFaqs(cater_Faq_type));
   }
 
 
@@ -198,7 +190,7 @@ const Faq = () => {
     } else {
       await dispatch(updateCateringFaq(updateData))
     }
-    await dispatch(fetchCatteringFaqs())
+    await dispatch(fetchCatteringFaqs(cater_Faq_type))
     handleClose()
   }
 
@@ -218,7 +210,7 @@ const Faq = () => {
 
         <hr />
 
-        <h4>Vendor Catering FAQ's</h4>
+        <h2>Vendor Catering FAQ's</h2>
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
           <DataTable
