@@ -6,6 +6,7 @@ import occasionReducer from '../features/catering/occasionSlice'
 import faqSliceReducer from '../features/catering/cateringFaq'
 import priceReducer from '../features/catering/priceSlice'
 import mealReducer from '../features/catering/mealSlice'
+import kitchenReducer from '../features/catering/kitchenSlice'
 
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
     occasion: occasionReducer,
     faq: faqSliceReducer,
     priceranges: priceReducer,
-    mealtypes: mealReducer
+    mealtypes: mealReducer,
+    kitchentypes: kitchenReducer,
   },
 })
