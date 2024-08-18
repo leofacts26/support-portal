@@ -23,6 +23,8 @@ export const fetchCatteringFaqs = createAsyncThunk(
 export const createCateringFaq = createAsyncThunk(
   'user/createCateringFaq',
   async (data, thunkAPI) => {
+    console.log(data, "data");
+    
     try {
       const response = await api.post(`${BASE_URL}/admin-faq-create`, data,
         //   {

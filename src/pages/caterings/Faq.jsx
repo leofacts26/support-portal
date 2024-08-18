@@ -8,9 +8,11 @@ import { FaEdit } from "react-icons/fa";
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { cater_Faq_type } from '../../constants';
+import Form from 'react-bootstrap/Form';
 
 
 const vendorFaqState = {
+  type: '',
   question_text: '',
   answer_text: '',
 }
@@ -23,6 +25,7 @@ const Faq = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [editId, setEditId] = useState(null)
   const [values, setValues] = useState(vendorFaqState)
+  const [selectType, setSelectType] = useState("user-caterer")
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -44,8 +47,10 @@ const Faq = () => {
 
 
   useEffect(() => {
-    dispatch(fetchCatteringFaqs(cater_Faq_type))
-  }, [])
+    dispatch(fetchCatteringFaqs(selectType))
+  }, [selectType])
+
+  console.log(faqList, "faqListfaqListfaqListfaqList");
 
 
   useEffect(() => {
@@ -55,7 +60,8 @@ const Faq = () => {
         answer_id: item?.answer_id,
         question_text: item?.question_text,
         answer_text: item?.answer_text,
-        is_active: item?.is_active
+        is_active: item?.is_active,
+        type: item?.type
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -97,7 +103,7 @@ const Faq = () => {
       is_active: item.is_active === 1 ? 0 : 1
     }
     await dispatch(updateToggleFaq(data))
-    await dispatch(fetchCatteringFaqs(cater_Faq_type));
+    await dispatch(fetchCatteringFaqs(selectType));
   }
 
 
@@ -161,6 +167,7 @@ const Faq = () => {
         ...prevValues,
         question_text: data.question_text || prevValues.question_text,
         answer_text: data.answer_text || prevValues.answer_text,
+        type: data.type || prevValues.type,
       }));
     }
   };
@@ -171,18 +178,18 @@ const Faq = () => {
     console.log(event, "event");
   }
 
-  // console.log(faqList, "faqList faqList");
+  console.log(values, "values values");
 
   const onHandleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       ...values,
-      type: 'vendor'
+      // type: 'vendor'
     }
     const updateData = {
       ...values,
       question_id: editId,
-      type: 'vendor'
+      // type: 'vendor' 
     }
 
     if (editId === null) {
@@ -190,7 +197,7 @@ const Faq = () => {
     } else {
       await dispatch(updateCateringFaq(updateData))
     }
-    await dispatch(fetchCatteringFaqs(cater_Faq_type))
+    await dispatch(fetchCatteringFaqs(selectType))
     handleClose()
   }
 
@@ -199,18 +206,32 @@ const Faq = () => {
     <>
       <div className="container-fluid my-5">
 
-        <div className="row mb-4 d-flex justify-content-between me-2">
+        <div className="row mb-4 d-flex justify-content-end me-2">
           <button className='btn btn-primary fit-content ms-3' variant="primary" onClick={handleShow}>
-            Create Vendor FAQ's
+            Create FAQ's
           </button>
-          <button className='btn btn-primary fit-content' variant="primary" onClick={handleShowUserShow}>
+          {/* <button className='btn btn-primary fit-content' variant="primary" onClick={handleShowUserShow}>
             Create User FAQ's
-          </button>
+          </button> */}
         </div>
 
         <hr />
 
-        <h2>Vendor Catering FAQ's</h2>
+        <div className='row w-100 mb-4 d-flex justify-content-between'>
+          <div style={{ width: 'fit-content' }}>
+            <h2>Vendor FAQ's</h2>
+          </div>
+          <div style={{ width: 'fit-content' }}>
+            <Form.Select aria-label="Default select example" name="selectType"
+              value={selectType} onChange={(e) => setSelectType(e.target.value)} style={{ width: '300px' }}>
+              <option value="user-caterer">user caterer Faq</option>
+              <option value="user-tiffin">user tiffin Faq</option>
+              <option value="vendor-caterer">vendor caterer Faq</option>
+              <option value="vendor-tiffin">vendor tiffin Faq</option>
+            </Form.Select>
+          </div>
+        </div>
+
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
           <DataTable
@@ -254,7 +275,18 @@ const Faq = () => {
             <Modal.Title> {editId ? "Edit" : 'Create'}  Vendor FAQ's</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div>
+
+            <label for="name" className="form-label"> {editId ? "Edit" : "Add"}  Question</label>
+            <Form.Select required aria-label="Default select example" name="type" value={values.type} onChange={onHandleChange}>
+              <option value="">Select an option</option>
+              <option value="user-caterer">user caterer Faq</option>
+              <option value="user-tiffin">user tiffin Faq</option>
+              <option value="vendor-caterer">vendor caterer Faq</option>
+              <option value="vendor-tiffin">vendor tiffin Faq</option>
+            </Form.Select>
+
+
+            <div className='mt-4'>
               <label for="name" className="form-label"> {editId ? "Edit" : "Add"}  Question</label>
               <input type="text" className="form-control" placeholder="City Name" required
                 name='question_text' value={values.question_text} onChange={onHandleChange}
