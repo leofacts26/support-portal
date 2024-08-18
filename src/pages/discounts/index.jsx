@@ -1,7 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCouponList } from '../../features/catering/couponSlice';
+import GlobalSearch from '../../components/common/GlobalSearch';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
+import { FaEdit } from "react-icons/fa";
 
 
 // const rows = [
@@ -46,7 +51,12 @@ const initialState = {
 // ];
 
 const Discounts = () => {
+  const dispatch = useDispatch()
+  const { couponsList, isLoading } = useSelector((state) => state.coupons)
+
+
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   // const [subCatdata, setSubCatData] = useState(rowsSubCategory);
 
   const [values, setValues] = useState(initialState)
@@ -58,6 +68,33 @@ const Discounts = () => {
   const [showSubCategory, setSubCategory] = useState(false);
   const handleSubClose = () => setSubCategory(false);
   const handleSubShow = () => setSubCategory(true);
+
+  console.log(couponsList, "couponsList couponsList couponsList");
+
+
+  useEffect(() => {
+    dispatch(fetchCouponList())
+  }, [])
+
+
+  useEffect(() => {
+    if (couponsList) {
+      const formattedData = couponsList?.map((item, index) => ({
+        id: item?.id,
+        discount_name: item?.discount_name,
+        vendor_type: item?.vendor_type,
+        coupon_code: item?.coupon_code,
+        valid_from: item?.valid_from,
+        valid_till: item?.valid_till,
+        status: item?.status,
+        coupon_type: item?.coupon_type,
+        discount_percent: item?.discount_percent,
+        discount_price: item?.discount_price,
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [couponsList]);
 
 
   const handleSearch = (e) => {
@@ -88,42 +125,47 @@ const Discounts = () => {
   const columns = [
     {
       name: "S.No",
-      selector: row => row.ID,
+      selector: row => row.id,
       sortable: true,
     },
     {
       name: "Discount Name",
-      selector: row => row.discountName,
+      selector: row => row.discount_name,
       sortable: true,
     },
     {
-      name: "Service",
-      selector: row => row.service,
+      name: "Vendor Type",
+      selector: row => row.vendor_type,
       sortable: true,
     },
     {
-      name: "Sub Type",
-      selector: row => row.subType,
+      name: "Coupon Code",
+      selector: row => row.coupon_code,
       sortable: true,
     },
     {
-      name: "Coupons",
-      selector: row => row.coupons,
-      sortable: true,
-    },
-    {
-      name: "Discount %",
-      selector: row => row.discount,
-      sortable: true,
-    },
-    {
-      name: "Valid Form",
-      selector: row => row.validForm,
+      name: "Valid From",
+      selector: row => row.valid_from,
       sortable: true,
     },
     {
       name: "Valid Till",
-      selector: row => row.validTill,
+      selector: row => row.valid_till,
+      sortable: true,
+    },
+    {
+      name: "coupon type",
+      selector: row => row.coupon_type,
+      sortable: true,
+    },
+    {
+      name: "discount_percent",
+      selector: row => row.discount_percent,
+      sortable: true,
+    },
+    {
+      name: "discount_price",
+      selector: row => row.discount_price,
       sortable: true,
     },
     {
@@ -135,8 +177,9 @@ const Discounts = () => {
       name: "Action",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer' onClick={() => alert("test")}> Edit / </span>
-          <span className='text-primary cursor-pointer' onClick={() => alert("test")}> {" "} Delete </span>
+          <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
+            <FaEdit />
+          </button>
         </>
       ),
       ignoreRowClick: true,
@@ -231,22 +274,17 @@ const Discounts = () => {
 
         <hr />
 
-        <h4>Broadcast Coupon List</h4>
+        <h2>Single Coupon List</h2>
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
             data={data}
             fixedHeader
             pagination
             selectableRows
-          // title="React-Data-Table-Component Tutorial."
+            customStyles={tableCustomStyles}
           />
         </div>
 
