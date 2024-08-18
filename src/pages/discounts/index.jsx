@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCouponList } from '../../features/catering/couponSlice';
+import { createCouponList, fetchCouponList, updateCouponList } from '../../features/catering/couponSlice';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
@@ -58,18 +58,24 @@ const Discounts = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   // const [subCatdata, setSubCatData] = useState(rowsSubCategory);
+  const [editId, setEditId] = useState(null)
+  const [editSubscriptionTypeId, setEditSubscriptionTypeId] = useState(null)
 
   const [values, setValues] = useState(initialState)
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+    setEditId(null)
+    setEditSubscriptionTypeId(null)
+  };
   const handleShow = () => setShow(true);
 
   const [showSubCategory, setSubCategory] = useState(false);
   const handleSubClose = () => setSubCategory(false);
   const handleSubShow = () => setSubCategory(true);
 
-  console.log(couponsList, "couponsList couponsList couponsList");
+  console.log(values, "values values values");
 
 
   useEffect(() => {
@@ -90,6 +96,7 @@ const Discounts = () => {
         coupon_type: item?.coupon_type,
         discount_percent: item?.discount_percent,
         discount_price: item?.discount_price,
+        subscription_type_id: item?.subscription_type_id,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -119,8 +126,9 @@ const Discounts = () => {
 
   const onHandleChange = (e) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value })
-  }
+    setValues((prevState) => ({ ...prevState, [name]: value }))
+  };
+
 
   const columns = [
     {
@@ -131,6 +139,11 @@ const Discounts = () => {
     {
       name: "Discount Name",
       selector: row => row.discount_name,
+      sortable: true,
+    },
+    {
+      name: "Sub Id",
+      selector: row => row.subscription_type_id,
       sortable: true,
     },
     {
@@ -245,16 +258,49 @@ const Discounts = () => {
   // ];
 
 
-  const handleEdit = (event) => {
-    console.log(event, "event");
+  const handleEdit = (data) => {
+    setEditId(data?.id)
+    setEditSubscriptionTypeId(data?.subscription_type_id)
+    handleShow()
+    if (data) {
+      setValues(prevValues => ({
+        ...prevValues,
+        discount_name: data.discount_name || prevValues.discount_name,
+        vendor_type: data.vendor_type || prevValues.vendor_type,
+        coupon_code: data.coupon_code || prevValues.coupon_code,
+        valid_from: data.valid_from ? new Date(data.valid_from).toISOString().split('T')[0] : prevValues.valid_from,
+        valid_till: data.valid_till ? new Date(data.valid_till).toISOString().split('T')[0] : prevValues.valid_till,
+        status: data.status || prevValues.status,
+        coupon_type: data.coupon_type || prevValues.coupon_type,
+        discount_percent: data.discount_percent || prevValues.discount_percent,
+        discount_price: data.discount_price || prevValues.discount_price,
+      }));
+    }
   }
   const handleDelete = (event) => {
     console.log(event, "event");
   }
 
-  const onHandleSubmit = (e) => {
-    e.preventDefault()
+  console.log(editId, "editId editId");
 
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const data = {
+      ...values,
+    }
+    const updateData = {
+      ...values,
+      id: editId,
+      subscription_type_id: editSubscriptionTypeId
+    }
+
+    if (editId === null) {
+      await dispatch(createCouponList(data))
+    } else {
+      await dispatch(updateCouponList(updateData))
+    }
+    await dispatch(fetchCouponList())
     handleClose()
   }
 
@@ -351,9 +397,10 @@ const Discounts = () => {
               <div className="col-6">
                 <div>
                   <label for="name" className="form-label">Status</label>
-                  <select className="form-select" data-choices name="valid_from" value={values.valid_from} onChange={onHandleChange}>
+                  <select className="form-select" name="status" value={values.status} onChange={onHandleChange}>
+                    <option value="">Select Status</option>
                     <option value="Active">Active</option>
-                    <option value="In-Active">In Active</option>
+                    <option value="Inactive">Inactive</option>
                   </select>
                 </div>
               </div>
@@ -381,9 +428,8 @@ const Discounts = () => {
               <div className="col-6">
                 <div>
                   <label for="name" className="form-label">Coupon Type</label>
-                  <select className="form-select" data-choices
-                    name="coupon_type" value={values.coupon_type} onChange={onHandleChange}
-                  >
+                  <select className="form-select" name="coupon_type" value={values.coupon_type} onChange={onHandleChange}>
+                    <option value="">Select Coupon Type</option>
                     <option value="discount">Discount</option>
                   </select>
                 </div>
