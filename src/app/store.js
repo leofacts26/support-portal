@@ -8,6 +8,7 @@ import priceReducer from '../features/catering/priceSlice'
 import mealReducer from '../features/catering/mealSlice'
 import kitchenReducer from '../features/catering/kitchenSlice'
 import couponReducer from '../features/catering/couponSlice'
+import subscriptionReducer from '../features/subscriptions'
 
 
 export const store = configureStore({
@@ -21,5 +22,6 @@ export const store = configureStore({
     mealtypes: mealReducer,
     kitchentypes: kitchenReducer,
     coupons: couponReducer,
+    subscription: subscriptionReducer,
   },
 })
