@@ -412,7 +412,7 @@ const Cuisines = () => {
     e.preventDefault();
     const addData = {
       name: mainCategorySubChild,
-      id: mainCategoryChild
+      parent_id: mainCategoryChild
     }
 
     const data = {
