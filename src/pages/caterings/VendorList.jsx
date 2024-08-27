@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import Table from 'react-bootstrap/Table';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import GlobalSearch from '../../components/common/GlobalSearch';
-
+import { Link } from 'react-router-dom'
 
 const rows = [
   {
@@ -35,7 +35,7 @@ const VendorList = () => {
   // console.log(cateringVendorsDetail.vendorDetails, "cateringVendorsDetail");
   const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
-  console.log(foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails, "foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails");
+  // console.log(foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails, "foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails");
 
 
   const [show, setShow] = useState(false);
@@ -141,9 +141,17 @@ const VendorList = () => {
       name: "Details",
       cell: (row) => (
         <>
-          <span className='text-primary cursor-pointer'
-            onClick={() => onHandleCateringDetails(row?.company_id)}
-          >View</span>
+          {row?.company_id ? (
+            <Link
+              // onClick={() => onHandleCateringDetails(row.company_id)}
+              to={`/vendor-list/${row.company_id}`}
+              className='text-primary cursor-pointer'
+            >
+              View
+            </Link>
+          ) : (
+            <span>N/A</span>
+          )}
         </>
       ),
       ignoreRowClick: true,

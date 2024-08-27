@@ -31,6 +31,7 @@ import ShareLinks from "./pages/customer-care/ShareLinks";
 import FollowUps from "./pages/customer-care/FollowUps";
 import SupportTickets from "./pages/customer-care/SupportTickets";
 import { Toaster } from 'react-hot-toast';
+import VendorListDetails from "./pages/caterings/VendorListDetails";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
 
           {/* Caterings */}
           <Route path="/vendor-list" element={<VendorList />} />
+          <Route path="/vendor-list/:id" element={<VendorListDetails />} />
           <Route path="/cuisines" element={<Cuisines />} />
           <Route path="/occasions" element={<Occasions />} />
           <Route path="/budjet-filter" element={<BudjetFilter />} />
@@ -88,7 +90,7 @@ function App() {
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
-          <Toaster />
+      <Toaster />
     </BrowserRouter>
   );
 }
