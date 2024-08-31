@@ -10,15 +10,6 @@ import { FaEdit } from "react-icons/fa";
 import { cater_vendor_type } from '../../constants';
 
 
-// const rows = [
-//   {
-//     personID: 1,
-//     minimum: "Rs. 50",
-//     maximum: "Rs. 100",
-//     image: "https://dashkit.goodthemes.co/assets/img/avatars/profiles/avatar-1.jpg",
-//   }
-// ];
-
 const initialState = {
   start_price: '',
   end_price: '',
