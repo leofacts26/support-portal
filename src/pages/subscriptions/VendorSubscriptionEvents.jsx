@@ -31,6 +31,8 @@ const VendorSubscriptionEvents = () => {
         event_type: subscription?.event_type,
         razorpay_subscription_id: subscription?.razorpay_subscription_id,
         vendor_service_name: subscription?.vendor_service_name,
+        created_at: subscription?.created_at,
+        event_date: subscription?.event_date,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -83,6 +85,16 @@ const VendorSubscriptionEvents = () => {
     {
       name: "Vendor Service Name",
       selector: row => row.vendor_service_name,
+      sortable: true,
+    },
+    {
+      name: "Created At",
+      selector: row => row.created_at.slice(0, 10),
+      sortable: true,
+    },
+    {
+      name: "Event Date",
+      selector: row => row.event_date.slice(0, 10),
       sortable: true,
     },
   ];
