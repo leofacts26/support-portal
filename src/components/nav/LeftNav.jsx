@@ -260,6 +260,11 @@ const LeftNav = () => {
                                                 Manage Subscription
                                             </NavLink>
                                         </li>
+                                        <li className="nav-item">
+                                            <NavLink to="/razorpay-plans-mapper" className="nav-link">
+                                                Razorpay Plans Mapper
+                                            </NavLink>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
