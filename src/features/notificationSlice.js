@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api, BASE_URL } from '../api/apiConfig';
-import { datavalidationerror } from '../utils';
+import { datavalidationerror, successToast } from '../utils';
 import toast from 'react-hot-toast';
 
 const initialState = {
@@ -49,8 +49,8 @@ export const fetchVendorNotificationData = createAsyncThunk(
 )
 
 
-export const createBroadbandSubscription = createAsyncThunk(
-  'user/createBroadbandSubscription',
+export const createBroadbandNotification = createAsyncThunk(
+  'user/createBroadbandNotification',
   async (data, thunkAPI) => {
     // const { title, message } = data;
     try {
@@ -61,6 +61,34 @@ export const createBroadbandSubscription = createAsyncThunk(
     }
   }
 )
+
+export const createUserNotification = createAsyncThunk(
+  'user/createUserNotification',
+  async (data, thunkAPI) => {
+    // const { title, message } = data;
+    try {
+      const response = await api.post(`${BASE_URL}/admin-create-user-notification`, data);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const createVendorSubscription = createAsyncThunk(
+  'user/createVendorSubscription',
+  async (data, thunkAPI) => {
+    // const { title, message } = data;
+    try {
+      const response = await api.post(`${BASE_URL}/admin-create-vendor-notification`, data);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 
 
 export const notificationSlice = createSlice({
@@ -107,14 +135,38 @@ export const notificationSlice = createSlice({
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
-      // createBroadbandSubscription 
-      .addCase(createBroadbandSubscription.pending, (state) => {
+      // createBroadbandNotification 
+      .addCase(createBroadbandNotification.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createBroadbandSubscription.fulfilled, (state, { payload }) => {
+      .addCase(createBroadbandNotification.fulfilled, (state, { payload }) => {
         state.isLoading = false;
       })
-      .addCase(createBroadbandSubscription.rejected, (state, { payload }) => {
+      .addCase(createBroadbandNotification.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // createUserNotification 
+      .addCase(createUserNotification.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createUserNotification.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(successToast(payload));
+      })
+      .addCase(createUserNotification.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // createVendorSubscription 
+      .addCase(createVendorSubscription.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createVendorSubscription.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(successToast(payload));
+      })
+      .addCase(createVendorSubscription.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

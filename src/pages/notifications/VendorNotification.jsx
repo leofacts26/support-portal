@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { createBroadbandSubscription, fetchBroadcastNotificationData, fetchVendorNotificationData } from '../../features/notificationSlice';
+import { createVendorSubscription, fetchBroadcastNotificationData, fetchVendorNotificationData } from '../../features/notificationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
@@ -13,8 +13,7 @@ import { fetchSubscriptionData } from '../../features/subscriptionSlice';
 const initialState = {
   title: '',
   message: '',
-  type: '',
-  subscriptionTypeId: ''
+  receiverId: '',
 }
 
 const VendorNotification = () => {
@@ -107,14 +106,13 @@ const VendorNotification = () => {
 
   const onHandleSubmit = async (e) => {
     e.preventDefault();
-    const { title, message, type, subscriptionTypeId } = values;
+    const { title, message, receiverId } = values;
     const data = {
       message,
       title,
-      vendor_type: type,
-      subscription_type_id: subscriptionTypeId
+      receiver_id: receiverId
     }
-    await dispatch(createBroadbandSubscription(data))
+    await dispatch(createVendorSubscription(data))
     await dispatch(fetchVendorNotificationData())
     setValues(initialState)
     handleClose()
@@ -168,37 +166,19 @@ const VendorNotification = () => {
           <Modal.Body>
 
             <div>
-              <label for="name" className="form-label">Type</label>
+              <label htmlFor="type" className="form-label">Receiver ID</label>
               <select
                 className="form-select"
-                name="type"
-                value={values.type}
+                name="receiverId"
+                value={values.receiverId}
                 onChange={handleChange}
               >
-                <>
-                  <option value="All">All</option>
-                  <option value="Catering">Catering</option>
-                  <option value="Tiffin">Tiffin</option>
-                  <option value="User">User</option>
-                </>
-              </select>
-            </div>
-
-
-            <div className='mt-3'>
-              <label for="name" className="form-label">subscription Types</label>
-              <select
-                className="form-select"
-                name="subscriptionTypeId"
-                value={values.subscriptionTypeId}
-                onChange={handleChange}
-              >
-                <>
-                  <option value="All">All</option>
-                  <option value="1">Brand</option>
-                  <option value="2">Popular</option>
-                  <option value="3">Basic</option>
-                </>
+                <option value="">Select Receiver ID</option>
+                {vendorNotificationList?.map((item) => (
+                  <option value={item.receiver_id} key={item.receiver_id}>
+                    {item.receiver_id}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -225,6 +205,7 @@ const VendorNotification = () => {
                 onChange={handleChange}
               ></textarea>
             </div>
+
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

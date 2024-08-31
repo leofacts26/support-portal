@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { createBroadbandSubscription, fetchBroadcastNotificationData } from '../../features/notificationSlice';
+import { createBroadbandNotification, fetchBroadcastNotificationData } from '../../features/notificationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
@@ -114,7 +114,7 @@ const BroadcastNotification = () => {
       vendor_type: type,
       subscription_type_id: subscriptionTypeId
     }
-    await dispatch(createBroadbandSubscription(data))
+    await dispatch(createBroadbandNotification(data))
     await dispatch(fetchBroadcastNotificationData())
     setValues(initialState)
     handleClose()

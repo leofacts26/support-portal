@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { createBroadbandSubscription, fetchBroadcastNotificationData, fetchUserNotificationData } from '../../features/notificationSlice';
+import { createUserNotification, fetchBroadcastNotificationData, fetchUserNotificationData } from '../../features/notificationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
@@ -13,8 +13,7 @@ import { fetchSubscriptionData } from '../../features/subscriptionSlice';
 const initialState = {
   title: '',
   message: '',
-  type: '',
-  subscriptionTypeId: ''
+  receiverId: '',
 }
 
 const UserNotification = () => {
@@ -47,6 +46,7 @@ const UserNotification = () => {
         vendor_type: broadcast?.vendor_type,
         title: broadcast?.title,
         message: broadcast?.message,
+        type: broadcast?.type,
         created_at: broadcast?.created_at,
       }));
       setData(formattedData);
@@ -64,7 +64,8 @@ const UserNotification = () => {
     const newFilteredData = data.filter((row) => {
       return (
         row?.title?.toLowerCase().includes(searchValue),
-        row?.message?.toLowerCase().includes(searchValue)
+        row?.message?.toLowerCase().includes(searchValue),
+        row?.type?.toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);
@@ -88,6 +89,11 @@ const UserNotification = () => {
       sortable: true,
     },
     {
+      name: "type",
+      selector: row => row.type,
+      sortable: true,
+    },
+    {
       name: "created_at",
       selector: row => row.created_at.slice(0, 10),
       sortable: true,
@@ -107,32 +113,23 @@ const UserNotification = () => {
 
   const onHandleSubmit = async (e) => {
     e.preventDefault();
-    const { title, message, type, subscriptionTypeId } = values;
+    const { title, message, receiverId } = values;
     const data = {
       message,
       title,
-      vendor_type: type,
-      subscription_type_id: subscriptionTypeId
+      receiver_id: receiverId
     }
-    await dispatch(createBroadbandSubscription(data))
+    // console.log(data, "data");
+    await dispatch(createUserNotification(data))
     await dispatch(fetchUserNotificationData())
     setValues(initialState)
     handleClose()
-
-    // if (editId === null) {
-    //   await dispatch(createPriceRanges(data))
-    // } else {
-    //   await dispatch(updatePriceRanges(data))
-    // }
-    // await dispatch(fetchpriceRangesList());
-    // setValues(initialState)
-    // handleClose()
   }
 
   return (
     <>
       <div className="container-fluid my-5">
-      <div className="row mb-4  me-2">
+        <div className="row mb-4  me-2">
           <div className="d-flex justify-content-between align-items-center">
             <h2>Total User Notifications - {userNotificationList?.length}</h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
@@ -168,39 +165,22 @@ const UserNotification = () => {
           <Modal.Body>
 
             <div>
-              <label for="name" className="form-label">Type</label>
+              <label htmlFor="type" className="form-label">Receiver ID</label>
               <select
                 className="form-select"
-                name="type"
-                value={values.type}
+                name="receiverId"
+                value={values.receiverId}
                 onChange={handleChange}
               >
-                <>
-                  <option value="All">All</option>
-                  <option value="Catering">Catering</option>
-                  <option value="Tiffin">Tiffin</option>
-                  <option value="User">User</option>
-                </>
+                <option value="">Select Receiver ID</option>
+                {userNotificationList?.map((item) => (
+                  <option value={item.receiver_id} key={item.receiver_id}>
+                    {item.receiver_id}
+                  </option>
+                ))}
               </select>
             </div>
 
-
-            <div className='mt-3'>
-              <label for="name" className="form-label">subscription Types</label>
-              <select
-                className="form-select"
-                name="subscriptionTypeId"
-                value={values.subscriptionTypeId}
-                onChange={handleChange}
-              >
-                <>
-                  <option value="All">All</option>
-                  <option value="1">Brand</option>
-                  <option value="2">Popular</option>
-                  <option value="3">Basic</option>
-                </>
-              </select>
-            </div>
 
 
             <div className='mt-3'>
