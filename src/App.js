@@ -22,7 +22,7 @@ import TiffinFoodTypes from "./pages/tiffins/TiffinFoodTypes";
 import TiffinFaq from "./pages/tiffins/TiffinFaq";
 import Subscriptions from "./pages/subscriptions";
 import Discounts from "./pages/discounts";
-import Notifications from "./pages/notifications";
+import Notifications from "./pages/notifications/BroadcastNotification";
 import RolesAccess from "./pages/customer-care/RolesAccess";
 import EmployeeMaster from "./pages/customer-care/EmployeeMaster";
 import UserMaster from "./pages/customer-care/UserMaster";
@@ -32,6 +32,7 @@ import FollowUps from "./pages/customer-care/FollowUps";
 import SupportTickets from "./pages/customer-care/SupportTickets";
 import { Toaster } from 'react-hot-toast';
 import VendorListDetails from "./pages/caterings/VendorListDetails";
+import BroadcastNotification from "./pages/notifications/BroadcastNotification";
 
 function App() {
   return (
@@ -75,7 +76,7 @@ function App() {
           <Route path="/discounts" element={<Discounts />} />
 
           {/* notifications  */}
-          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/broadcast-notifications" element={<BroadcastNotification />} />
 
           {/* customer care */}
           <Route path="/roles-access" element={<RolesAccess />} />

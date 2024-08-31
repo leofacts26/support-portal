@@ -272,10 +272,27 @@ const LeftNav = () => {
                             </li>
 
                             <li className="nav-item">
-                                <NavLink className="nav-link " to="/notifications">
-                                    <i className="fe fe-grid" /> Notifications
-                                </NavLink>
+                                <a
+                                    className="nav-link"
+                                    href="#ManageNotification"
+                                    data-bs-toggle="collapse"
+                                    role="button"
+                                    aria-expanded="true"
+                                    aria-controls="ManageNotification"
+                                >
+                                    <i className="fe fe-home" /> Notifications
+                                </a>
+                                <div className="collapse" id="ManageNotification">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/broadcast-notifications" className="nav-link">
+                                                Broadcast Notifications
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
+
 
 
                             <li className="nav-item">

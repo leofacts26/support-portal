@@ -22,6 +22,20 @@ export const fetchBroadcastNotificationData = createAsyncThunk(
 )
 
 
+export const createBroadbandSubscription = createAsyncThunk(
+  'user/createBroadbandSubscription',
+  async (data, thunkAPI) => {
+    // const { title, message } = data;
+    try {
+      const response = await api.post(`${BASE_URL}/admin-create-broadcast-notification`, data);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
 export const notificationSlice = createSlice({
   name: 'notifications',
   initialState,
