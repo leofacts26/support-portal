@@ -291,6 +291,24 @@ const LeftNav = () => {
                                         </li>
                                     </ul>
                                 </div>
+                                <div className="collapse" id="ManageNotification">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/user-notifications" className="nav-link">
+                                                User Notifications
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="collapse" id="ManageNotification">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/vendor-notifications" className="nav-link">
+                                                Vendor Notifications
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
 
 

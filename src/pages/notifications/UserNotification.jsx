@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { createBroadbandSubscription, fetchBroadcastNotificationData } from '../../features/notificationSlice';
+import { createBroadbandSubscription, fetchBroadcastNotificationData, fetchUserNotificationData } from '../../features/notificationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
@@ -17,9 +17,9 @@ const initialState = {
   subscriptionTypeId: ''
 }
 
-const BroadcastNotification = () => {
+const UserNotification = () => {
   const dispatch = useDispatch()
-  const { broadcastNotificationList, isLoading } = useSelector((state) => state.notifications)
+  const { userNotificationList, isLoading } = useSelector((state) => state.notifications)
   const [values, setValues] = useState(initialState)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -36,14 +36,14 @@ const BroadcastNotification = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchBroadcastNotificationData());
+    dispatch(fetchUserNotificationData());
   }, [dispatch]);
 
 
 
   useEffect(() => {
-    if (broadcastNotificationList) {
-      const formattedData = broadcastNotificationList?.map((broadcast, index) => ({
+    if (userNotificationList) {
+      const formattedData = userNotificationList?.map((broadcast, index) => ({
         vendor_type: broadcast?.vendor_type,
         title: broadcast?.title,
         message: broadcast?.message,
@@ -52,7 +52,7 @@ const BroadcastNotification = () => {
       setData(formattedData);
       setFilteredData(formattedData);
     }
-  }, [broadcastNotificationList]);
+  }, [userNotificationList]);
 
 
   const handleSearch = (e) => {
@@ -115,7 +115,7 @@ const BroadcastNotification = () => {
       subscription_type_id: subscriptionTypeId
     }
     await dispatch(createBroadbandSubscription(data))
-    await dispatch(fetchBroadcastNotificationData())
+    await dispatch(fetchUserNotificationData())
     setValues(initialState)
     handleClose()
 
@@ -132,17 +132,17 @@ const BroadcastNotification = () => {
   return (
     <>
       <div className="container-fluid my-5">
-        <div className="row mb-4  me-2">
+      <div className="row mb-4  me-2">
           <div className="d-flex justify-content-between align-items-center">
-            <h2>Total Broadcast Notifications - {broadcastNotificationList?.length}</h2>
+            <h2>Total User Notifications - {userNotificationList?.length}</h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Broadcast Notifications
+              Create User Notifications
             </button>
           </div>
         </div>
         <hr />
 
-        <hr />
+
         <div className="card">
           {/* Search */}
           <GlobalSearch handleSearch={handleSearch} />
@@ -163,7 +163,7 @@ const BroadcastNotification = () => {
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onHandleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>Create Broadcast Notifications</Modal.Title>
+            <Modal.Title>Create User Notifications</Modal.Title>
           </Modal.Header>
           <Modal.Body>
 
@@ -245,4 +245,4 @@ const BroadcastNotification = () => {
   )
 }
 
-export default BroadcastNotification
+export default UserNotification

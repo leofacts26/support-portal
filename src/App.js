@@ -33,6 +33,8 @@ import SupportTickets from "./pages/customer-care/SupportTickets";
 import { Toaster } from 'react-hot-toast';
 import VendorListDetails from "./pages/caterings/VendorListDetails";
 import BroadcastNotification from "./pages/notifications/BroadcastNotification";
+import UserNotification from "./pages/notifications/UserNotification";
+import VendorNotification from "./pages/notifications/VendorNotification";
 
 function App() {
   return (
@@ -77,6 +79,8 @@ function App() {
 
           {/* notifications  */}
           <Route path="/broadcast-notifications" element={<BroadcastNotification />} />
+          <Route path="/user-notifications" element={<UserNotification />} />
+          <Route path="/vendor-notifications" element={<VendorNotification />} />
 
           {/* customer care */}
           <Route path="/roles-access" element={<RolesAccess />} />
