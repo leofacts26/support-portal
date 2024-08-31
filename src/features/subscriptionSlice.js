@@ -7,6 +7,7 @@ const initialState = {
   isLoading: true,
   subscriptionList: [],
   razorpayPlansMapperList: [],
+  vendorSubscriptionEvents: [],
 }
 
 
@@ -34,6 +35,21 @@ export const fetchRazorpayPlansMapper = createAsyncThunk(
     }
   }
 )
+
+
+export const fetchVendorSubscriptionEvents = createAsyncThunk(
+  'user/fetchVendorSubscriptionEvents',
+  async (user, thunkAPI) => {
+    try {
+      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscription-events?limit=10&page=1`);      
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
 
 
 export const subscriptionSlice = createSlice({
@@ -64,6 +80,18 @@ export const subscriptionSlice = createSlice({
         state.razorpayPlansMapperList = payload;
       })
       .addCase(fetchRazorpayPlansMapper.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // fetchVendorSubscriptionEvents 
+      .addCase(fetchVendorSubscriptionEvents.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchVendorSubscriptionEvents.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.vendorSubscriptionEvents = payload;
+      })
+      .addCase(fetchVendorSubscriptionEvents.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

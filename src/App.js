@@ -36,6 +36,7 @@ import BroadcastNotification from "./pages/notifications/BroadcastNotification";
 import UserNotification from "./pages/notifications/UserNotification";
 import VendorNotification from "./pages/notifications/VendorNotification";
 import RazorpayPlansMapper from "./pages/subscriptions/RazorpayPlansMapper";
+import VendorSubscriptionEvents from "./pages/subscriptions/VendorSubscriptionEvents";
 
 function App() {
   return (
@@ -75,6 +76,7 @@ function App() {
           {/* Subscriptions  */}
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="/razorpay-plans-mapper" element={<RazorpayPlansMapper />} />
+          <Route path="/vendor-subscription-events" element={<VendorSubscriptionEvents />} />
 
           {/* discounts  */}
           <Route path="/discounts" element={<Discounts />} />
