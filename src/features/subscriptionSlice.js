@@ -14,7 +14,7 @@ export const fetchSubscriptionData = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await api.get(`${BASE_URL}/admin-list-vendor-subscriptions`);
-      return response?.data;
+      return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }

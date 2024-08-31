@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { fetchBroadcastNotificationData } from '../../features/notificationSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import GlobalSearch from '../../components/common/GlobalSearch';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
 
 
 const rows = [
@@ -37,29 +41,58 @@ const rowsSubCategory = [
 ];
 
 const Notifications = () => {
-  const [data, setData] = useState(rows);
+  // const [data, setData] = useState(rows);
   const [subCatdata, setSubCatData] = useState(rowsSubCategory);
+
+  const dispatch = useDispatch()
+  const { broadcastNotificationList, isLoading } = useSelector((state) => state.notifications)
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  console.log(broadcastNotificationList, "broadcastNotificationList broadcastNotificationList");
+
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
-
   const [showSubCategory, setSubCategory] = useState(false);
   const handleSubClose = () => setSubCategory(false);
   const handleSubShow = () => setSubCategory(true);
 
+  useEffect(() => {
+    dispatch(fetchBroadcastNotificationData());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    if (broadcastNotificationList) {
+      const formattedData = broadcastNotificationList?.map((broadcast, index) => ({
+        vendor_type: broadcast?.vendor_type,
+        title: broadcast?.title,
+        message: broadcast?.message,
+        created_at: broadcast?.created_at,
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [broadcastNotificationList]);
+
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const newRows = rows.filter((row) => {
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data.filter((row) => {
       return (
-        row.mainCategory.toLowerCase().includes(searchValue)
+        row?.title?.toLowerCase().includes(searchValue),
+        row?.message?.toLowerCase().includes(searchValue)
       );
     });
-    setData(newRows);
+    setFilteredData(newFilteredData);
   };
+
 
   const handleSubCategorySearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
@@ -73,8 +106,8 @@ const Notifications = () => {
 
   const columns = [
     {
-      name: "Service",
-      selector: row => row.service,
+      name: "vendor_type",
+      selector: row => row.vendor_type,
       sortable: true,
     },
     {
@@ -83,8 +116,13 @@ const Notifications = () => {
       sortable: true,
     },
     {
-      name: "Body",
-      selector: row => row.body,
+      name: "message",
+      selector: row => row.message,
+      sortable: true,
+    },
+    {
+      name: "created_at",
+      selector: row => row.created_at.slice(0, 10),
       sortable: true,
     },
     {
@@ -140,9 +178,9 @@ const Notifications = () => {
 
   return (
     <>
-      <div className="container my-5">
+      <div className="container-fluid my-5">
 
-        <div className="row mb-4 d-flex justify-content-between me-2">
+        <div className="row mb-4 d-flex justify-content-between me-2 ms-2">
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
             Send Broadcast Notifications
           </button>
@@ -155,19 +193,15 @@ const Notifications = () => {
         <hr />
 
         <div className="card">
-          <input
-            type="search"
-            className="form-control-sm border ps-3 py-3"
-            placeholder="Search"
-            onChange={handleSearch}
-          />
+          {/* Search */}
+          <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows
-          // title="React-Data-Table-Component Tutorial."
+            customStyles={tableCustomStyles}
           />
         </div>
 
@@ -189,9 +223,6 @@ const Notifications = () => {
           // title="React-Data-Table-Component Tutorial."
           />
         </div>
-
-
-
       </div>
 
       <br />
@@ -239,8 +270,6 @@ const Notifications = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-
 
       <Modal centered show={showSubCategory} onHide={handleSubClose}>
         <Modal.Header closeButton>
