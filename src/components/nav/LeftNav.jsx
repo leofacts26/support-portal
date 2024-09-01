@@ -328,7 +328,7 @@ const LeftNav = () => {
 
 
 
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <a
                                     className="nav-link"
                                     href="#customercare"
@@ -378,7 +378,9 @@ const LeftNav = () => {
                                         </li>
                                     </ul>
                                 </div>
-                            </li>
+                            </li> */}
+
+                            
                         </ul>
                         {/* Divider */}
                         {/* <hr className="navbar-divider my-3" /> */}

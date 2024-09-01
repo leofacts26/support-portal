@@ -27,7 +27,7 @@ const RazorpayPlansMapper = () => {
   const [type, setType] = useState("")
 
 
-  console.log(type, "type");
+
 
 
   const [show, setShow] = useState(false);

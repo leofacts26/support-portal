@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { fetchVendorSubscriptionList } from '../../features/subscriptionSlice';
+import { fetchSubscriptionData } from '../../features/subscriptionSlice';
 
 
 
@@ -15,8 +15,16 @@ const Subscriptions = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
+  // console.log(subscriptionList, "subscriptionList subscriptionList");
+  
+
+  // useEffect(() => {
+  //   dispatch(fetchVendorSubscriptionList());
+  // }, [dispatch]);
+
+
   useEffect(() => {
-    dispatch(fetchVendorSubscriptionList());
+    dispatch(fetchSubscriptionData());
   }, [dispatch]);
 
 
@@ -148,9 +156,9 @@ const Subscriptions = () => {
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
             <h2>Total Subscription List - {subscriptionList?.length} </h2>
-            <button className='btn btn-primary fit-content' variant="primary">
+            {/* <button className='btn btn-primary fit-content' variant="primary">
               Create Subscription List
-            </button>
+            </button> */}
           </div>
         </div>
 

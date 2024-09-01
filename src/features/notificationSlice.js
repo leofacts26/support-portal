@@ -8,35 +8,35 @@ const initialState = {
   broadcastNotificationList: [],
   userNotificationList: [],
   vendorNotificationList: [],
-  caterSubscriptionTypes: [],
-  tiffinSubscriptionTypes: [],
+  // caterSubscriptionTypes: [],
+  // tiffinSubscriptionTypes: [],
 }
 
 
-export const fetchSubscriptionTypesCaterer = createAsyncThunk(
-  'user/fetchSubscriptionTypesCaterer',
-  async (data, thunkAPI) => {
-    console.log(data, "data ttttttttt");
-    try {
-      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=Caterer&limit=1000&page=1`);
-      return response?.data?.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
-    }
-  }
-)
+// export const fetchSubscriptionTypesCaterer = createAsyncThunk(
+//   'user/fetchSubscriptionTypesCaterer',
+//   async (data, thunkAPI) => {
+//     console.log(data, "data ttttttttt");
+//     try {
+//       const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=Caterer&limit=1000&page=1`);
+//       return response?.data?.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.response.data.msg);
+//     }
+//   }
+// )
 
-export const fetchSubscriptionTypesTiffin = createAsyncThunk(
-  'user/fetchSubscriptionTypesTiffin',
-  async (user, thunkAPI) => {
-    try {
-      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=Tiffin&limit=1000&page=1`);
-      return response?.data?.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
-    }
-  }
-)
+// export const fetchSubscriptionTypesTiffin = createAsyncThunk(
+//   'user/fetchSubscriptionTypesTiffin',
+//   async (user, thunkAPI) => {
+//     try {
+//       const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=Tiffin&limit=1000&page=1`);
+//       return response?.data?.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.response.data.msg);
+//     }
+//   }
+// )
 
 export const fetchBroadcastNotificationData = createAsyncThunk(
   'user/fetchBroadcastNotificationData',
@@ -197,30 +197,7 @@ export const notificationSlice = createSlice({
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
-      // fetchSubscriptionTypesCaterer 
-      .addCase(fetchSubscriptionTypesCaterer.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchSubscriptionTypesCaterer.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.caterSubscriptionTypes = payload;
-      })
-      .addCase(fetchSubscriptionTypesCaterer.rejected, (state, { payload }) => {
-        state.isLoading = false;
-        toast.error(datavalidationerror(payload));
-      })
-      // fetchSubscriptionTypesTiffin 
-      .addCase(fetchSubscriptionTypesTiffin.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchSubscriptionTypesTiffin.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.tiffinSubscriptionTypes = payload;
-      })
-      .addCase(fetchSubscriptionTypesTiffin.rejected, (state, { payload }) => {
-        state.isLoading = false;
-        toast.error(datavalidationerror(payload));
-      })
+
   }
 })
 

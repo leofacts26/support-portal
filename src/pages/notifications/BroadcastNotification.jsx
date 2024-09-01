@@ -6,32 +6,25 @@ import { createBroadbandNotification, fetchBroadcastNotificationData, fetchSubsc
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
-import { fetchSubscriptionData } from '../../features/subscriptionSlice';
+import { fetchSubscriptionData, fetchSubscriptionTypeCaterer } from '../../features/subscriptionSlice';
 
 
 
 const initialState = {
   title: '',
   message: '',
-  type: '',
+  // type: '',
   subscriptionTypeId: ''
 }
 
 const BroadcastNotification = () => {
   const dispatch = useDispatch()
-  const { broadcastNotificationList, isLoading, caterSubscriptionTypes, tiffinSubscriptionTypes } = useSelector((state) => state.notifications)
+  const { broadcastNotificationList, isLoading } = useSelector((state) => state.notifications)
+  const { vendorSubscriptionTypesList } = useSelector((state) => state.subscription)
   const [values, setValues] = useState(initialState)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-
-  const combineSubsData = [
-    ...(caterSubscriptionTypes || []),
-    ...(tiffinSubscriptionTypes || [])
-  ].map(item => ({
-    id: item?.id,
-    display_name: `${item?.display_name}-${item?.vendor_type}`,
-    vendor_type: item?.vendor_type
-  }));
+  const [type, setType] = useState("")
 
 
   const [show, setShow] = useState(false);
@@ -47,16 +40,11 @@ const BroadcastNotification = () => {
     dispatch(fetchBroadcastNotificationData());
   }, [dispatch]);
 
-
   useEffect(() => {
-    dispatch(fetchSubscriptionTypesCaterer());
-  }, [dispatch]);
-
-
-  useEffect(() => {
-    dispatch(fetchSubscriptionTypesTiffin());
-  }, [dispatch]);
-
+    if (type !== '') {
+      dispatch(fetchSubscriptionTypeCaterer(type));
+    }
+  }, [type]);
 
 
   useEffect(() => {
@@ -125,7 +113,7 @@ const BroadcastNotification = () => {
 
   const onHandleSubmit = async (e) => {
     e.preventDefault();
-    const { title, message, type, subscriptionTypeId } = values;
+    const { title, message, subscriptionTypeId } = values;
     const data = {
       message,
       title,
@@ -136,15 +124,6 @@ const BroadcastNotification = () => {
     await dispatch(fetchBroadcastNotificationData())
     setValues(initialState)
     handleClose()
-
-    // if (editId === null) {
-    //   await dispatch(createPriceRanges(data))
-    // } else {
-    //   await dispatch(updatePriceRanges(data))
-    // }
-    // await dispatch(fetchpriceRangesList());
-    // setValues(initialState)
-    // handleClose()
   }
 
   return (
@@ -184,24 +163,22 @@ const BroadcastNotification = () => {
           <Modal.Body>
 
             <div>
-              <label htmlFor="type" className="form-label">Type</label>
+              <label htmlFor="vendor_type" className="form-label">Vendor Type</label>
               <select
                 required
-                className="form-select"
                 name="type"
+                className="form-select"
                 value={values.type}
-                onChange={handleChange}
+                onChange={(e) => setType(e.target.value)}
               >
-                <option value="">Select Type</option>
-                <option value="All">All</option>
-                <option value="Catering">Catering</option>
+                <option value="">Select Vendor Type</option>
+                <option value="Caterer">Caterer</option>
                 <option value="Tiffin">Tiffin</option>
-                <option value="User">User</option>
               </select>
             </div>
 
 
-            <div className='mt-3'>
+            {type && <div className='mt-3'>
               <label for="name" className="form-label">subscription Types</label>
               <select
                 required
@@ -211,15 +188,16 @@ const BroadcastNotification = () => {
                 onChange={handleChange}
               >
                 <>
-                  <option value="">Select Subscription Type</option> {/* Placeholder Option */}
-                  {combineSubsData?.map((item) => (
+                  <option value="">Select Subscription Type</option>
+                  {vendorSubscriptionTypesList?.map((item) => (
                     <option key={item?.id} value={item?.id}>
                       {item?.display_name}
                     </option>
                   ))}
                 </>
               </select>
-            </div>
+            </div>}
+
 
 
             <div className='mt-3'>
