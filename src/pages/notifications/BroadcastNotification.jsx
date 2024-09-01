@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { createBroadbandNotification, fetchBroadcastNotificationData } from '../../features/notificationSlice';
+import { createBroadbandNotification, fetchBroadcastNotificationData, fetchSubscriptionTypesCaterer, fetchSubscriptionTypesTiffin } from '../../features/notificationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
@@ -19,11 +19,19 @@ const initialState = {
 
 const BroadcastNotification = () => {
   const dispatch = useDispatch()
-  const { broadcastNotificationList, isLoading } = useSelector((state) => state.notifications)
+  const { broadcastNotificationList, isLoading, caterSubscriptionTypes, tiffinSubscriptionTypes } = useSelector((state) => state.notifications)
   const [values, setValues] = useState(initialState)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
+  const combineSubsData = [
+    ...(caterSubscriptionTypes || []),
+    ...(tiffinSubscriptionTypes || [])
+  ].map(item => ({
+    id: item?.id,
+    display_name: `${item?.display_name}-${item?.vendor_type}`,
+    vendor_type: item?.vendor_type
+  }));
 
 
   const [show, setShow] = useState(false);
@@ -37,6 +45,16 @@ const BroadcastNotification = () => {
 
   useEffect(() => {
     dispatch(fetchBroadcastNotificationData());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    dispatch(fetchSubscriptionTypesCaterer());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    dispatch(fetchSubscriptionTypesTiffin());
   }, [dispatch]);
 
 
@@ -168,19 +186,19 @@ const BroadcastNotification = () => {
           <Modal.Body>
 
             <div>
-              <label for="name" className="form-label">Type</label>
+              <label htmlFor="type" className="form-label">Type</label>
               <select
+                required
                 className="form-select"
                 name="type"
                 value={values.type}
                 onChange={handleChange}
               >
-                <>
-                  <option value="All">All</option>
-                  <option value="Catering">Catering</option>
-                  <option value="Tiffin">Tiffin</option>
-                  <option value="User">User</option>
-                </>
+                <option value="">Select Type</option>
+                <option value="All">All</option>
+                <option value="Catering">Catering</option>
+                <option value="Tiffin">Tiffin</option>
+                <option value="User">User</option>
               </select>
             </div>
 
@@ -188,16 +206,19 @@ const BroadcastNotification = () => {
             <div className='mt-3'>
               <label for="name" className="form-label">subscription Types</label>
               <select
+                required
                 className="form-select"
                 name="subscriptionTypeId"
                 value={values.subscriptionTypeId}
                 onChange={handleChange}
               >
                 <>
-                  <option value="All">All</option>
-                  <option value="1">Brand</option>
-                  <option value="2">Popular</option>
-                  <option value="3">Basic</option>
+                  <option value="">Select Subscription Type</option> {/* Placeholder Option */}
+                  {combineSubsData?.map((item) => (
+                    <option key={item?.id} value={item?.id}>
+                      {item?.display_name}
+                    </option>
+                  ))}
                 </>
               </select>
             </div>
@@ -206,6 +227,7 @@ const BroadcastNotification = () => {
             <div className='mt-3'>
               <label for="name" className="form-label">Title</label>
               <input
+                required
                 type="text"
                 className="form-control"
                 placeholder="Enter Title"
@@ -217,6 +239,7 @@ const BroadcastNotification = () => {
             <div className='mt-3'>
               <label for="name" className="form-label">Message</label>
               <textarea
+                required
                 className="form-control"
                 data-autosize rows="1"
                 placeholder="Enter Message..."
@@ -238,7 +261,7 @@ const BroadcastNotification = () => {
             </Button>
           </Modal.Footer>
         </form>
-      </Modal>
+      </Modal >
 
 
     </>
