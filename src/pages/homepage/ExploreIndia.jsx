@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import { createExplorecity, fetchexplorecitiesData, updateExplorecity, updateToggleExplorecity } from '../../features/homepage/homeSlice';
+import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { setCuisineId } from '../../features/userSlice';

@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import {  updateTogglePriceRanges } from '../../features/catering/priceSlice';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { fetchSubscriptionData } from '../../features/subscriptionSlice';
+import { fetchVendorSubscriptionList } from '../../features/subscriptionSlice';
 
 
 
@@ -19,7 +16,7 @@ const Subscriptions = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchSubscriptionData());
+    dispatch(fetchVendorSubscriptionList());
   }, [dispatch]);
 
 

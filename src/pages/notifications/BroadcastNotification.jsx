@@ -159,8 +159,6 @@ const BroadcastNotification = () => {
           </div>
         </div>
         <hr />
-
-        <hr />
         <div className="card">
           {/* Search */}
           <GlobalSearch handleSearch={handleSearch} />

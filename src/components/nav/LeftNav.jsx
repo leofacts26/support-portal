@@ -225,11 +225,11 @@ const LeftNav = () => {
                                                 Tiffin Food Types
                                             </NavLink>
                                         </li> */}
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <NavLink to="/tiffin-faq" className="nav-link">
                                                 Tiffin Faq
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                     </ul>
                                 </div>
                             </li>
@@ -255,6 +255,11 @@ const LeftNav = () => {
                                 </a>
                                 <div className="collapse" id="ManageSubs">
                                     <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/create-subscription" className="nav-link">
+                                                Create Subscription
+                                            </NavLink>
+                                        </li>
                                         <li className="nav-item">
                                             <NavLink to="/subscriptions" className="nav-link">
                                                 Manage Subscription

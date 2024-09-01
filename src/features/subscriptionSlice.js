@@ -8,6 +8,7 @@ const initialState = {
   subscriptionList: [],
   razorpayPlansMapperList: [],
   vendorSubscriptionEvents: [],
+  vendorSubscriptionList: [],
 }
 
 
@@ -41,7 +42,45 @@ export const fetchVendorSubscriptionEvents = createAsyncThunk(
   'user/fetchVendorSubscriptionEvents',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscription-events?limit=1000&page=1`);      
+      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscription-events?limit=1000&page=1`);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const fetchVendorSubscriptionList = createAsyncThunk(
+  'user/fetchSubscriptionList',
+  async (user, thunkAPI) => {
+    try {
+      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=Caterer&limit=100&page=1`);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const createSubscriptionData = createAsyncThunk(
+  'user/createSubscriptionData',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-create-subscription-type`, data);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const updateSubscriptionData = createAsyncThunk(
+  'user/updateSubscriptionData',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-update-subscription-type`, data);
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -92,6 +131,18 @@ export const subscriptionSlice = createSlice({
         state.vendorSubscriptionEvents = payload;
       })
       .addCase(fetchVendorSubscriptionEvents.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // fetchVendorSubscriptionList 
+      .addCase(fetchVendorSubscriptionList.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchVendorSubscriptionList.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.vendorSubscriptionList = payload;
+      })
+      .addCase(fetchVendorSubscriptionList.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
