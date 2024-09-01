@@ -10,6 +10,7 @@ import kitchenReducer from '../features/catering/kitchenSlice'
 import couponReducer from '../features/catering/couponSlice'
 import subscriptionReducer from '../features/subscriptionSlice'
 import notificationReducer from '../features/notificationSlice'
+import authReducer from '../features/authSlice'
 
 
 export const store = configureStore({
@@ -25,5 +26,6 @@ export const store = configureStore({
     coupons: couponReducer,
     subscription: subscriptionReducer,
     notifications: notificationReducer,
+    authSlice: authReducer,
   },
 })

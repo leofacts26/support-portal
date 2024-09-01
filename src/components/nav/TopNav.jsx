@@ -1,6 +1,19 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { setToken } from '../../features/authSlice'
 
 const TopNav = () => {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const onHandleLogout = () => {
+        localStorage.removeItem('token');
+        dispatch(setToken(''));
+        navigate('/login');
+    }
+
     return (
         <>
             <nav
@@ -32,9 +45,9 @@ const TopNav = () => {
                                 </a>
                                 {/* Menu */}
                                 <div className="dropdown-menu dropdown-menu-end">
-                                    <a href="#" className="dropdown-item">
+                                    <div className="dropdown-item" style={{ cursor: 'pointer' }} onClick={onHandleLogout}>
                                         Logout
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

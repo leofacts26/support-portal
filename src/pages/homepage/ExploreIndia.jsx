@@ -26,13 +26,14 @@ const initialState = {
 const ExploreIndia = () => {
   const dispatch = useDispatch()
   const { exploreCities, isLoading } = useSelector((state) => state.homepage)
+  const { token } = useSelector((state) => state.authSlice)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [values, setValues] = useState(initialState)
   const [editId, setEditId] = useState(null)
   const { onUploadCityImage } = useUploadCusinePhotoos()
 
-  // console.log(filteredData, "filteredData filteredData");
+  console.log(token, "token token token token");
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
