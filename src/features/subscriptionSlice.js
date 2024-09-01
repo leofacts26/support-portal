@@ -9,6 +9,7 @@ const initialState = {
   razorpayPlansMapperList: [],
   vendorSubscriptionEvents: [],
   vendorSubscriptionList: [],
+  vendorSubscriptionTypesList: [],
 }
 
 
@@ -90,6 +91,48 @@ export const updateSubscriptionData = createAsyncThunk(
 
 
 
+export const fetchSubscriptionTypeCaterer = createAsyncThunk(
+  'user/fetchSubscriptionTypeCaterer',
+  async (vendor_type, thunkAPI) => {
+    // console.log(data, "data ttttttttt");
+    try {
+      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=${vendor_type}&limit=1000&page=1`);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+// admin-create-razorpay-plan-mapper 
+export const createRazorpayPlansMapper = createAsyncThunk(
+  'user/createRazorpayPlansMapper',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-create-razorpay-plan-mapper`, data);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const updateRazorpayPlansMapper = createAsyncThunk(
+  'user/updateRazorpayPlansMapper',
+  async (data, thunkAPI) => {
+    try {
+      const response = await api.post(`${BASE_URL}/admin-update-razorpay-plan-mapper`, data);
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+
 
 export const subscriptionSlice = createSlice({
   name: 'subscription',
@@ -146,6 +189,41 @@ export const subscriptionSlice = createSlice({
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
+      // fetchSubscriptionTypeCaterer 
+      .addCase(fetchSubscriptionTypeCaterer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchSubscriptionTypeCaterer.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.vendorSubscriptionTypesList = payload;
+      })
+      .addCase(fetchSubscriptionTypeCaterer.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // createRazorpayPlansMapper 
+      .addCase(createRazorpayPlansMapper.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createRazorpayPlansMapper.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(createRazorpayPlansMapper.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // updateRazorpayPlansMapper 
+      .addCase(updateRazorpayPlansMapper.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateRazorpayPlansMapper.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(updateRazorpayPlansMapper.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+
   }
 })
 
