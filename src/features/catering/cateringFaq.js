@@ -10,9 +10,14 @@ const initialState = {
 
 export const fetchCatteringFaqs = createAsyncThunk(
   'catering/fetchCatteringFaqs',
-  async (type, thunkAPI) => {    
+  async (type, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-faqs?limit=100&current_page=1&type=${type}`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-faqs?limit=100&current_page=1&type=${type}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -23,15 +28,13 @@ export const fetchCatteringFaqs = createAsyncThunk(
 export const createCateringFaq = createAsyncThunk(
   'user/createCateringFaq',
   async (data, thunkAPI) => {
-    console.log(data, "data");
-    
     try {
-      const response = await api.post(`${BASE_URL}/admin-faq-create`, data,
-        //   {
-        //   headers: {
-        //     authorization: `Bearer ${thunkAPI.getState()?.user?.accessToken}`,
-        //   },
-        // }
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-faq-create`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
       );
       toast.success(successToast(response))
     } catch (error) {
@@ -44,7 +47,12 @@ export const updateCateringFaq = createAsyncThunk(
   'user/updateCateringFaq',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-faq-update`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-faq-update`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success(successToast(response))
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -57,7 +65,12 @@ export const updateToggleFaq = createAsyncThunk(
   'user/updateToggleFaq',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-toggle-faq`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-toggle-faq`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success(successToast(response))
       // return response?.data?.data;
     } catch (error) {

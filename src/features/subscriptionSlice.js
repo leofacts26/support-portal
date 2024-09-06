@@ -17,7 +17,12 @@ export const fetchSubscriptionData = createAsyncThunk(
   'user/fetchSubscriptionData',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscriptions`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscriptions`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -30,7 +35,12 @@ export const fetchRazorpayPlansMapper = createAsyncThunk(
   'user/fetchRazorpayPlansMapper',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-razorpay-plans-mapper?limit=1000&current_page=1`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-razorpay-plans-mapper?limit=1000&current_page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -43,7 +53,12 @@ export const fetchVendorSubscriptionEvents = createAsyncThunk(
   'user/fetchVendorSubscriptionEvents',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscription-events?limit=1000&page=1`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscription-events?limit=1000&page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -55,7 +70,12 @@ export const fetchVendorSubscriptionList = createAsyncThunk(
   'user/fetchSubscriptionList',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=Caterer&limit=100&page=1`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=Caterer&limit=100&page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -68,7 +88,12 @@ export const createSubscriptionData = createAsyncThunk(
   'user/createSubscriptionData',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-subscription-type`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-subscription-type`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -81,7 +106,12 @@ export const updateSubscriptionData = createAsyncThunk(
   'user/updateSubscriptionData',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-update-subscription-type`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-update-subscription-type`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -94,9 +124,13 @@ export const updateSubscriptionData = createAsyncThunk(
 export const fetchSubscriptionTypeCaterer = createAsyncThunk(
   'user/fetchSubscriptionTypeCaterer',
   async (vendor_type, thunkAPI) => {
-    // console.log(data, "data ttttttttt");
     try {
-      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=${vendor_type}&limit=1000&page=1`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/rz-list-subscription-types-by-vendor-type?vendor_type=${vendor_type}&limit=1000&page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -110,7 +144,12 @@ export const createRazorpayPlansMapper = createAsyncThunk(
   'user/createRazorpayPlansMapper',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-razorpay-plan-mapper`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-razorpay-plan-mapper`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -123,7 +162,12 @@ export const updateRazorpayPlansMapper = createAsyncThunk(
   'user/updateRazorpayPlansMapper',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-update-razorpay-plan-mapper`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-update-razorpay-plan-mapper`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);

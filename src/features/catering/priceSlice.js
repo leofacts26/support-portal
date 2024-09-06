@@ -13,9 +13,13 @@ const initialState = {
 export const fetchpriceRangesList = createAsyncThunk(
   'catering/fetchpriceRangesList',
   async (data, thunkAPI) => {
-    console.log(data, "DATATATT");
-      try {
-      const response = await api.get(`${BASE_URL}/admin-list-price-ranges?current_page=1&limit=10&vendor_type=${cater_vendor_type}`);
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-price-ranges?current_page=1&limit=10&vendor_type=${cater_vendor_type}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -26,9 +30,13 @@ export const fetchpriceRangesList = createAsyncThunk(
 export const fetchpriceRangesListTiffin = createAsyncThunk(
   'catering/fetchpriceRangesListTiffin',
   async (data, thunkAPI) => {
-    console.log(data, "DATATATT");
-      try {
-      const response = await api.get(`${BASE_URL}/admin-list-price-ranges?current_page=1&limit=10&vendor_type=${tiffin_vendor_type}`);
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-price-ranges?current_page=1&limit=10&vendor_type=${tiffin_vendor_type}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -40,7 +48,12 @@ export const createPriceRanges = createAsyncThunk(
   'user/createPriceRanges',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-price-range`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-price-range`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -52,7 +65,12 @@ export const updateTogglePriceRanges = createAsyncThunk(
   'user/updateTogglePriceRanges',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-toggle-price-range`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-toggle-price-range`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success(successToast(response))
       // return response?.data?.data;
     } catch (error) {
@@ -65,7 +83,12 @@ export const updatePriceRanges = createAsyncThunk(
   'user/updatePriceRanges',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-update-price-range`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-update-price-range`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);

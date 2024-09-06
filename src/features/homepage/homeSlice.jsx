@@ -15,7 +15,12 @@ export const fetchexplorecitiesData = createAsyncThunk(
     'user/fetchexplorecitiesData',
     async (user, thunkAPI) => {
         try {
-            const response = await api.get(`${BASE_URL}/admin-list-explore-cities`);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-list-explore-cities`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -28,7 +33,12 @@ export const createExplorecity = createAsyncThunk(
     'user/createExplorecity',
     async (cityData, thunkAPI) => {
         try {
-            const response = await api.post(`${BASE_URL}/admin-create-new-explore-city`, cityData);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-create-new-explore-city`, cityData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -41,7 +51,12 @@ export const updateExplorecity = createAsyncThunk(
     'user/updateExplorecity',
     async (cityData, thunkAPI) => {
         try {
-            const response = await api.post(`${BASE_URL}/admin-update-explore-city`, cityData);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-update-explore-city`, cityData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -54,7 +69,12 @@ export const updateToggleExplorecity = createAsyncThunk(
     'user/updateExplorecity',
     async (cityData, thunkAPI) => {
         try {
-            const response = await api.post(`${BASE_URL}/admin-toggle-explore-city`, cityData);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-toggle-explore-city`, cityData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             toast.success(successToast(response))
             // return response?.data?.data;
         } catch (error) {
@@ -68,7 +88,12 @@ export const fetchNewsletter = createAsyncThunk(
     'user/fetchNewsletter',
     async (user, thunkAPI) => {
         try {
-            const response = await api.get(`${BASE_URL}/admin-list-email-subscriptions`);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-list-email-subscriptions`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);

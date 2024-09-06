@@ -13,7 +13,12 @@ export const fetchOccasionList = createAsyncThunk(
   'catering/fetchOccasionList',
   async (catering, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-occasions?current_page=1&limit=100`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-occasions?current_page=1&limit=100`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -25,7 +30,12 @@ export const createOccasionData = createAsyncThunk(
   'user/createOccasionData',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-occasion`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-occasion`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -38,7 +48,12 @@ export const updateToggleOccasion = createAsyncThunk(
   'user/updateToggleOccasion',
   async (occasionData, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-toggle-occasion`, occasionData);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-toggle-occasion`, occasionData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success(successToast(response))
       // return response?.data?.data;
     } catch (error) {
@@ -52,7 +67,12 @@ export const updateOccasionData = createAsyncThunk(
   'user/updateOccasionData',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-update-occasion`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-update-occasion`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);

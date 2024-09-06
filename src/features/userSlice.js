@@ -14,7 +14,12 @@ export const fetchUserData = createAsyncThunk(
     'user/fetchUserData',
     async (user, thunkAPI) => {
         try {
-            const response = await api.get(`${BASE_URL}/admin-list-users`);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-list-users`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);

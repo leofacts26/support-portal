@@ -12,9 +12,13 @@ const initialState = {
 export const fetchKitchenTypes = createAsyncThunk(
   'catering/fetchKitchenTypes',
   async (data, thunkAPI) => {
-    // console.log(data, "DATATATT");
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-kitchen-types?current_page=1&limit=100`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-kitchen-types?current_page=1&limit=100`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -26,7 +30,12 @@ export const createKitchenType = createAsyncThunk(
   'user/createKitchenType',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-kitchen-type`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-kitchen-type`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -39,7 +48,12 @@ export const updateKitchenType = createAsyncThunk(
   'user/updateKitchenType',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-update-kitchen-type`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-update-kitchen-type`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -52,7 +66,12 @@ export const updateToggleKitchenType = createAsyncThunk(
   'user/updateToggleKitchenType',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-toggle-kitchen-type`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-toggle-kitchen-type`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success(successToast(response))
       // return response?.data?.data;
     } catch (error) {

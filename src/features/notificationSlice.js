@@ -42,7 +42,12 @@ export const fetchBroadcastNotificationData = createAsyncThunk(
   'user/fetchBroadcastNotificationData',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-broadcast-notifications?current_page=1&limit=1000`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-broadcast-notifications?current_page=1&limit=1000`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -54,7 +59,12 @@ export const fetchUserNotificationData = createAsyncThunk(
   'user/fetchUserNotificationData',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-user-notifications?current_page=1&limit=1000`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-user-notifications?current_page=1&limit=1000`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -67,7 +77,12 @@ export const fetchVendorNotificationData = createAsyncThunk(
   'user/fetchVendorNotificationData',
   async (user, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-vendor-notifications?current_page=1&limit=10`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-vendor-notifications?current_page=1&limit=10`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -79,9 +94,13 @@ export const fetchVendorNotificationData = createAsyncThunk(
 export const createBroadbandNotification = createAsyncThunk(
   'user/createBroadbandNotification',
   async (data, thunkAPI) => {
-    // const { title, message } = data;
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-broadcast-notification`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-broadcast-notification`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -92,9 +111,13 @@ export const createBroadbandNotification = createAsyncThunk(
 export const createUserNotification = createAsyncThunk(
   'user/createUserNotification',
   async (data, thunkAPI) => {
-    // const { title, message } = data;
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-user-notification`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-user-notification`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -106,9 +129,13 @@ export const createUserNotification = createAsyncThunk(
 export const createVendorSubscription = createAsyncThunk(
   'user/createVendorSubscription',
   async (data, thunkAPI) => {
-    // const { title, message } = data;
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-vendor-notification`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-vendor-notification`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);

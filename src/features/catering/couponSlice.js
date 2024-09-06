@@ -13,7 +13,12 @@ export const fetchCouponList = createAsyncThunk(
   'catering/fetchCouponList',
   async (data, thunkAPI) => {
     try {
-      const response = await api.get(`${BASE_URL}/admin-list-coupons`);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-coupons`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -26,7 +31,12 @@ export const createCouponList = createAsyncThunk(
   'user/createCouponList',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-create-coupon`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-coupon`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -40,7 +50,12 @@ export const updateCouponList = createAsyncThunk(
   'user/updateCouponList',
   async (data, thunkAPI) => {
     try {
-      const response = await api.post(`${BASE_URL}/admin-update-coupon`, data);
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-update-coupon`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);

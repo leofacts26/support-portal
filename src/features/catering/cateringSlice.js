@@ -14,8 +14,13 @@ const initialState = {
 export const fetchCateringVendors = createAsyncThunk(
     'catering/fetchCateringVendors',
     async (catering, thunkAPI) => {
+        const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
         try {
-            const response = await api.get(`${BASE_URL}/admin-list-vendors`);
+            const response = await api.get(`${BASE_URL}/admin-list-vendors`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -27,7 +32,12 @@ export const fetchCateringVendorDetails = createAsyncThunk(
     'catering/fetchCateringVendorDetails',
     async (companyId, thunkAPI) => {
         try {
-            const response = await api.get(`${BASE_URL}/admin-get-vendor-view-details?company_id=${companyId}`);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-get-vendor-view-details?company_id=${companyId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -39,7 +49,12 @@ export const fetchCateringFoodTypes = createAsyncThunk(
     'catering/fetchCateringFoodTypes',
     async (catering, thunkAPI) => {
         try {
-            const response = await api.get(`${BASE_URL}/admin-list-food-types`);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-list-food-types`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -51,7 +66,12 @@ export const fetchCateringCuisines = createAsyncThunk(
     'catering/fetchCateringCuisines',
     async (catering, thunkAPI) => {
         try {
-            const response = await api.get(`${BASE_URL}/admin-list-cuisines`);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-list-cuisines`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -63,7 +83,12 @@ export const editCateringParentCuisine = createAsyncThunk(
     'catering/editCateringParentCuisine',
     async (catering, thunkAPI) => {
         try {
-            const response = await api.post(`${BASE_URL}/admin-update-cuisine`, catering);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-update-cuisine`, catering, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             toast.success(successToast(response))
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -75,7 +100,12 @@ export const addCateringParentCuisine = createAsyncThunk(
     'catering/addCateringParentCuisine',
     async (catering, thunkAPI) => {
         try {
-            const response = await api.post(`${BASE_URL}/admin-create-cuisine`, catering);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-create-cuisine`, catering, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             toast.success(successToast(response))
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -87,7 +117,12 @@ export const deleteCateringCuisine = createAsyncThunk(
     'catering/deleteCateringCuisine',
     async (catering, thunkAPI) => {
         try {
-            const response = await api.post(`${BASE_URL}/admin-toggle-cuisine`, catering);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-toggle-cuisine`, catering, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             toast.success(successToast(response))
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -100,7 +135,12 @@ export const updateToggleCuisine = createAsyncThunk(
     'user/updateToggleCuisine',
     async (data, thunkAPI) => {
         try {
-            const response = await api.post(`${BASE_URL}/admin-toggle-cuisine`, data);
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-toggle-cuisine`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             toast.success(successToast(response))
             // return response?.data?.data;
         } catch (error) {
