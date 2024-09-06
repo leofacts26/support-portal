@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api, BASE_URL } from '../api/apiConfig';
-import { datavalidationerror } from '../utils';
+import { datavalidationerror, successToast } from '../utils';
 import toast from 'react-hot-toast';
 
 const initialState = {
@@ -175,6 +175,24 @@ export const updateRazorpayPlansMapper = createAsyncThunk(
   }
 )
 
+
+export const updateToggleSubscriptionList = createAsyncThunk(
+  'user/updateToggleSubscriptionList',
+  async (data, thunkAPI) => {
+      try {
+          const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+          const response = await api.post(`${BASE_URL}/apineeded`, data, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          });
+          toast.success(successToast(response))
+          // return response?.data?.data;
+      } catch (error) {
+          return thunkAPI.rejectWithValue(error.response.data.msg);
+      }
+  }
+)
 
 
 

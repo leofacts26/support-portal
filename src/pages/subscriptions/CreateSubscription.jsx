@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { createSubscriptionData, fetchVendorSubscriptionList, updateSubscriptionData } from '../../features/subscriptionSlice';
+import { createSubscriptionData, fetchVendorSubscriptionList, updateSubscriptionData, updateToggleSubscriptionList } from '../../features/subscriptionSlice';
 import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
 import Button from 'react-bootstrap/Button';
@@ -71,13 +71,13 @@ const CreateSubscription = () => {
   }, [vendorSubscriptionList]);
 
 
-  const handleStatusToggle = async (city) => {
-    // const updatedCity = {
-    //   ...city,
-    //   is_active: city.is_active === 1 ? 0 : 1
+  const handleStatusToggle = async (sub) => {
+    // const updatedSub = {
+    //   ...sub,
+    //   is_active: sub.is_active === 1 ? 0 : 1
     // }
-    // await dispatch(updateToggleExplorecity(updatedCity))
-    // await dispatch(fetchexplorecitiesData());
+    // await dispatch(updateToggleSubscriptionList(updatedSub))
+    // await dispatch(fetchVendorSubscriptionList());
   }
 
 
