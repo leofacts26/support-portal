@@ -35,6 +35,9 @@ const VendorList = () => {
   // console.log(cateringVendorsDetail.vendorDetails, "cateringVendorsDetail");
   const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
+  // const { token } = useSelector((state) => state.authSlice)
+
+
   // console.log(foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails, "foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails");
 
 

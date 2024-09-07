@@ -10,7 +10,7 @@ const VendorListDetails = () => {
   const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering)
   const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
-  console.log(foodTypes, "foodTypes");
+  console.log(cateringVendorsDetail, "cateringVendorsDetail");
 
 
   const { id } = useParams();
@@ -111,6 +111,99 @@ const VendorListDetails = () => {
               <tr>
                 <td>
                   {foodTypes?.map(item => item.food_type_name)?.join(', ')}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
+
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Kitchen Types</h3>
+            <h3 className='mb-0 text-warning'>Edit</h3>
+          </div>
+          <Table responsive="xl" className='m-0'>
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>Kitchen Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {kitchenTypes?.map(item => item.kitchen_type_name)?.join(', ')}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
+
+
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Meal Types</h3>
+            <h3 className='mb-0 text-warning'>Edit</h3>
+          </div>
+          <Table responsive="xl" className='m-0'>
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>Meal Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {mealTimes?.map(item => item.meal_time_name)?.join(', ')}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Service Types</h3>
+            <h3 className='mb-0 text-warning'>Edit</h3>
+          </div>
+          <Table responsive="xl" className='m-0'>
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>Service Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {serviceTypes?.map(item => item.service_type_name)?.join(', ')}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
+
+
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Serving Types</h3>
+            <h3 className='mb-0 text-warning'>Edit</h3>
+          </div>
+          <Table responsive="xl" className='m-0'>
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>Serving Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {servingTypes?.map(item => item.serving_type_name)?.join(', ')}
                 </td>
               </tr>
             </tbody>
