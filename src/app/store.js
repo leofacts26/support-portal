@@ -11,6 +11,8 @@ import couponReducer from '../features/catering/couponSlice'
 import subscriptionReducer from '../features/subscriptionSlice'
 import notificationReducer from '../features/notificationSlice'
 import authReducer from '../features/authSlice'
+import footerReduce from '../features/footer'
+
 
 
 export const store = configureStore({
@@ -27,5 +29,6 @@ export const store = configureStore({
     subscription: subscriptionReducer,
     notifications: notificationReducer,
     authSlice: authReducer,
+    footerSlice: footerReduce,
   },
 })
