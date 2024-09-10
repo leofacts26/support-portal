@@ -9,9 +9,37 @@ import Modal from 'react-bootstrap/Modal';
 import { fetchCateringVendorDetails } from '../../features/catering/cateringSlice';
 
 
-const initialState = {
-  start_price: '',
-  end_price: '',
+
+const businessProfile = {
+  vendor_service_name: '',
+  vendor_type: '',
+  street_name: '',
+  point_of_contact_name: '',
+  total_staffs_approx: '',
+  pin_code: '',
+  about_description: '',
+  working_since: '',
+  business_email: '',
+  business_phone_number: '',
+  landline_number: '',
+  whatsapp_business_phone_number: '',
+  website_link: '',
+  twitter_id: '',
+  instagram_link: '',
+  facebook_link: '',
+  country: '',
+  state: '',
+  city: '',
+  pincode: '',
+  place_id: '',
+  latitude: '',
+  longitude: '',
+  area: '',
+  formatted_address: '',
+  working_days_start: '',
+  working_days_end: '',
+  working_hours_start: '',
+  working_hours_end: '',
 }
 
 
@@ -23,8 +51,8 @@ const VendorListDetails = () => {
   const companyId = queryParams.get('company_id');
 
   const dispatch = useDispatch()
-  const { cateringVendors, cateringVendorsDetail, isLoading, vendorListId } = useSelector((state) => state.catering)
-  const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const { cateringVendors, cateringVendorsDetail, isLoading } = useSelector((state) => state.catering)
+  const { foodTypes, kitchenTypes, mealTimes, cuisines, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
   const [foodTypesList, setFoodTypesList] = useState(foodTypes)
   const [startPrice, setStartPrice] = useState(cateringVendorsDetail?.start_price || null)
@@ -33,14 +61,15 @@ const VendorListDetails = () => {
   const [maximumCapacity, setMaximumCapacity] = useState(cateringVendorsDetail?.maximum_capacity)
   const [minimumCapacity, setMinimumCapacity] = useState(cateringVendorsDetail?.minimum_capacity)
 
-  console.log(id, "cateringVendorsDetail 897");
-  console.log(companyId, "companyId 897");
+  console.log(cateringVendorsDetail, "cateringVendorsDetail 897");
 
 
-
-  const [values, setValues] = useState(initialState)
+  const [businessProfileValues, setBusinessProfileValues] = useState(businessProfile)
   const [editId, setEditId] = useState(null)
   const [show, setShow] = useState(false);
+  const [showBusiness, setShowBusiness] = useState(false);
+
+  console.log(businessProfileValues, "businessProfileValues businessProfileValues");
 
 
   const handleClose = () => {
@@ -60,15 +89,32 @@ const VendorListDetails = () => {
   };
 
 
+  const handleShowBusinessProfileEditClose = () => {
+    setShowBusiness(false)
+  }
+
+  const handleBusinessProfileEditShow = () => {
+    setShowBusiness(true)
+  }
+
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBusinessProfileValues({ ...businessProfileValues, [name]: value })
+  }
+
+
+  useEffect(() => {
+    setBusinessProfileValues(cateringVendorsDetail);
+  }, [cateringVendorsDetail]);
+
+
   useEffect(() => {
     dispatch(fetchCateringVendorDetails(id));
   }, [id]);
 
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value })
-  }
 
 
 
@@ -116,6 +162,81 @@ const VendorListDetails = () => {
   }
 
 
+  const onHandleBusinessProfileSubmit = (e) => {
+    e.preventDefault();
+
+
+    const {
+      vendor_service_name,
+      vendor_type,
+      street_name,
+      point_of_contact_name,
+      total_staffs_approx,
+      pin_code,
+      about_description,
+      working_since,
+      business_email,
+      business_phone_number,
+      landline_number,
+      whatsapp_business_phone_number,
+      website_link,
+      twitter_id,
+      instagram_link,
+      facebook_link,
+      country,
+      state,
+      city,
+      pincode,
+      place_id,
+      latitude,
+      longitude,
+      area,
+      formatted_address,
+      working_days_start,
+      working_days_end,
+      working_hours_start,
+      working_hours_end,
+    } = businessProfileValues;
+
+    const data = {
+      vendor_service_name,
+      vendor_type,
+      street_name,
+      point_of_contact_name,
+      total_staffs_approx,
+      pin_code,
+      about_description,
+      working_since,
+      business_email,
+      business_phone_number,
+      landline_number,
+      whatsapp_business_phone_number,
+      website_link,
+      twitter_id,
+      instagram_link,
+      facebook_link,
+      country,
+      state,
+      city,
+      pincode,
+      place_id,
+      latitude,
+      longitude,
+      area,
+      formatted_address,
+      working_days_start,
+      working_days_end,
+      working_hours_start,
+      working_hours_end,
+    }
+
+
+    console.log(data, "data businessProfileValuestatatat");
+
+
+    // handleShowBusinessProfileEditClose() 
+  }
+
 
   return (
     <>
@@ -155,7 +276,7 @@ const VendorListDetails = () => {
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Business Information</h3>
-            <h3 className='mb-0 text-warning'>Edit</h3>
+            <h3 className='mb-0 text-warning' onClick={handleBusinessProfileEditShow} style={{ cursor: 'pointer' }}>Edit</h3>
           </div>
           <Table responsive="xl" className='m-0'>
             <>
@@ -293,12 +414,255 @@ const VendorListDetails = () => {
         <hr />
 
 
+
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Cuisines You cater</h3>
+            <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3>
+          </div>
+          <div className='mt-3'>
+            {cuisines && cuisines.length > 0
+              ? cuisines.map((item, index) => (
+                <span key={item.cuisine_name} className='cuisine-item'>
+                  {item.cuisine_name}
+                  {index < cuisines.length - 1 && ', '}
+                </span>
+              ))
+              : 'N/A'}
+          </div>
+        </div>
+        <hr />
       </div>
 
 
 
 
 
+      <Modal size="xl" centered show={showBusiness} onHide={handleShowBusinessProfileEditClose}>
+        <form onSubmit={onHandleBusinessProfileSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> Update Business Profile </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>vendor service name</b> </label>
+                <input type="text" className="form-control" placeholder="Name" name="vendor_service_name"
+                  value={businessProfileValues?.vendor_service_name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>vendor type</b> </label>
+                <input type="text" className="form-control" placeholder="type" name="vendor_type"
+                  value={businessProfileValues?.vendor_type}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>street name</b> </label>
+                <input type="text" className="form-control" placeholder="street name" name="street_name"
+                  value={businessProfileValues?.street_name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>point of contact name</b> </label>
+                <input type="text" className="form-control" placeholder="point of contact name" name="point_of_contact_name"
+                  value={businessProfileValues?.point_of_contact_name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>total staffs approx</b> </label>
+                <input type="text" className="form-control" placeholder="total staffs approx" name="total_staffs_approx"
+                  value={businessProfileValues?.total_staffs_approx}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>pin code</b> </label>
+                <input type="text" className="form-control" placeholder="pin code" name="pin_code"
+                  value={businessProfileValues?.pin_code}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>about description</b> </label>
+                <input type="text" className="form-control" placeholder="about description" name="about_description"
+                  value={businessProfileValues?.about_description}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>working since</b> </label>
+                <input type="text" className="form-control" placeholder="working since" name="working_since"
+                  value={businessProfileValues?.working_since}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>business email</b> </label>
+                <input type="text" className="form-control" placeholder="business email" name="business_email"
+                  value={businessProfileValues?.business_email}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>business phone number</b> </label>
+                <input type="text" className="form-control" placeholder="business phone number" name="business_phone_number"
+                  value={businessProfileValues?.business_phone_number}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>landline number</b> </label>
+                <input type="text" className="form-control" placeholder="landline number" name="landline_number"
+                  value={businessProfileValues?.landline_number}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>whatsapp business phone number</b> </label>
+                <input type="text" className="form-control" placeholder="whatsapp business phone number" name="whatsapp_business_phone_number"
+                  value={businessProfileValues?.whatsapp_business_phone_number}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>website link</b> </label>
+                <input type="text" className="form-control" placeholder="website link" name="website_link"
+                  value={businessProfileValues?.website_link}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>twitter id</b> </label>
+                <input type="text" className="form-control" placeholder="twitter id" name="twitter_id"
+                  value={businessProfileValues?.twitter_id}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>instagram link</b> </label>
+                <input type="text" className="form-control" placeholder="instagram link" name="instagram_link"
+                  value={businessProfileValues?.instagram_link}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>facebook link</b> </label>
+                <input type="text" className="form-control" placeholder="facebook link" name="facebook_link"
+                  value={businessProfileValues?.facebook_link}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>country</b> </label>
+                <input type="text" className="form-control" placeholder="country" name="country"
+                  value={businessProfileValues?.country}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>state</b> </label>
+                <input type="text" className="form-control" placeholder="state" name="state"
+                  value={businessProfileValues?.state}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>city</b> </label>
+                <input type="text" className="form-control" placeholder="city" name="city"
+                  value={businessProfileValues?.city}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>pincode</b> </label>
+                <input type="text" className="form-control" placeholder="pincode" name="pincode"
+                  value={businessProfileValues?.pincode}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>place_id</b> </label>
+                <input type="text" className="form-control" placeholder="place_id" name="place_id"
+                  value={businessProfileValues?.place_id}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>latitude</b> </label>
+                <input type="text" className="form-control" placeholder="latitude" name="latitude"
+                  value={businessProfileValues?.latitude}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>longitude</b> </label>
+                <input type="text" className="form-control" placeholder="longitude" name="longitude"
+                  value={businessProfileValues?.longitude}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>area</b> </label>
+                <input type="text" className="form-control" placeholder="area" name="area"
+                  value={businessProfileValues?.area}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>formatted address</b> </label>
+                <input type="text" className="form-control" placeholder="formatted address" name="formatted_address"
+                  value={businessProfileValues?.formatted_address}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>working days start</b> </label>
+                <input type="text" className="form-control" placeholder="working days start" name="working_days_start"
+                  value={businessProfileValues?.working_days_start}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>working days end</b> </label>
+                <input type="text" className="form-control" placeholder="working days end" name="working_days_end"
+                  value={businessProfileValues?.working_days_end}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>working hours start</b> </label>
+                <input type="text" className="form-control" placeholder="working hours start" name="working_hours_start"
+                  value={businessProfileValues?.working_hours_start}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='col-3 mt-4'>
+                <label for="name" className="form-label"> <b>working hours end</b> </label>
+                <input type="text" className="form-control" placeholder="working hours end" name="working_hours_end"
+                  value={businessProfileValues?.working_hours_end}
+                  onChange={handleChange}
+                />
+              </div>
+
+            </div>
+            <hr />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleShowBusinessProfileEditClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
 
 
 
