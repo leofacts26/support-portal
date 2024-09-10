@@ -4,6 +4,7 @@ import { datavalidationerror, successToast } from '../../utils';
 import toast from 'react-hot-toast';
 
 const initialState = {
+    vendorListId: '',
     isLoading: true,
     cateringVendors: [],
     cateringVendorsDetail: [],
@@ -13,10 +14,10 @@ const initialState = {
 
 export const fetchCateringVendors = createAsyncThunk(
     'catering/fetchCateringVendors',
-    async (catering, thunkAPI) => {
+    async (type, thunkAPI) => {
         const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
         try {
-            const response = await api.get(`${BASE_URL}/admin-list-vendors`, {
+            const response = await api.get(`${BASE_URL}/admin-list-vendors?vendor_type=${type}&current_page=1&limit=100000`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -30,14 +31,16 @@ export const fetchCateringVendors = createAsyncThunk(
 
 export const fetchCateringVendorDetails = createAsyncThunk(
     'catering/fetchCateringVendorDetails',
-    async (companyId, thunkAPI) => {
+    async (vendorId, thunkAPI) => {
         try {
             const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-            const response = await api.get(`${BASE_URL}/admin-get-vendor-view-details?company_id=${companyId}`, {
+            const response = await api.get(`${BASE_URL}/admin-get-vendor-show-detailed?vendor_id=${vendorId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log(response, "response123");
+            
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -130,7 +133,6 @@ export const deleteCateringCuisine = createAsyncThunk(
     }
 )
 
-
 export const updateToggleCuisine = createAsyncThunk(
     'user/updateToggleCuisine',
     async (data, thunkAPI) => {
@@ -154,7 +156,10 @@ export const cateringSlice = createSlice({
     name: 'catering',
     initialState,
     reducers: {
-
+        setVendorListId: (state, { payload }) => {
+            console.log(payload, "payload payloadpayloadpayloadpayload");
+            state.vendorListId = payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -232,6 +237,6 @@ export const cateringSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { } = cateringSlice.actions
+export const { setVendorListId } = cateringSlice.actions
 
 export default cateringSlice.reducer

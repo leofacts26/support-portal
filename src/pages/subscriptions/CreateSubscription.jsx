@@ -31,6 +31,9 @@ const CreateSubscription = () => {
   const [editId, setEditId] = useState(null)
   const [values, setValues] = useState(initialState)
 
+  console.log(editId, "editId editId");
+  
+
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false)

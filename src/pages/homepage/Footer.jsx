@@ -8,17 +8,21 @@ import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { cater_vendor_type } from '../../constants';
-import { fetchFooterData } from '../../features/footer';
+import { createFooter, fetchFooterData, updateFooter, updateToggleFooter } from '../../features/footerSlice';
 
 
 const initialState = {
-  start_price: '',
-  end_price: '',
+  category: '',
+  sub_category: '',
+  link: '',
+  status: 'active',
+  vendor_type: '',
+  category_display_order: '',
+  sub_category_display_order: '',
 }
 
 
 const Footer = () => {
-
   const dispatch = useDispatch()
   const { footerList, isLoading } = useSelector((state) => state.footerSlice)
 
@@ -26,6 +30,9 @@ const Footer = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [editId, setEditId] = useState(null)
+
+  console.log(editId, "editId editId");
+
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -54,6 +61,7 @@ const Footer = () => {
         link: footer?.link,
         vendor_type: footer?.vendor_type,
         category_display_order: footer?.category_display_order,
+        sub_category_display_order: footer?.sub_category_display_order,
         updated_at: footer?.updated_at,
       }));
       setData(formattedData);
@@ -86,8 +94,8 @@ const Footer = () => {
       ...item,
       is_active: item.is_active === 1 ? 0 : 1
     }
-    await dispatch(updateTogglePriceRanges(data))
-    await dispatch(fetchFooterData());
+    // await dispatch(updateToggleFooter(data))
+    // await dispatch(fetchFooterData());
   }
 
 
@@ -167,8 +175,13 @@ const Footer = () => {
     setValues((prevValues) => ({
       ...prevValues,
       id: data?.id,
-      start_price: data?.startprice,
-      end_price: data?.endprice,
+      category: data?.category,
+      sub_category: data?.sub_category,
+      link: data?.link,
+      status: data?.status,
+      vendor_type: data?.vendor_type,
+      category_display_order: data?.category_display_order,
+      sub_category_display_order: data?.sub_category_display_order,
     }))
   }
 
@@ -180,18 +193,24 @@ const Footer = () => {
 
   const onHandleSubmit = async (e) => {
     e.preventDefault();
-    const { start_price, end_price } = values;
+
+    // category: '',
+    // sub_category: '',
+    // link: '',
+    // status: 'active',
+    // vendor_type: '',
+    // category_display_order: '',
+    // sub_category_display_order: '',
+
+    const { category, sub_category, link, status, vendor_type, category_display_order, sub_category_display_order } = values;
     const data = {
-      vendor_type: cater_vendor_type,
-      start_price,
-      end_price,
-      id: editId
+      category, sub_category, link, status, vendor_type, category_display_order, sub_category_display_order, id: editId
     }
 
     if (editId === null) {
-      await dispatch(createPriceRanges(data))
+      await dispatch(createFooter(data))
     } else {
-      await dispatch(updatePriceRanges(data))
+      await dispatch(updateFooter(data))
     }
     await dispatch(fetchFooterData());
     setValues(initialState)
@@ -233,17 +252,42 @@ const Footer = () => {
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onHandleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title> {editId ? 'Edit Budget' : 'Create Budget'} </Modal.Title>
+            <Modal.Title> {editId ? 'Edit Footer' : 'Create Footer'} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="row">
-              <div className='col-6'>
-                <label for="name" className="form-label"> <b>Start Price</b> </label>
-                <input type="text" className="form-control" placeholder="Rs. 100" name="start_price" required onChange={handleChange} value={values.start_price} />
+              <div className='col-12'>
+                <label for="name" className="form-label"> <b>category</b> </label>
+                <input type="text" className="form-control" placeholder="Eg. Home" name="category" required onChange={handleChange} value={values.category} />
               </div>
-              <div className='col-6'>
-                <label for="name" className="form-label"> <b>End Price</b> </label>
-                <input type="text" className="form-control" placeholder="Rs. 200" name="end_price" required onChange={handleChange} value={values.end_price} />
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>Sub Category</b> </label>
+                <input type="text" className="form-control" placeholder="Eg. sub category" name="sub_category" required onChange={handleChange} value={values.sub_category} />
+              </div>
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>Link</b> </label>
+                <input type="text" className="form-control" placeholder="Eg. instagram.com" name="link" required onChange={handleChange} value={values.link} />
+              </div>
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>category display order</b> </label>
+                <input type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" required onChange={handleChange} value={values.category_display_order} />
+              </div>
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>Sub Category Display Order</b> </label>
+                <input type="number" className="form-control" placeholder="Eg. 1" name="sub_category_display_order" required onChange={handleChange} value={values.sub_category_display_order} />
+              </div>
+              <div className='mt-4'>
+                <label htmlFor="vendor_type" className="form-label"><b>Vendor Type</b></label>
+                <select
+                  name="vendor_type"
+                  className="form-select"
+                  value={values.vendor_type}
+                  onChange={handleChange}
+                >
+                  <option value=""><b>Select Vendor Type</b></option>
+                  <option value="Caterer">Caterer</option>
+                  <option value="Tiffin">Tiffin</option>
+                </select>
               </div>
             </div>
           </Modal.Body>

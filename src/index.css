@@ -43,3 +43,8 @@ input:focus {
    font-size: 18px;
    color: #656464;
 }
+
+.vd-ft{
+  display: flex;
+  
+}

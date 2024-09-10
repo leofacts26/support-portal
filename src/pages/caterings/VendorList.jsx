@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCateringVendorDetails, fetchCateringVendors } from '../../features/catering/cateringSlice';
+import {  fetchCateringVendors, setVendorListId } from '../../features/catering/cateringSlice';
 import * as XLSX from "xlsx";
 import useExportData from '../../hooks/useExportData';
 import toast from 'react-hot-toast';
@@ -11,6 +11,7 @@ import Table from 'react-bootstrap/Table';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { Link } from 'react-router-dom'
+import { cater_vendor_type } from '../../constants';
 
 const rows = [
   {
@@ -46,13 +47,14 @@ const VendorList = () => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    dispatch(fetchCateringVendors());
+    dispatch(fetchCateringVendors(cater_vendor_type));
   }, [dispatch]);
 
 
   useEffect(() => {
     if (cateringVendors) {
       const formattedData = cateringVendors.map((catering, index) => ({
+        id: catering.id,
         businessID: index + 1,
         fullName: catering?.vendor_service_name || 'N/A',
         phoneNo: catering?.phone_number || 'N?A',
@@ -90,13 +92,9 @@ const VendorList = () => {
     setFilteredData(newFilteredData);
   };
 
-  const onHandleCateringDetails = (companyId) => {
-    if (!companyId) {
-      toast.error('Vendor Not Found')
-      return
-    }
+  const onHandleCateringDetails = (row) => {
     handleShow()
-    dispatch(fetchCateringVendorDetails(companyId));
+    dispatch(setVendorListId(row?.id));
   }
 
   const columns = [
@@ -146,8 +144,8 @@ const VendorList = () => {
         <>
           {row?.company_id ? (
             <Link
-              // onClick={() => onHandleCateringDetails(row.company_id)}
-              to={`/vendor-list/${row.company_id}`}
+              onClick={() => onHandleCateringDetails(row)}
+              to={`/vendor-list/${row.id}?company_id=${row.company_id}`}
               className='text-primary cursor-pointer'
             >
               View

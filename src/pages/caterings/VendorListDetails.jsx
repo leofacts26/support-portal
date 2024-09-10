@@ -1,28 +1,121 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fetchCateringVendorDetails } from '../../features/catering/cateringSlice';
+import { useLocation, useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
+
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { fetchCateringVendorDetails } from '../../features/catering/cateringSlice';
+
+
+const initialState = {
+  start_price: '',
+  end_price: '',
+}
 
 
 const VendorListDetails = () => {
-  const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering)
+  const location = useLocation();
+  const { id } = useParams();
+
+  const queryParams = new URLSearchParams(location.search);
+  const companyId = queryParams.get('company_id');
+
+  const dispatch = useDispatch()
+  const { cateringVendors, cateringVendorsDetail, isLoading, vendorListId } = useSelector((state) => state.catering)
   const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
-  console.log(cateringVendorsDetail, "cateringVendorsDetail");
+  const [foodTypesList, setFoodTypesList] = useState(foodTypes)
+  const [startPrice, setStartPrice] = useState(cateringVendorsDetail?.start_price || null)
+  const [serviceTypesList, setServiceTypesList] = useState(serviceTypes)
+  const [servingTypesList, setServingTypesList] = useState(servingTypes)
+  const [maximumCapacity, setMaximumCapacity] = useState(cateringVendorsDetail?.maximum_capacity)
+  const [minimumCapacity, setMinimumCapacity] = useState(cateringVendorsDetail?.minimum_capacity)
+
+  console.log(id, "cateringVendorsDetail 897");
+  console.log(companyId, "companyId 897");
 
 
-  const { id } = useParams();
-  const dispatch = useDispatch()
+
+  const [values, setValues] = useState(initialState)
+  const [editId, setEditId] = useState(null)
+  const [show, setShow] = useState(false);
+
+
+  const handleClose = () => {
+    setShow(false)
+    setEditId(null)
+  };
+
+
+  const handleShow = () => {
+    setShow(true)
+    setFoodTypesList(foodTypes)
+    setStartPrice(cateringVendorsDetail?.start_price)
+    setServiceTypesList(serviceTypes)
+    setServingTypesList(servingTypes)
+    setMaximumCapacity(cateringVendorsDetail?.maximum_capacity)
+    setMinimumCapacity(cateringVendorsDetail?.minimum_capacity)
+  };
+
 
   useEffect(() => {
-    if (!id) {
-      toast.error('Vendor Not Found')
-      return
-    }
     dispatch(fetchCateringVendorDetails(id));
-  }, [id])
+  }, [id]);
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value })
+  }
+
+
+
+  const handleFoodSwitchToggle = (index) => {
+    const updatedFoodTypes = foodTypesList?.length > 0 && foodTypesList?.map((food, i) =>
+      i === index ? { ...food, selected: food.selected === 1 ? 0 : 1 } : food
+    );
+    setFoodTypesList(updatedFoodTypes);
+  };
+
+
+  const handleServiceSwitchToggle = (index) => {
+    const updatedServiceTypes = serviceTypesList.map((service, i) =>
+      i === index ? { ...service, selected: service.selected === 1 ? 0 : 1 } : service
+    );
+    setServiceTypesList(updatedServiceTypes);
+  };
+
+  const handleServingSwitchToggle = (index) => {
+    const updatedServingTypes = servingTypesList.map((serving, i) =>
+      i === index ? { ...serving, selected: serving.selected === 1 ? 0 : 1 } : serving
+    );
+    setServingTypesList(updatedServingTypes);
+  };
+
+
+
+
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      foodTypesList,
+      startPrice,
+      serviceTypesList,
+      servingTypesList,
+      maximumCapacity,
+      minimumCapacity,
+      company_id: companyId
+    }
+
+    console.log(data, "Datatatatat");
+
+    // handleClose()
+  }
+
+
 
   return (
     <>
@@ -47,11 +140,11 @@ const VendorListDetails = () => {
             <tbody>
               <tr>
                 <td>{id ? id : 'N/A'}</td>
-                <td>{vendorDetails?.vendor_type ? vendorDetails?.vendor_type : 'N/A'}</td>
-                <td>{vendorDetails?.sub_plan ? vendorDetails?.sub_plan : 'N/A'}</td>
-                <td>{vendorDetails?.plan_type ? vendorDetails?.plan_type : 'N/A'}</td>
-                <td>{vendorDetails?.start_date ? vendorDetails?.start_date : 'N/A'}</td>
-                <td>{vendorDetails?.expiry_date ? vendorDetails?.expiry_date : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.sub_plan ? cateringVendorsDetail?.sub_plan : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.start_date ? cateringVendorsDetail?.start_date : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.expiry_date ? cateringVendorsDetail?.expiry_date : 'N/A'}</td>
               </tr>
             </tbody>
           </Table>
@@ -65,156 +158,266 @@ const VendorListDetails = () => {
             <h3 className='mb-0 text-warning'>Edit</h3>
           </div>
           <Table responsive="xl" className='m-0'>
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>Business Name</th>
-                <th style={{ fontSize: '10px' }}>Phone No</th>
-                <th style={{ fontSize: '10px' }}>Alt Phone No</th>
-                <th style={{ fontSize: '10px' }}>Email ID</th>
-                <th style={{ fontSize: '10px' }}>Streer Address</th>
-                <th style={{ fontSize: '10px' }}>Area</th>
-                <th style={{ fontSize: '10px' }}>City</th>
-                <th style={{ fontSize: '10px' }}>Pincode</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{vendorDetails?.vendor_service_name ? vendorDetails?.vendor_service_name : 'N/A'}</td>
-                <td>{vendorDetails?.business_phone_number ? vendorDetails?.business_phone_number : 'N/A'}</td>
-                <td>{vendorDetails?.landline_number ? vendorDetails?.landline_number : 'N/A'}</td>
-                <td>{vendorDetails?.business_email ? vendorDetails?.business_email : 'N/A'}</td>
-                <td>
-                  {`${vendorDetails?.street_name}`}
-                </td>
-                <td>{vendorDetails?.area ? vendorDetails?.area : 'N/A'}</td>
-                <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
-                <td>{vendorDetails?.pincode ? vendorDetails?.pincode : 'N/A'}</td>
-              </tr>
-            </tbody>
+            <>
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>vendor_service_name</th>
+                  <th style={{ fontSize: '10px' }}>vendor_type</th>
+                  <th style={{ fontSize: '10px' }}>business_email</th>
+                  <th style={{ fontSize: '10px' }}>business_phone_number</th>
+                  <th style={{ fontSize: '10px' }}>landline_number</th>
+                  <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{cateringVendorsDetail?.vendor_service_name ? cateringVendorsDetail?.vendor_service_name : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.business_email ? cateringVendorsDetail?.business_email : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.business_phone_number ? cateringVendorsDetail?.business_phone_number : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.landline_number ? cateringVendorsDetail?.landline_number : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.point_of_contact_name ? cateringVendorsDetail?.point_of_contact_name : 'N/A'}</td>
+                </tr>
+              </tbody>
+
+
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>whatsapp_business_phone_number</th>
+                  <th style={{ fontSize: '10px' }}>about_description</th>
+                  <th style={{ fontSize: '10px' }}>facebook_link</th>
+                  <th style={{ fontSize: '10px' }}>instagram_link</th>
+                  <th style={{ fontSize: '10px' }}>twitter_id</th>
+                  <th style={{ fontSize: '10px' }}>website_link</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{cateringVendorsDetail?.whatsapp_business_phone_number ? cateringVendorsDetail?.whatsapp_business_phone_number : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.about_description ? cateringVendorsDetail?.about_description : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.facebook_link ? cateringVendorsDetail?.facebook_link : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.instagram_link ? cateringVendorsDetail?.instagram_link : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.twitter_id ? cateringVendorsDetail?.twitter_id : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.website_link ? cateringVendorsDetail?.website_link : 'N/A'}</td>
+                </tr>
+              </tbody>
+
+
+
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>total_staffs_approx</th>
+                  <th style={{ fontSize: '10px' }}>working_days_hours</th>
+                  <th style={{ fontSize: '10px' }}>working_since</th>
+                  <th style={{ fontSize: '10px' }}>street_name</th>
+                  <th style={{ fontSize: '10px' }}>state</th>
+                  <th style={{ fontSize: '10px' }}>area</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{cateringVendorsDetail?.total_staffs_approx ? cateringVendorsDetail?.total_staffs_approx : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.working_days_hours ? cateringVendorsDetail?.working_days_hours : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.working_since ? cateringVendorsDetail?.working_since : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.street_name ? cateringVendorsDetail?.street_name : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.state ? cateringVendorsDetail?.state : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.area ? cateringVendorsDetail?.area : 'N/A'}</td>
+                </tr>
+              </tbody>
+
+
+
+
+
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>city</th>
+                  <th style={{ fontSize: '10px' }}>country</th>
+                  <th style={{ fontSize: '10px' }}>formatted_address</th>
+                  <th style={{ fontSize: '10px' }}>latitude</th>
+                  <th style={{ fontSize: '10px' }}>longitude</th>
+                  <th style={{ fontSize: '10px' }}>pincode</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{cateringVendorsDetail?.city ? cateringVendorsDetail?.city : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.country ? cateringVendorsDetail?.country : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.formatted_address ? cateringVendorsDetail?.formatted_address : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.latitude ? cateringVendorsDetail?.latitude : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.longitude ? cateringVendorsDetail?.longitude : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.pincode ? cateringVendorsDetail?.pincode : 'N/A'}</td>
+                </tr>
+              </tbody>
+            </>
           </Table>
         </div>
         <hr />
 
 
+
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Food Types</h3>
-            <h3 className='mb-0 text-warning'>Edit</h3>
+            <h3 className='mb-0'>Culinary Details</h3>
+            <h3 className='mb-0 text-warning' onClick={handleShow} style={{ cursor: 'pointer' }}>Edit</h3>
           </div>
           <Table responsive="xl" className='m-0'>
             <thead>
               <tr>
                 <th style={{ fontSize: '10px' }}>Food Type</th>
+                <th style={{ fontSize: '10px' }}>serviceTypes</th>
+                <th style={{ fontSize: '10px' }}>servingTypes</th>
+                <th style={{ fontSize: '10px' }}>maximum_capacity</th>
+                <th style={{ fontSize: '10px' }}>minimum_capacity</th>
+                <th style={{ fontSize: '10px' }}>start_price</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>
-                  {foodTypes?.map(item => item.food_type_name)?.join(', ')}
+                  {foodTypes?.length > 0 ? foodTypes?.map(item => item.food_type_name)?.join(', ') : 'N/A'}
                 </td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-        <hr />
-
-
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Kitchen Types</h3>
-            <h3 className='mb-0 text-warning'>Edit</h3>
-          </div>
-          <Table responsive="xl" className='m-0'>
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>Kitchen Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
                 <td>
-                  {kitchenTypes?.map(item => item.kitchen_type_name)?.join(', ')}
+                  {serviceTypes?.length > 0 ? serviceTypes?.map(item => item.service_type_name)?.join(', ') : 'N/A'}
                 </td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-        <hr />
-
-
-
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Meal Types</h3>
-            <h3 className='mb-0 text-warning'>Edit</h3>
-          </div>
-          <Table responsive="xl" className='m-0'>
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>Meal Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
                 <td>
-                  {mealTimes?.map(item => item.meal_time_name)?.join(', ')}
+                  {servingTypes?.length > 0 ? servingTypes?.map(item => item.serving_type_name)?.join(', ') : 'N/A'}
                 </td>
+                <td>{cateringVendorsDetail?.maximum_capacity ? cateringVendorsDetail?.maximum_capacity : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.minimum_capacity ? cateringVendorsDetail?.minimum_capacity : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.start_price ? cateringVendorsDetail?.start_price : 'N/A'}</td>
               </tr>
             </tbody>
           </Table>
         </div>
         <hr />
-
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Service Types</h3>
-            <h3 className='mb-0 text-warning'>Edit</h3>
-          </div>
-          <Table responsive="xl" className='m-0'>
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>Service Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  {serviceTypes?.map(item => item.service_type_name)?.join(', ')}
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-        <hr />
-
-
-
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Serving Types</h3>
-            <h3 className='mb-0 text-warning'>Edit</h3>
-          </div>
-          <Table responsive="xl" className='m-0'>
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>Serving Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  {servingTypes?.map(item => item.serving_type_name)?.join(', ')}
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-        <hr />
-
-
 
 
       </div>
+
+
+
+
+
+
+
+
+
+      <Modal centered show={show} onHide={handleClose}>
+        <form onSubmit={onHandleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> {editId ? 'Edit Budget' : 'Create Budget'} </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className='col-6'>
+                <h3 className='package-capacity mt-0 mb-4'>Manage Your Package</h3>
+                {foodTypesList?.length > 0 && foodTypesList?.map((food, index) => (
+                  <div className="vd-ft mb-5" key={food.id}>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`status-${food.id}`}
+                        checked={food.selected === 1}
+                        onChange={() => handleFoodSwitchToggle(index)}
+                      />
+                      <label className="form-check-label" htmlFor={`status-${food.id}`}>
+                        {food?.food_type_name}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className='col-6'>
+                <label for="name" className="form-label"> <b>End Price</b> </label>
+                <input type="text" className="form-control" placeholder="Enter Minimum Capacity - Eg: 100plates" name="startPrice" required
+                  value={startPrice}
+                  onChange={(e) => setStartPrice(e.target.value)}
+                />
+              </div>
+            </div>
+            <hr />
+
+            <div className="row">
+              <div className='col-6'>
+                <h3 className='package-capacity mt-0 mb-4'>Choose your Service type Below</h3>
+                {serviceTypesList?.length > 0 && serviceTypesList?.map((service, index) => (
+                  <div className="vd-ft mb-5" key={service.id}>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`status-${service.id}`}
+                        checked={service.selected === 1}
+                        onChange={() => handleServiceSwitchToggle(index)}
+                      />
+                      <label className="form-check-label" htmlFor={`status-${service.id}`}>
+                        {service.service_type_name}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className='col-6'>
+                <h3 className='package-capacity mt-0 mb-4'>Choose your Serving type Below</h3>
+                {servingTypesList?.length > 0 && servingTypesList?.map((serving, index) => (
+                  <div className="vd-ft mb-5" key={serving.id}>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`status-${serving.id}`}
+                        checked={serving.selected === 1}
+                        onChange={() => handleServingSwitchToggle(index)}
+                      />
+                      <label className="form-check-label" htmlFor={`status-${serving.id}`}>
+                        {serving.serving_type_name}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <hr />
+
+
+            <div className="row">
+              <h3 className='package-capacity text-center mt-0 mb-4'>Capacity</h3>
+              <div className='col-6'>
+                <>
+                  <label for="name" className="form-label"> <b>Minimum Capacity</b> </label>
+                  <input type="text" className="form-control" placeholder="Enter Minimum Capacity - Eg: 100plates" name="minimumCapacity" required
+                    value={minimumCapacity}
+                    onChange={(e) => setMinimumCapacity(e.target.value)}
+                  />
+                </>
+              </div>
+              <div className='col-6'>
+                <>
+                  <label for="name" className="form-label"> <b>Maximum Capacity</b> </label>
+                  <input type="text" className="form-control" placeholder="Enter Maximum Capacity - Eg: 100plates" name="maximumCapacity" required
+                    value={maximumCapacity}
+                    onChange={(e) => setMaximumCapacity(e.target.value)}
+                  />
+                </>
+              </div>
+            </div>
+
+
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
+
     </>
   )
 }
