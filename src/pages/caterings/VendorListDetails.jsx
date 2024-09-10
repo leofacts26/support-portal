@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { fetchCateringVendorDetails } from '../../features/catering/cateringSlice';
+import { fetchCateringCuisines, fetchCateringVendorDetails } from '../../features/catering/cateringSlice';
 
 
 
@@ -43,6 +43,14 @@ const businessProfile = {
 }
 
 
+const passwordData = {
+  id: '',
+  company_id: '',
+  phone_number: '',
+  new_password: ''
+}
+
+
 const VendorListDetails = () => {
   const location = useLocation();
   const { id } = useParams();
@@ -53,6 +61,7 @@ const VendorListDetails = () => {
   const dispatch = useDispatch()
   const { cateringVendors, cateringVendorsDetail, isLoading } = useSelector((state) => state.catering)
   const { foodTypes, kitchenTypes, mealTimes, cuisines, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const { cuisineList } = useSelector((state) => state.catering)
 
   const [foodTypesList, setFoodTypesList] = useState(foodTypes)
   const [startPrice, setStartPrice] = useState(cateringVendorsDetail?.start_price || null)
@@ -65,11 +74,18 @@ const VendorListDetails = () => {
 
 
   const [businessProfileValues, setBusinessProfileValues] = useState(businessProfile)
+  const [passwordDataValues, setPasswordDataValues] = useState(passwordData)
   const [editId, setEditId] = useState(null)
   const [show, setShow] = useState(false);
   const [showBusiness, setShowBusiness] = useState(false);
+  const [showPasswordData, setShowPasswordData] = useState(false)
+  const [showCuisineModal, setShowCuisineModal] = useState(false)
 
-  console.log(businessProfileValues, "businessProfileValues businessProfileValues");
+  console.log(cuisineList, "cuisineList cuisineList");
+
+  useEffect(() => {
+    dispatch(fetchCateringCuisines())
+  }, [])
 
 
   const handleClose = () => {
@@ -92,16 +108,43 @@ const VendorListDetails = () => {
   const handleShowBusinessProfileEditClose = () => {
     setShowBusiness(false)
   }
-
   const handleBusinessProfileEditShow = () => {
     setShowBusiness(true)
   }
+
+  const onHandleCuisineModalClose = () => {
+    setShowCuisineModal(false)
+  }
+  const onHandleCuisineModalOpen = () => {
+    setShowCuisineModal(true)
+  }
+
+
+  const onHandlePasswordClose = () => {
+    setShowPasswordData(false)
+  }
+  const onHandlePasswordShow = () => {
+    setShowPasswordData(true)
+    setPasswordDataValues({
+      ...passwordData,
+      company_id: companyId,
+      id: id,
+      phone_number: cateringVendorsDetail?.business_phone_number
+    })
+  }
+
 
 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBusinessProfileValues({ ...businessProfileValues, [name]: value })
+  }
+
+
+  const onHandlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordDataValues({ ...passwordDataValues, [name]: value })
   }
 
 
@@ -236,6 +279,22 @@ const VendorListDetails = () => {
 
     // handleShowBusinessProfileEditClose() 
   }
+
+
+
+  const onHandlePasswordSubmit = (e) => {
+    e.preventDefault()
+
+    onHandlePasswordClose()
+  }
+
+
+  const onHandleCuisineSubmit = (e) => {
+    e.preventDefault()
+
+    onHandlePasswordClose()
+  }
+
 
 
   return (
@@ -419,7 +478,7 @@ const VendorListDetails = () => {
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Cuisines You cater</h3>
-            <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3>
+            <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={onHandleCuisineModalOpen}>Edit</h3>
           </div>
           <div className='mt-3'>
             {cuisines && cuisines.length > 0
@@ -433,7 +492,118 @@ const VendorListDetails = () => {
           </div>
         </div>
         <hr />
+
+
+
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Profile</h3>
+            <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={onHandlePasswordShow}>Edit</h3>
+          </div>
+          <div className='mt-3'>
+            <Table responsive="xl" className='m-0'>
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>Login ID</th>
+                  <th style={{ fontSize: '10px' }}>Password</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{companyId}</td>
+                  <td>Passsssword</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+        </div>
+        <hr />
+
+
+
       </div>
+
+
+
+
+      <Modal size="xl" centered show={showCuisineModal} onHide={onHandleCuisineModalClose}>
+        <form onSubmit={onHandleCuisineSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> Update Cuisine </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className='col-6 mt-1'>
+                <label for="name" className="form-label"> <b>vendor ID</b> </label>
+
+              </div>
+            </div>
+            <hr />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={onHandleCuisineModalClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
+
+
+      <Modal size="xl" centered show={showPasswordData} onHide={onHandlePasswordClose}>
+        <form onSubmit={onHandlePasswordSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> Update Password </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className='col-6 mt-1'>
+                <label for="name" className="form-label"> <b>vendor ID</b> </label>
+                <input type="text" className="form-control" placeholder="vendor id" name="id"
+                  value={passwordDataValues?.id}
+                  onChange={onHandlePasswordChange}
+                />
+              </div>
+              <div className='col-6 mt-1'>
+                <label for="name" className="form-label"> <b>company id</b> </label>
+                <input type="text" className="form-control" placeholder="company id" name="company id"
+                  value={passwordDataValues?.company_id}
+                  onChange={onHandlePasswordChange}
+                />
+              </div>
+              <div className='col-6 mt-4'>
+                <label for="name" className="form-label"> <b>phone_number</b> </label>
+                <input type="text" className="form-control" placeholder="phone number" name="phone_number"
+                  value={passwordDataValues?.phone_number}
+                  onChange={onHandlePasswordChange}
+                />
+              </div>
+              <div className='col-6 mt-4'>
+                <label for="name" className="form-label"> <b>new_password</b> </label>
+                <input type="text" className="form-control" placeholder="new password" name="new_password"
+                  value={passwordDataValues?.new_password}
+                  onChange={onHandlePasswordChange}
+                />
+              </div>
+
+
+            </div>
+            <hr />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={onHandlePasswordClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
 
 
 
