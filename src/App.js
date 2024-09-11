@@ -38,6 +38,7 @@ import VendorNotification from "./pages/notifications/VendorNotification";
 import RazorpayPlansMapper from "./pages/subscriptions/RazorpayPlansMapper";
 import VendorSubscriptionEvents from "./pages/subscriptions/VendorSubscriptionEvents";
 import CreateSubscription from "./pages/subscriptions/CreateSubscription";
+import TiffinListDetails from "./pages/tiffins/TiffinListDetails";
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
 
           {/* Tiffins */}
           <Route path="/tiffin-vendor-list" element={<TiffinVendorList />} />
+          <Route path="/tiffin-list/:id" element={<TiffinListDetails />} />
           <Route path="/tiffin-cuisines" element={<TiffinCuisines />} />
           <Route path="/meal-time" element={<MealTime />} />
           <Route path="/kitchen-type" element={<KitchenType />} />
