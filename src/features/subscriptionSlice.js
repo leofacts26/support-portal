@@ -18,7 +18,7 @@ export const fetchSubscriptionData = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscriptions?limit=10&page=1`, {
+      const response = await api.get(`${BASE_URL}/admin-list-vendor-subscriptions?limit=10000&page=1`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -194,7 +194,25 @@ export const updateToggleSubscriptionList = createAsyncThunk(
   }
 )
 
-
+// admin-rz-cancel-subscription
+export const cancelSubscription = createAsyncThunk(
+  'user/cancelSubscription',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-rz-cancel-subscription`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(response)
+      return response?.data?.data;
+    } catch (error) {
+      toast.error(error.response.data.message)
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
 
 export const subscriptionSlice = createSlice({
   name: 'subscription',

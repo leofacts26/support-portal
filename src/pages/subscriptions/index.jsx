@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { fetchSubscriptionData } from '../../features/subscriptionSlice';
+import { cancelSubscription, fetchSubscriptionData } from '../../features/subscriptionSlice';
+import { MdDelete } from "react-icons/md";
+import { Modal, Button } from 'react-bootstrap';
 
 
 
@@ -14,9 +16,14 @@ const Subscriptions = () => {
   const { subscriptionList, isLoading } = useSelector((state) => state.subscription)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-
+  const [selectedRow, setSelectedRow] = useState(null);
   // console.log(subscriptionList, "subscriptionList subscriptionList");
-  
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+
+
 
   // useEffect(() => {
   //   dispatch(fetchVendorSubscriptionList());
@@ -66,6 +73,22 @@ const Subscriptions = () => {
     });
     setFilteredData(newFilteredData);
   };
+
+
+
+  const onHandleCancelSubscription = async (row) => {
+    const { razorpay_subscription_id, vendor_id } = row;
+    const data = { subscription_id: razorpay_subscription_id, vendor_id };
+    console.log(data, "data data");
+
+    await dispatch(cancelSubscription(data));
+    handleClose();
+  }
+
+  const onHandleSubscriptionModal = (row) => {
+    setSelectedRow(row);
+    handleShow();
+  }
 
 
   const columns = [
@@ -147,6 +170,20 @@ const Subscriptions = () => {
       allowOverflow: true,
       button: true,
     },
+    {
+      name: "Cancel",
+      cell: (row) => (
+        <>
+          <button className="btn btn-danger me-1" onClick={() => onHandleSubscriptionModal(row)}>
+            Cancel <MdDelete />
+          </button>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    }
+
   ];
 
 
@@ -176,6 +213,33 @@ const Subscriptions = () => {
       </div>
 
       <br />
+
+
+
+      {/* React Bootstrap Modal */}
+      <Modal show={showModal} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Cancel Subscription</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h2 className='text-center'>Are you sure you want to cancel the subscription?</h2>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            No, Keep Subscription
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              onHandleCancelSubscription(selectedRow);
+            }}
+          >
+            Yes, Cancel Subscription
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
     </>
   )
 }
