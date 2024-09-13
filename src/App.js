@@ -39,6 +39,7 @@ import RazorpayPlansMapper from "./pages/subscriptions/RazorpayPlansMapper";
 import VendorSubscriptionEvents from "./pages/subscriptions/VendorSubscriptionEvents";
 import CreateSubscription from "./pages/subscriptions/CreateSubscription";
 import TiffinListDetails from "./pages/tiffins/TiffinListDetails";
+import AdminListRoles from "./pages/roles/AdminListRoles";
 
 function App() {
   return (
@@ -89,6 +90,10 @@ function App() {
           <Route path="/broadcast-notifications" element={<BroadcastNotification />} />
           <Route path="/user-notifications" element={<UserNotification />} />
           <Route path="/vendor-notifications" element={<VendorNotification />} />
+
+          {/* Admin Roles  */}
+          <Route path="/admin-list-roles" element={<AdminListRoles />} />
+
 
           {/* customer care */}
           <Route path="/roles-access" element={<RolesAccess />} />
