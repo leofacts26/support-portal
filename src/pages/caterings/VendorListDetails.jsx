@@ -60,7 +60,7 @@ const VendorListDetails = () => {
 
   const dispatch = useDispatch()
   const { cateringVendors, cateringVendorsDetail, isLoading } = useSelector((state) => state.catering)
-  const { foodTypes, kitchenTypes, mealTimes, cuisines, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const { foodTypes, kitchenTypes, mealTimes, cuisines, occasions, branches, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
   const { cuisineList } = useSelector((state) => state.catering)
 
   const [foodTypesList, setFoodTypesList] = useState(foodTypes)
@@ -321,7 +321,7 @@ const VendorListDetails = () => {
               <tr>
                 <td>{id ? id : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
-                <td>{cateringVendorsDetail?.sub_plan ? cateringVendorsDetail?.sub_plan : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.start_date ? cateringVendorsDetail?.start_date : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.expiry_date ? cateringVendorsDetail?.expiry_date : 'N/A'}</td>
@@ -473,6 +473,27 @@ const VendorListDetails = () => {
         <hr />
 
 
+        <div className="row mx-2">
+        <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+          <h3 className='mb-0'>Other Branches</h3>
+          <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3>
+        </div>
+        <Table responsive="xl" className='m-0'>
+          <thead>
+            <tr>
+              <th style={{ fontSize: '10px' }}>Other Branches</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {branches?.length > 0 ? branches?.map(item => item.catering_service_name)?.join(', ') : 'N/A'}
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
+      <hr />
 
 
         <div className="row mx-2">
@@ -486,6 +507,24 @@ const VendorListDetails = () => {
                 <span key={item.cuisine_name} className='cuisine-item'>
                   {item.cuisine_name}
                   {index < cuisines.length - 1 && ', '}
+                </span>
+              ))
+              : 'N/A'}
+          </div>
+        </div>
+        <hr />
+
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Occastions You cater</h3>
+            <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={onHandleCuisineModalOpen}>Edit</h3>
+          </div>
+          <div className='mt-3'>
+          {occasions && occasions.length > 0
+              ? occasions.map((item, index) => (
+                <span key={item.occasion_name} className='cuisine-item'>
+                  {item.occasion_name}  {index < occasions.length - 1 && ', '}
                 </span>
               ))
               : 'N/A'}
@@ -512,7 +551,7 @@ const VendorListDetails = () => {
               <tbody>
                 <tr>
                   <td>{companyId}</td>
-                  <td>Passsssword</td>
+                  <td>XXXXXXXXXX</td>
                 </tr>
               </tbody>
             </Table>
