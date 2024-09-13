@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { createAdminFeature, createAdminROle, fetchAdminListFuture, updateAdminFeature, updateAdminRole, updateToggleAdminFeatures, updateToggleAdminRolesRanges } from '../../features/adminRoleSlice';
+import { createAdminFeature, createAdminROle, fetchAdminListFuture, onHandledeleteFeatures, updateAdminFeature, updateAdminRole, updateToggleAdminFeatures, updateToggleAdminRolesRanges } from '../../features/adminRoleSlice';
+import { MdDelete } from "react-icons/md";
+
 
 const initialState = {
   name: '',
@@ -111,6 +113,19 @@ const AdminListFeatures = () => {
     await dispatch(fetchAdminListFuture());
   };
 
+
+  const handleDelete = async (item) => {
+    console.log(item, "item");
+    
+    const data = {
+      feature_id: item.feature_id,
+      is_active: item.is_active === 1 ? 0 : 1,
+    };
+    await dispatch(onHandledeleteFeatures(data));
+    await dispatch(fetchAdminListFuture());
+  };
+
+
   const columns = [
     {
       name: "Feature ID",
@@ -175,6 +190,9 @@ const AdminListFeatures = () => {
         <>
           <button className="btn btn-success me-1" onClick={() => handleEdit(row)}>
             <FaEdit />
+          </button>
+          <button className="btn btn-success me-1" onClick={() => handleDelete(row)}>
+            <MdDelete />
           </button>
         </>
       ),

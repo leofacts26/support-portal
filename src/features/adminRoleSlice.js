@@ -155,6 +155,24 @@ export const updateAdminFeature = createAsyncThunk(
 )
 
 
+export const onHandledeleteFeatures = createAsyncThunk(
+  'user/onHandledeleteFeatures',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-delete-feature`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
 
 export const adminRoleSlice = createSlice({
   name: 'roleSlice',
