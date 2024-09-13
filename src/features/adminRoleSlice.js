@@ -82,6 +82,7 @@ export const updateToggleAdminRolesRanges = createAsyncThunk(
 )
 
 
+// features 
 export const fetchAdminListFuture = createAsyncThunk(
   'user/fetchAdminListFuture',
   async (user, thunkAPI) => {
@@ -98,6 +99,61 @@ export const fetchAdminListFuture = createAsyncThunk(
     }
   }
 )
+
+
+export const updateToggleAdminFeatures = createAsyncThunk(
+  'user/updateToggleAdminFeatures',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-toggle-feature`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(successToast(response))
+      // return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const createAdminFeature = createAsyncThunk(
+  'user/createAdminFeature',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-feature`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const updateAdminFeature = createAsyncThunk(
+  'user/updateAdminFeature',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-feature-update`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 
 
 export const adminRoleSlice = createSlice({
@@ -161,6 +217,39 @@ export const adminRoleSlice = createSlice({
         state.adminFeatureRoleList = payload;
       })
       .addCase(fetchAdminListFuture.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // updateToggleAdminFeatures 
+      .addCase(updateToggleAdminFeatures.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateToggleAdminFeatures.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(updateToggleAdminFeatures.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // createAdminFeature 
+      .addCase(createAdminFeature.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createAdminFeature.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(createAdminFeature.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // updateAdminFeature 
+      .addCase(updateAdminFeature.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateAdminFeature.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(updateAdminFeature.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { createAdminROle, fetchAdminListFuture, updateAdminRole, updateToggleAdminRolesRanges } from '../../features/adminRoleSlice';
+import { createAdminFeature, createAdminROle, fetchAdminListFuture, updateAdminFeature, updateAdminRole, updateToggleAdminFeatures, updateToggleAdminRolesRanges } from '../../features/adminRoleSlice';
 
 const initialState = {
   name: '',
@@ -37,7 +37,10 @@ const AdminListFeatures = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    setValues({
+      ...values,
+      [name]: value
+    });
   };
 
   useEffect(() => {
@@ -49,13 +52,17 @@ const AdminListFeatures = () => {
       const flattenData = [];
 
       adminFeatureRoleList.forEach((feature) => {
+        // Parent feature
         flattenData.push({
           feature_id: feature.feature_id,
           feature_name: feature.feature_name,
           is_menu: feature.is_menu,
           link: feature.link,
           is_active: feature.is_active,
-          parent: true, // Mark as parent
+          parent: true, // Parent flag
+          parent_id: feature.parent_id || "", // Parent ID if applicable
+          parent_display_order: feature.parent_display_order || "",
+          child_display_order: feature.child_display_order || ""
         });
 
         // Push child features
@@ -67,16 +74,20 @@ const AdminListFeatures = () => {
               is_menu: child.is_menu,
               link: child.link,
               is_active: child.is_active,
-              parent: false, // Mark as child
+              parent: false, // Child flag
+              parent_id: feature.feature_id, // Child inherits parent feature ID
+              parent_display_order: feature.parent_display_order || "",
+              child_display_order: child.child_display_order || ""
             });
           });
         }
       });
 
       setData(flattenData);
-      setFilteredData(flattenData);
+      setFilteredData(flattenData); // Optionally filter or search
     }
   }, [adminFeatureRoleList]);
+
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
@@ -96,7 +107,7 @@ const AdminListFeatures = () => {
       feature_id: item.feature_id,
       is_active: item.is_active === 1 ? 0 : 1,
     };
-    await dispatch(updateToggleAdminRolesRanges(data));
+    await dispatch(updateToggleAdminFeatures(data));
     await dispatch(fetchAdminListFuture());
   };
 
@@ -118,12 +129,26 @@ const AdminListFeatures = () => {
     },
     {
       name: "Link",
-      selector: row => row.link,
+      cell: row => (
+        <a href={row.link} target="_blank" rel="noopener noreferrer">
+          link
+        </a>
+      ),
       sortable: true,
-    },
+    },    
     {
       name: "Is Active",
       selector: row => row.is_active === 1 ? "Active" : "Inactive",
+      sortable: true,
+    },
+    {
+      name: "Parent/Child",
+      selector: row => row.parent ? "Parent" : `Child of ${row.parent_id}`,
+      sortable: true,
+    },
+    {
+      name: "Parent ID",
+      selector: row => row.parent_id || "N/A",
       sortable: true,
     },
     {
@@ -160,32 +185,56 @@ const AdminListFeatures = () => {
   ];
 
   const handleEdit = (data) => {
+    console.log(data, "data HGFG");
+
     setEditId(data.feature_id);
     handleShow();
+
     setValues({
-      name: data.feature_name.replace("-- ", ""), // Remove child prefix
+      name: data.feature_name.replace("-- ", ""),
       is_active: data.is_active,
+      is_menu: data.is_menu,
+      link: data.link || "",
+      parent_id: data.parent_id || "",
+      parent_display_order: data.parent_display_order || "",
+      child_display_order: data.child_display_order || ""
     });
   };
 
+
   const onHandleSubmit = async (e) => {
     e.preventDefault();
-    const { name, is_active } = values;
+
+    // Destructure the values from the form state
+    const { name, is_active, is_menu, link, parent_id, parent_display_order, child_display_order } = values;
+
+    // Prepare the payload with all required fields
     const data = {
+      feature_id: editId || null, // If editing, include feature_id; otherwise null for new creation
       name,
+      is_menu: is_menu || 0,      // Default to 0 if not selected
+      link: link || "",           // Default to empty string if not provided
       is_active,
-      role_id: editId,
+      parent_id: parent_id || "",  // Include parent_id if available
+      parent_display_order: parent_display_order || "",  // Parent display order
+      child_display_order: child_display_order || ""     // Child display order
     };
 
-    if (editId === null) {
-      await dispatch(createAdminROle(data));
+    // Dispatch action to create or update the feature
+    if (!editId) {
+      await dispatch(createAdminFeature(data)); // Create new feature
     } else {
-      await dispatch(updateAdminRole(data));
+      await dispatch(updateAdminFeature(data)); // Update existing feature
     }
+
+    // Fetch updated feature list
     await dispatch(fetchAdminListFuture());
+
+    // Reset form and close modal
     setValues(initialState);
     handleClose();
   };
+
 
   // Conditional row styling for parent rows
   const conditionalRowStyles = [
@@ -231,22 +280,107 @@ const AdminListFeatures = () => {
           </Modal.Header>
           <Modal.Body>
             <div className="row">
+              {/* Name Input */}
               <div className='col-12'>
                 <label htmlFor="name" className="form-label"><b>Name</b></label>
-                <input type="text" className="form-control" name="name" required onChange={handleChange} value={values.name} />
+                <input
+                  type="text"
+                  className="form-control"
+                  name="name"
+                  required
+                  onChange={handleChange}
+                  value={values.name}
+                />
+              </div>
+
+              {/* Is Active Input */}
+              <div className='col-12 mt-3'>
+                <label htmlFor="is_active" className="form-label"><b>Is Active</b></label>
+                <select
+                  className="form-control"
+                  name="is_active"
+                  onChange={handleChange}
+                  value={values.is_active}
+                >
+                  <option value={1}>Active</option>
+                  <option value={0}>Inactive</option>
+                </select>
+              </div>
+
+              {/* Is Menu Input */}
+              <div className='col-12 mt-3'>
+                <label htmlFor="is_menu" className="form-label"><b>Is Menu</b></label>
+                <select
+                  className="form-control"
+                  name="is_menu"
+                  onChange={handleChange}
+                  value={values.is_menu}
+                >
+                  <option value="">Select</option>
+                  <option value="1">Yes</option>
+                  <option value="0">No</option>
+                </select>
+              </div>
+
+              {/* Link Input */}
+              <div className='col-12 mt-3'>
+                <label htmlFor="link" className="form-label"><b>Link</b></label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="link"
+                  onChange={handleChange}
+                  value={values.link}
+                />
+              </div>
+
+              {/* Parent ID Input */}
+              <div className='col-12 mt-3'>
+                <label htmlFor="parent_id" className="form-label"><b>Parent ID</b></label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="parent_id"
+                  onChange={handleChange}
+                  value={values.parent_id}
+                />
+              </div>
+
+              {/* Parent Display Order Input */}
+              <div className='col-12 mt-3'>
+                <label htmlFor="parent_display_order" className="form-label"><b>Parent Display Order</b></label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="parent_display_order"
+                  onChange={handleChange}
+                  value={values.parent_display_order}
+                />
+              </div>
+
+              {/* Child Display Order Input */}
+              <div className='col-12 mt-3'>
+                <label htmlFor="child_display_order" className="form-label"><b>Child Display Order</b></label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="child_display_order"
+                  onChange={handleChange}
+                  value={values.child_display_order}
+                />
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
             <Button variant="primary" type="submit">
               {isLoading ? 'Loading...' : 'Save Changes'}
             </Button>
           </Modal.Footer>
         </form>
       </Modal>
+
+
     </>
   );
 };
