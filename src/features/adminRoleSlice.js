@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 const initialState = {
   isLoading: true,
   adminRoleList: [],
+  adminFeatureRoleList: [],
 }
 
 
@@ -81,6 +82,23 @@ export const updateToggleAdminRolesRanges = createAsyncThunk(
 )
 
 
+export const fetchAdminListFuture = createAsyncThunk(
+  'user/fetchAdminListFuture',
+  async (user, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-features?current_page=1&limit=100000`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 
 export const adminRoleSlice = createSlice({
   name: 'roleSlice',
@@ -131,6 +149,18 @@ export const adminRoleSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateToggleAdminRolesRanges.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // fetchAdminListFuture 
+      .addCase(fetchAdminListFuture.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAdminListFuture.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.adminFeatureRoleList = payload;
+      })
+      .addCase(fetchAdminListFuture.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

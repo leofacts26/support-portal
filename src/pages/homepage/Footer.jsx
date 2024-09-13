@@ -57,7 +57,7 @@ const Footer = () => {
         id: footer?.id,
         category: footer?.category,
         sub_category: footer?.sub_category,
-        is_active: footer?.status,
+        is_active: footer?.is_active,
         link: footer?.link,
         vendor_type: footer?.vendor_type,
         category_display_order: footer?.category_display_order,
@@ -92,10 +92,12 @@ const Footer = () => {
   const handleStatusToggle = async (item) => {
     const data = {
       ...item,
-      is_active: item.is_active === 1 ? 0 : 1
+      is_active: item.is_active === '1' ? '0' : '1'
     }
-    // await dispatch(updateToggleFooter(data))
-    // await dispatch(fetchFooterData());
+    console.log(data, "data");
+
+    await dispatch(updateToggleFooter(data))
+    await dispatch(fetchFooterData());
   }
 
 
@@ -143,7 +145,7 @@ const Footer = () => {
             className="form-check-input"
             type="checkbox"
             id={`status-${row.id}`}
-            checked={row.is_active === 1}
+            checked={row.is_active === '1'}
             onChange={() => handleStatusToggle(row)}
           />
           {/* <label className="form-check-label" htmlFor={`status-${row.id}`}>

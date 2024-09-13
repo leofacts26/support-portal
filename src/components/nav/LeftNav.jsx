@@ -345,6 +345,11 @@ const LeftNav = () => {
                                                 Admin List Roles
                                             </NavLink>
                                         </li>
+                                        <li className="nav-item">
+                                            <NavLink to="/admin-list-features" className="nav-link">
+                                                Admin List Features
+                                            </NavLink>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
