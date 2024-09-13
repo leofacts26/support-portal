@@ -342,14 +342,15 @@ const LeftNav = () => {
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
                                             <NavLink to="/admin-list-roles" className="nav-link">
-                                                Admin List Roles
+                                                Roles
                                             </NavLink>
                                         </li>
                                         <li className="nav-item">
                                             <NavLink to="/admin-list-features" className="nav-link">
-                                                Admin List Features
+                                                Features
                                             </NavLink>
                                         </li>
+                                      
                                     </ul>
                                 </div>
                             </li>

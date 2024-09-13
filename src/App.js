@@ -41,6 +41,7 @@ import CreateSubscription from "./pages/subscriptions/CreateSubscription";
 import TiffinListDetails from "./pages/tiffins/TiffinListDetails";
 import AdminListRoles from "./pages/roles/AdminListRoles";
 import AdminListFeatures from "./pages/roles/AdminListFeatures";
+import AdminListFeaturesDetails from "./pages/roles/AdminListFeaturesDetails";
 
 function App() {
   return (
@@ -94,6 +95,7 @@ function App() {
 
           {/* Admin Roles  */}
           <Route path="/admin-list-roles" element={<AdminListRoles />} />
+          <Route path="/admin-list-roles-details/:id" element={<AdminListFeaturesDetails />} />
           <Route path="/admin-list-features" element={<AdminListFeatures />} />
 
 

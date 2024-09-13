@@ -7,6 +7,7 @@ const initialState = {
   isLoading: true,
   adminRoleList: [],
   adminFeatureRoleList: [],
+  adminFeaturesForRolesList: [],
 }
 
 
@@ -173,6 +174,42 @@ export const onHandledeleteFeatures = createAsyncThunk(
 )
 
 
+export const adminListFeaturesForRoles = createAsyncThunk(
+  'user/adminListFeaturesForRoles',
+  async (role_id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-features-for-roles?current_page=1&limit=100000&role_id=${role_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      toast.error(error.response.data.message)
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const adminAssociateFeature = createAsyncThunk(
+  'user/adminAssociateFeature',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-associate-feature`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 
 export const adminRoleSlice = createSlice({
   name: 'roleSlice',
@@ -268,6 +305,18 @@ export const adminRoleSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateAdminFeature.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // adminListFeaturesForRoles 
+      .addCase(adminListFeaturesForRoles.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(adminListFeaturesForRoles.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.adminFeaturesForRolesList = payload;
+      })
+      .addCase(adminListFeaturesForRoles.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

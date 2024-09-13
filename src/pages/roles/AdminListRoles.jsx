@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { createAdminROle, fetchAdminRoleListData, updateAdminRole, updateToggleAdminRolesRanges } from '../../features/adminRoleSlice';
+import { adminListFeaturesForRoles, createAdminROle, fetchAdminRoleListData, updateAdminRole, updateToggleAdminRolesRanges } from '../../features/adminRoleSlice';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
 const AdminListRoles = () => {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { adminRoleList, isLoading } = useSelector((state) => state.roleSlice)
 
   const [values, setValues] = useState(initialState)
@@ -30,8 +32,8 @@ const AdminListRoles = () => {
     setShow(false)
     setEditId(null)
   };
-  const handleShow = () => setShow(true);
 
+  const handleShow = () => setShow(true);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value })
@@ -54,7 +56,6 @@ const AdminListRoles = () => {
       setFilteredData(formattedData);
     }
   }, [adminRoleList]);
-
 
 
   const handleSearch = (e) => {
@@ -80,6 +81,11 @@ const AdminListRoles = () => {
     }
     await dispatch(updateToggleAdminRolesRanges(data))
     await dispatch(fetchAdminRoleListData());
+  }
+
+
+  const onHandleRedirectDetails = (id) => {
+    navigate(`/admin-list-roles-details/${id}`)
   }
 
 
@@ -118,6 +124,19 @@ const AdminListRoles = () => {
       sortable: true,
     },
     {
+      name: "Details",
+      cell: (row) => (
+        <>
+          <button className="btn btn-success me-1" onClick={() => onHandleRedirectDetails(row.role_id)}>
+            View
+          </button>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+    {
       name: "Action",
       cell: (row) => (
         <>
@@ -144,6 +163,11 @@ const AdminListRoles = () => {
     }))
   }
 
+
+  // const onHandleDetailsShow = async (row) => {
+  //   const { role_id } = row;
+  //   await dispatch(adminListFeaturesForRoles(role_id))
+  // }
 
 
   const onHandleSubmit = async (e) => {
