@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api, BASE_URL } from '../api/apiConfig';
-import { datavalidationerror } from '../utils';
+import { datavalidationerror, successToast } from '../utils';
 import toast from 'react-hot-toast';
 
 const initialState = {
     isLoading: true,
     userList: [],
+    adminUserList: [],
     cuisineId: null,
 }
 
@@ -26,6 +27,81 @@ export const fetchUserData = createAsyncThunk(
         }
     }
 )
+
+
+export const fetchAdminUsers = createAsyncThunk(
+    'user/fetchAdminUsers',
+    async (user, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-list-admin-users`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+export const createAdminUser = createAsyncThunk(
+    'user/createAdminUser',
+    async (data, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-create-admin-user`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+export const updateAdminUser = createAsyncThunk(
+    'user/updateAdminUser',
+    async (data, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-update-admin-user`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+export const toggleAdminUser = createAsyncThunk(
+    'user/toggleAdminUser',
+    async (data, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-toggle-admin-user`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            toast.success(successToast(response))
+            // return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
 
 
 export const usersSlice = createSlice({
@@ -49,6 +125,18 @@ export const usersSlice = createSlice({
                 state.userList = payload;
             })
             .addCase(fetchUserData.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // fetchAdminUsers 
+            .addCase(fetchAdminUsers.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchAdminUsers.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.adminUserList = payload;
+            })
+            .addCase(fetchAdminUsers.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })

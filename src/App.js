@@ -42,6 +42,7 @@ import TiffinListDetails from "./pages/tiffins/TiffinListDetails";
 import AdminListRoles from "./pages/roles/AdminListRoles";
 import AdminListFeatures from "./pages/roles/AdminListFeatures";
 import AdminListFeaturesDetails from "./pages/roles/AdminListFeaturesDetails";
+import AdminListUsers from "./pages/users/AdminListUsers";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
 
           {/* users  */}
           <Route path="/users" element={<Users />} />
+          <Route path="/admin-list-users" element={<AdminListUsers />} />
 
           {/* Subscriptions  */}
           <Route path="/create-subscription" element={<CreateSubscription />} />

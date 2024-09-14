@@ -236,9 +236,34 @@ const LeftNav = () => {
 
 
                             <li className="nav-item">
-                                <NavLink className="nav-link " to="/users">
-                                    <i className="fe fe-grid" /> Users
-                                </NavLink>
+                                <a
+                                    className="nav-link"
+                                    href="#ManageNotification"
+                                    data-bs-toggle="collapse"
+                                    role="button"
+                                    aria-expanded="true"
+                                    aria-controls="ManageNotification"
+                                >
+                                    <i className="fe fe-home" /> users
+                                </a>
+                                <div className="collapse" id="ManageNotification">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/users" className="nav-link">
+                                                List Users
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="collapse" id="ManageNotification">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/admin-list-users" className="nav-link">
+                                                Admin List Users
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
 
 
@@ -350,7 +375,7 @@ const LeftNav = () => {
                                                 Features
                                             </NavLink>
                                         </li>
-                                      
+
                                     </ul>
                                 </div>
                             </li>
