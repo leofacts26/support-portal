@@ -32,7 +32,7 @@ const TiffinListDetails = () => {
       <div className="row mx-2">
         <div className="bg-secondary text-white py-3 d-flex justify-content-between">
           <h3 className='mb-0'>Vendor Details</h3>
-          <h3 className='mb-0 text-warning'>Upgrade</h3>
+          {/* <h3 className='mb-0 text-warning'>Upgrade</h3> */}
         </div>
         <Table responsive="xl" className='m-0'>
           <thead>
@@ -63,7 +63,7 @@ const TiffinListDetails = () => {
       <div className="row mx-2">
         <div className="bg-secondary text-white py-3 d-flex justify-content-between">
           <h3 className='mb-0'>Business Information</h3>
-          <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3>
+          {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3> */}
         </div>
         <Table responsive="xl" className='m-0'>
           <>
@@ -161,7 +161,7 @@ const TiffinListDetails = () => {
       <div className="row mx-2">
         <div className="bg-secondary text-white py-3 d-flex justify-content-between">
           <h3 className='mb-0'>Culinary Details</h3>
-          <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3>
+          {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3> */}
         </div>
         <Table responsive="xl" className='m-0'>
           <thead>
@@ -194,7 +194,7 @@ const TiffinListDetails = () => {
       <div className="row mx-2">
         <div className="bg-secondary text-white py-3 d-flex justify-content-between">
           <h3 className='mb-0'>Other Branches</h3>
-          <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3>
+          {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3> */}
         </div>
         <Table responsive="xl" className='m-0'>
           <thead>
@@ -217,7 +217,7 @@ const TiffinListDetails = () => {
       <div className="row mx-2">
         <div className="bg-secondary text-white py-3 d-flex justify-content-between">
           <h3 className='mb-0'>Profile</h3>
-          <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3>
+          {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3> */}
         </div>
         <div className='mt-3'>
           <Table responsive="xl" className='m-0'>
