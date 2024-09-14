@@ -76,14 +76,30 @@ const Subscriptions = () => {
 
 
 
-  const onHandleCancelSubscription = async (row) => {
-    const { razorpay_subscription_id, vendor_id } = row;
-    const data = { subscription_id: razorpay_subscription_id, vendor_id };
-    console.log(data, "data data");
+  // const onHandleCancelSubscription = async (row) => {
+  //   const { razorpay_subscription_id, vendor_id } = row;
+  //   const data = { subscription_id: razorpay_subscription_id, vendor_id };
+  //   console.log(row, "row data");
 
-    await dispatch(cancelSubscription(data));
-    handleClose();
+  //   await dispatch(cancelSubscription(data));
+  //   handleClose();
+  // }
+
+
+  const onHandleCancelSubscription = async (row) => {
+    const { razorpay_subscription_id, vendor_id, status } = row;
+
+    if ((status === "active" || status === "pending") && razorpay_subscription_id !== null) {
+      const data = { subscription_id: razorpay_subscription_id, vendor_id };
+      await dispatch(cancelSubscription(data));
+      handleClose();
+    } else {
+      alert("Cancellation not allowed: Subscription is either not active/queued or does not have a valid Razorpay subscription ID.")
+      console.log("Cancellation not allowed: Subscription is either not active/queued or does not have a valid Razorpay subscription ID.");
+    }
   }
+
+
 
   const onHandleSubscriptionModal = (row) => {
     setSelectedRow(row);
@@ -100,6 +116,11 @@ const Subscriptions = () => {
     {
       name: "auth_status",
       selector: row => row.auth_status,
+      sortable: true,
+    },
+    {
+      name: "payment_status",
+      selector: row => row.payment_status,
       sortable: true,
     },
     {
@@ -120,11 +141,6 @@ const Subscriptions = () => {
     {
       name: "final_amount",
       selector: row => row.final_amount,
-      sortable: true,
-    },
-    {
-      name: "payment_status",
-      selector: row => row.payment_status,
       sortable: true,
     },
     {
@@ -174,16 +190,20 @@ const Subscriptions = () => {
       name: "Cancel",
       cell: (row) => (
         <>
-          <button className="btn btn-danger me-1" onClick={() => onHandleSubscriptionModal(row)}>
-            Cancel <MdDelete />
-          </button>
+          {(row.status === "active" || row.status === "pending") && row.razorpay_subscription_id !== null && (
+            <button
+              className="btn btn-danger me-1"
+              onClick={() => onHandleSubscriptionModal(row)}
+            >
+              Cancel <MdDelete />
+            </button>
+          )}
         </>
       ),
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
     }
-
   ];
 
 
