@@ -282,17 +282,17 @@ const LeftNav = () => {
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
                                             <NavLink to="/create-subscription" className="nav-link">
-                                                Create Subscription
-                                            </NavLink>
-                                        </li>
-                                        <li className="nav-item">
-                                            <NavLink to="/subscriptions" className="nav-link">
-                                                Manage Subscription
+                                                Local Plans
                                             </NavLink>
                                         </li>
                                         <li className="nav-item">
                                             <NavLink to="/razorpay-plans-mapper" className="nav-link">
                                                 Razorpay Plans Mapper
+                                            </NavLink>
+                                        </li>
+                                        <li className="nav-item">
+                                            <NavLink to="/subscriptions" className="nav-link">
+                                                Vendor Subscriptions
                                             </NavLink>
                                         </li>
                                         <li className="nav-item">

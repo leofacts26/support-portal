@@ -235,9 +235,9 @@ const CreateSubscription = () => {
       <div className="container-fluid my-5">
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
-            <h2>Subscription List - {vendorSubscriptionList?.length} </h2>
+            <h2>Subscription Plans List - {vendorSubscriptionList?.length} </h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Subscription
+              Create Subscription Plan
             </button>
           </div>
         </div>

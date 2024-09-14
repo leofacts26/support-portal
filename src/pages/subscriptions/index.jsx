@@ -212,7 +212,7 @@ const Subscriptions = () => {
       <div className="container-fluid my-5">
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
-            <h2>Total Subscription List - {subscriptionList?.length} </h2>
+            <h2>Total Vendor Subscription List - {subscriptionList?.length} </h2>
             {/* <button className='btn btn-primary fit-content' variant="primary">
               Create Subscription List
             </button> */}
