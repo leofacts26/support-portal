@@ -24,7 +24,7 @@ const useUploadCusinePhotoos = () => {
             const response = await api.post(`${BASE_URL}/admin-upload-cuisine`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    // Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             dispatch(fetchCateringCuisines());

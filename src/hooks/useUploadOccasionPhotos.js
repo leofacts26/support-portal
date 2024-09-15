@@ -8,7 +8,8 @@ import { fetchOccasionList } from '../features/catering/occasionSlice';
 const useUploadOccasionPhotoos = () => {
     const dispatch = useDispatch()
     const { occasionId } = useSelector((state) => state.occasion)
-    
+    const { token } = useSelector((state) => state.authSlice);
+
 
     const onUploadOccasionImage = async (event) => {
         const formData = new FormData();
@@ -22,6 +23,7 @@ const useUploadOccasionPhotoos = () => {
             const response = await api.post(`${BASE_URL}/admin-upload-occasion`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
                 },
             });
             dispatch(fetchOccasionList());
