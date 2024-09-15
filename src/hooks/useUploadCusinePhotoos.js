@@ -42,14 +42,14 @@ const useUploadCusinePhotoos = () => {
         formData.append('id', cuisineId);
         formData.append('image', event.target.files[0]);
         formData.append('table', 'explore_cities')
-
+        const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
         dispatch(setIsLoading(true))
         try {
             toast.loading('Uploading Image...');
             const response = await api.post(`${BASE_URL}/admin-upload-explore-city`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    // Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             dispatch(fetchexplorecitiesData());
