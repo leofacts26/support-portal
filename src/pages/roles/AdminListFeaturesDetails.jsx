@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { adminAssociateFeature, adminListFeaturesForRoles, fetchFeaturesDisassociated } from '../../features/adminRoleSlice';
+import { adminAssociateFeature, adminDeleteFeatureRole, adminListFeaturesForRoles, fetchFeaturesDisassociated } from '../../features/adminRoleSlice';
 import { useParams } from 'react-router-dom';
 
 
@@ -34,6 +34,18 @@ const AdminListFeaturesDetails = () => {
     await dispatch(adminAssociateFeature(data))
     await dispatch(fetchFeaturesDisassociated(id));
     await dispatch(adminListFeaturesForRoles(id));
+  }
+
+  const onHandleAdminDIsAssociateFeatureFOrRole = async (row) => {
+    const { feature_id } = row;
+    const role_id = id;
+    const data = {
+      feature_id,
+      role_id
+    }
+    await dispatch(adminDeleteFeatureRole(data))
+    await dispatch(adminListFeaturesForRoles(id));
+    await dispatch(fetchFeaturesDisassociated(id));
   }
 
   useEffect(() => {
@@ -187,8 +199,8 @@ const AdminListFeaturesDetails = () => {
       name: "Details",
       cell: (row) => (
         <>
-          <button className="btn btn-success me-1" style={{ fontSize: '12px' }}>
-            DeAssociate
+          <button className="btn btn-success me-1" style={{ fontSize: '12px' }} onClick={() => onHandleAdminDIsAssociateFeatureFOrRole(row)}>
+            DisAssociate
           </button>
         </>
       ),

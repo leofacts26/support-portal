@@ -210,6 +210,23 @@ export const adminAssociateFeature = createAsyncThunk(
   }
 )
 
+export const adminDeleteFeatureRole = createAsyncThunk(
+  'user/adminAssociateFeature',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-delete-feature-for-role`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 export const fetchFeaturesDisassociated = createAsyncThunk(
   'user/fetchFeaturesDisassociated',
   async (roleID, thunkAPI) => {
@@ -348,6 +365,17 @@ export const adminRoleSlice = createSlice({
         state.adminListFeaturesDisassociated = payload;
       })
       .addCase(fetchFeaturesDisassociated.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // adminDeleteFeatureROle 
+      .addCase(adminDeleteFeatureRole.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(adminDeleteFeatureRole.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(adminDeleteFeatureRole.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
