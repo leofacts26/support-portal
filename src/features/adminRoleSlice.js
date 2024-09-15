@@ -8,6 +8,7 @@ const initialState = {
   adminRoleList: [],
   adminFeatureRoleList: [],
   adminFeaturesForRolesList: [],
+  adminListFeaturesDisassociated: [],
 }
 
 
@@ -186,7 +187,6 @@ export const adminListFeaturesForRoles = createAsyncThunk(
       });
       return response?.data?.data;
     } catch (error) {
-      toast.error(error.response.data.message)
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }
@@ -209,6 +209,25 @@ export const adminAssociateFeature = createAsyncThunk(
     }
   }
 )
+
+export const fetchFeaturesDisassociated = createAsyncThunk(
+  'user/fetchFeaturesDisassociated',
+  async (roleID, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/admin-list-features-disassociated?current_page=1&limit=1000000&role_id=${roleID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
 
 
 export const adminRoleSlice = createSlice({
@@ -317,6 +336,18 @@ export const adminRoleSlice = createSlice({
         state.adminFeaturesForRolesList = payload;
       })
       .addCase(adminListFeaturesForRoles.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        // toast.error(datavalidationerror(payload)); 
+      })
+      // fetchFeaturesDisassociated 
+      .addCase(fetchFeaturesDisassociated.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchFeaturesDisassociated.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.adminListFeaturesDisassociated = payload;
+      })
+      .addCase(fetchFeaturesDisassociated.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

@@ -116,9 +116,9 @@ const AdminListRoles = () => {
             checked={row.is_active === 1}
             onChange={() => handleStatusToggle(row)}
           />
-          <label className="form-check-label" htmlFor={`status-${row.id}`}>
+          {/* <label className="form-check-label" htmlFor={`status-${row.id}`}>
             {row.is_active === 1 ? 'Active' : 'Inactive'}
-          </label>
+          </label> */}
         </div>
       ),
       sortable: true,
@@ -127,9 +127,9 @@ const AdminListRoles = () => {
       name: "Details",
       cell: (row) => (
         <>
-          <button className="btn btn-success me-1" onClick={() => onHandleRedirectDetails(row.role_id)}>
+          <a className="btn btn-success me-1" href={`/admin-list-roles-details/${row?.role_id}`}>
             View
-          </button>
+          </a>
         </>
       ),
       ignoreRowClick: true,
@@ -193,9 +193,6 @@ const AdminListRoles = () => {
   return (
     <>
       <div className="container-fluid my-5">
-
-
-
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
             <h2>Total Admin Role List - {adminRoleList?.length} </h2>
