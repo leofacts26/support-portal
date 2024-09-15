@@ -285,7 +285,7 @@ const Discounts = () => {
 
   const onHandleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const data = {
       ...values,
     }
@@ -308,19 +308,23 @@ const Discounts = () => {
     <>
       <div className="container-fluid my-5">
 
-        <div className="row mb-4 d-flex justify-content-between me-2">
+        {/* <div className="row mb-4 d-flex justify-content-between me-2">
           <button className='btn btn-primary fit-content ms-3' variant="primary" onClick={handleShow}>
             Create Single Vendor Discount
           </button>
-
-          {/* <button className='btn btn-primary fit-content ms-3' variant="primary" onClick={handleSubShow}>
-            Create Broadcast Discount
-          </button> */}
         </div>
+        <hr /> */}
 
+        <div className="row mb-4 me-2">
+          <div className="d-flex justify-content-between">
+            <h2>Total discounts List - {couponsList?.length} </h2>
+            <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
+            Create Single Vendor Discount
+            </button>
+          </div>
+        </div>
         <hr />
 
-        <h2>Single Coupon List</h2>
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
