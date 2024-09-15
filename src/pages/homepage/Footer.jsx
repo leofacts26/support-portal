@@ -16,6 +16,7 @@ const initialState = {
   sub_category: '',
   link: '',
   status: 'active',
+  is_active: '1',
   vendor_type: '',
   category_display_order: '',
   sub_category_display_order: '',
@@ -31,13 +32,14 @@ const Footer = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [editId, setEditId] = useState(null)
 
-  console.log(editId, "editId editId");
+  // console.log(editId, "editId editId");
 
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false)
     setEditId(null)
+    setValues(initialState)
   };
   const handleShow = () => setShow(true);
 
@@ -228,9 +230,9 @@ const Footer = () => {
 
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
-            <h2>Total Catering Budjet List - {footerList?.length} </h2>
+            <h2>Total Footer List - {footerList?.length} </h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Catering Budget
+              Create Footer Link
             </button>
           </div>
         </div>
@@ -260,23 +262,23 @@ const Footer = () => {
             <div className="row">
               <div className='col-12'>
                 <label for="name" className="form-label"> <b>category</b> </label>
-                <input type="text" className="form-control" placeholder="Eg. Home" name="category" required onChange={handleChange} value={values.category} />
+                <input type="text" className="form-control" placeholder="Eg. Home" name="category" onChange={handleChange} value={values.category} />
               </div>
               <div className='col-12 mt-4'>
                 <label for="name" className="form-label"> <b>Sub Category</b> </label>
-                <input type="text" className="form-control" placeholder="Eg. sub category" name="sub_category" required onChange={handleChange} value={values.sub_category} />
+                <input type="text" className="form-control" placeholder="Eg. sub category" name="sub_category" onChange={handleChange} value={values.sub_category} />
               </div>
               <div className='col-12 mt-4'>
                 <label for="name" className="form-label"> <b>Link</b> </label>
-                <input type="text" className="form-control" placeholder="Eg. instagram.com" name="link" required onChange={handleChange} value={values.link} />
+                <input type="text" className="form-control" placeholder="Eg. instagram.com" name="link" onChange={handleChange} value={values.link} />
               </div>
               <div className='col-12 mt-4'>
                 <label for="name" className="form-label"> <b>category display order</b> </label>
-                <input type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" required onChange={handleChange} value={values.category_display_order} />
+                <input type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" onChange={handleChange} value={values.category_display_order} />
               </div>
               <div className='col-12 mt-4'>
                 <label for="name" className="form-label"> <b>Sub Category Display Order</b> </label>
-                <input type="number" className="form-control" placeholder="Eg. 1" name="sub_category_display_order" required onChange={handleChange} value={values.sub_category_display_order} />
+                <input type="number" className="form-control" placeholder="Eg. 1" name="sub_category_display_order" onChange={handleChange} value={values.sub_category_display_order} />
               </div>
               <div className='mt-4'>
                 <label htmlFor="vendor_type" className="form-label"><b>Vendor Type</b></label>
