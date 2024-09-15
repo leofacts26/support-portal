@@ -10,6 +10,7 @@ import { fetchexplorecitiesData } from '../features/homepage/homeSlice';
 const useUploadCusinePhotoos = () => {
     const dispatch = useDispatch()
     const { cuisineId } = useSelector((state) => state.users)
+    const { token } = useSelector((state) => state.authSlice);
 
     const onUploadParentCuisine = async (event) => {
         const formData = new FormData();
@@ -42,7 +43,7 @@ const useUploadCusinePhotoos = () => {
         formData.append('id', cuisineId);
         formData.append('image', event.target.files[0]);
         formData.append('table', 'explore_cities')
-        const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+        // const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
         dispatch(setIsLoading(true))
         try {
             toast.loading('Uploading Image...');
