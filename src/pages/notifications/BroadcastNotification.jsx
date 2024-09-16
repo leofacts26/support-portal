@@ -67,10 +67,12 @@ const BroadcastNotification = () => {
       setFilteredData(data);
       return;
     }
-    const newFilteredData = data.filter((row) => {
+    const newFilteredData = data?.filter((row) => {
       return (
-        row?.title?.toLowerCase().includes(searchValue),
-        row?.message?.toLowerCase().includes(searchValue)
+        String(row?.title).toLowerCase().includes(searchValue) ||
+        String(row?.vendor_type).toLowerCase().includes(searchValue) ||
+        String(row?.created_at).toLowerCase().includes(searchValue) ||
+        String(row?.message).toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);

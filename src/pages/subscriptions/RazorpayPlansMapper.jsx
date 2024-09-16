@@ -58,11 +58,11 @@ const RazorpayPlansMapper = () => {
     if (razorpayPlansMapperList) {
       const formattedData = razorpayPlansMapperList?.map((subscription, index) => ({
         id: subscription?.id,
+        subscription_type_name: subscription?.subscription_type_name,
+        vendor_type: subscription?.vendor_type,
         duration: subscription?.duration,
         plan_id: subscription?.plan_id,
         subscription_type_id: subscription?.subscription_type_id,
-        subscription_type_name: subscription?.subscription_type_name,
-        vendor_type: subscription?.vendor_type,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -80,6 +80,9 @@ const RazorpayPlansMapper = () => {
       return (
         String(row?.id).toLowerCase().includes(searchValue) ||
         String(row?.subscription_type_name).toLowerCase().includes(searchValue) ||
+        String(row?.duration).toLowerCase().includes(searchValue) ||
+        String(row?.plan_id).toLowerCase().includes(searchValue) ||
+        String(row?.subscription_type_id).toLowerCase().includes(searchValue) ||
         String(row?.vendor_type).toLowerCase().includes(searchValue)
       );
     });

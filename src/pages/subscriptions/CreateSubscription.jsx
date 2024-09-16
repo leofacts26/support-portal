@@ -93,8 +93,14 @@ const CreateSubscription = () => {
     const newFilteredData = data?.filter((row) => {
       return (
         String(row?.id).toLowerCase().includes(searchValue) ||
-        (row?.startprice && String(row.startprice).toLowerCase().includes(searchValue)) ||
-        (row?.endprice && String(row.endprice).toLowerCase().includes(searchValue))
+        String(row?.display_name).toLowerCase().includes(searchValue) ||
+        String(row?.display_color).toLowerCase().includes(searchValue) ||
+        String(row?.monthly_charges).toLowerCase().includes(searchValue) ||
+        String(row?.name).toLowerCase().includes(searchValue) ||
+        String(row?.vendor_type).toLowerCase().includes(searchValue) ||
+        String(row?.yearly_charges).toLowerCase().includes(searchValue) ||
+        String(row?.search_result_order).toLowerCase().includes(searchValue) ||
+        String(row?.created_at).toLowerCase().includes(searchValue) 
       );
     });
     setFilteredData(newFilteredData);

@@ -69,6 +69,7 @@ const KitchenType = () => {
     const newFilteredData = data?.filter((row) => {
       return (
         String(row?.id).toLowerCase().includes(searchValue) ||
+        String(row?.createdAt).toLowerCase().includes(searchValue) ||
         (row?.name && String(row.name).toLowerCase().includes(searchValue))
       );
     });

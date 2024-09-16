@@ -67,8 +67,18 @@ const Subscriptions = () => {
     const newFilteredData = data?.filter((row) => {
       return (
         String(row?.id).toLowerCase().includes(searchValue) ||
-        (row?.startprice && String(row.startprice).toLowerCase().includes(searchValue)) ||
-        (row?.endprice && String(row.endprice).toLowerCase().includes(searchValue))
+        (row?.auth_status && String(row.auth_status).toLowerCase().includes(searchValue)) ||
+        (row?.created_at && String(row.created_at).toLowerCase().includes(searchValue)) ||
+        (row?.discount_amount && String(row.discount_amount).toLowerCase().includes(searchValue)) ||
+        (row?.final_amount && String(row.final_amount).toLowerCase().includes(searchValue)) ||
+        (row?.payment_status && String(row.payment_status).toLowerCase().includes(searchValue)) ||
+        (row?.razorpay_subscription_id && String(row.razorpay_subscription_id).toLowerCase().includes(searchValue)) ||
+        (row?.status && String(row.status).toLowerCase().includes(searchValue)) ||
+        (row?.sub_amount && String(row.sub_amount).toLowerCase().includes(searchValue)) ||
+        (row?.subscription_pattern && String(row.subscription_pattern).toLowerCase().includes(searchValue)) ||
+        (row?.vendor_id && String(row.vendor_id).toLowerCase().includes(searchValue)) ||
+        (row?.vendor_service_name && String(row.vendor_service_name).toLowerCase().includes(searchValue)) ||
+        (row?.carried_forward_days && String(row.carried_forward_days).toLowerCase().includes(searchValue))
       );
     });
     setFilteredData(newFilteredData);

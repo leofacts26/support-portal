@@ -238,15 +238,15 @@ const LeftNav = () => {
                             <li className="nav-item">
                                 <a
                                     className="nav-link"
-                                    href="#ManageNotification"
+                                    href="#users"
                                     data-bs-toggle="collapse"
                                     role="button"
                                     aria-expanded="true"
-                                    aria-controls="ManageNotification"
+                                    aria-controls="users"
                                 >
                                     <i className="fe fe-home" /> users
                                 </a>
-                                <div className="collapse" id="ManageNotification">
+                                <div className="collapse" id="users">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
                                             <NavLink to="/users" className="nav-link">
@@ -255,7 +255,7 @@ const LeftNav = () => {
                                         </li>
                                     </ul>
                                 </div>
-                                <div className="collapse" id="ManageNotification">
+                                <div className="collapse" id="users">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
                                             <NavLink to="/admin-list-users" className="nav-link">

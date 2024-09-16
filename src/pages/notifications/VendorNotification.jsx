@@ -47,6 +47,7 @@ const VendorNotification = () => {
         title: broadcast?.title,
         message: broadcast?.message,
         created_at: broadcast?.created_at,
+        type: broadcast?.type,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -60,15 +61,17 @@ const VendorNotification = () => {
       setFilteredData(data);
       return;
     }
-    const newFilteredData = data.filter((row) => {
+    const newFilteredData = data?.filter((row) => {
       return (
-        row?.title?.toLowerCase().includes(searchValue),
-        row?.message?.toLowerCase().includes(searchValue)
+        String(row?.vendor_type).toLowerCase().includes(searchValue) ||
+        String(row?.title).toLowerCase().includes(searchValue) ||
+        String(row?.message).toLowerCase().includes(searchValue) ||
+        String(row?.type).toLowerCase().includes(searchValue) ||
+        String(row?.created_at).toLowerCase().includes(searchValue) 
       );
     });
     setFilteredData(newFilteredData);
   };
-
 
   const columns = [
     {
@@ -84,6 +87,11 @@ const VendorNotification = () => {
     {
       name: "message",
       selector: row => row.message,
+      sortable: true,
+    },
+    {
+      name: "type",
+      selector: row => row.type,
       sortable: true,
     },
     {

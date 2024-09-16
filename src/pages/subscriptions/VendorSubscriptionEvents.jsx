@@ -49,6 +49,12 @@ const VendorSubscriptionEvents = () => {
     const newFilteredData = data?.filter((row) => {
       return (
         String(row?.id).toLowerCase().includes(searchValue) ||
+        String(row?.vendor_subscription_id).toLowerCase().includes(searchValue) ||
+        String(row?.event_type).toLowerCase().includes(searchValue) ||
+        String(row?.razorpay_subscription_id).toLowerCase().includes(searchValue) ||
+        String(row?.vendor_service_name).toLowerCase().includes(searchValue) ||
+        String(row?.created_at).toLowerCase().includes(searchValue) ||
+        String(row?.event_date).toLowerCase().includes(searchValue) ||
         String(row?.vendor_id).toLowerCase().includes(searchValue)
       );
     });

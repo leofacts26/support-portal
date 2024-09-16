@@ -106,23 +106,29 @@ const Discounts = () => {
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    // const newRows = rows.filter((row) => {
-    //   return (
-    //     row.mainCategory.toLowerCase().includes(searchValue)
-    //   );
-    // });
-    // setData(newRows);
+    if (!searchValue) {
+      setFilteredData(data);
+      return;
+    }
+    const newFilteredData = data?.filter((row) => {
+      return (
+        String(row?.id).toLowerCase().includes(searchValue) ||
+        String(row?.discount_name).toLowerCase().includes(searchValue) ||
+        String(row?.vendor_type).toLowerCase().includes(searchValue) ||
+        String(row?.coupon_code).toLowerCase().includes(searchValue) ||
+        String(row?.valid_from).toLowerCase().includes(searchValue) ||
+        String(row?.valid_till).toLowerCase().includes(searchValue) ||
+        String(row?.status).toLowerCase().includes(searchValue) ||
+        String(row?.discount_percent).toLowerCase().includes(searchValue) ||
+        String(row?.discount_price).toLowerCase().includes(searchValue) ||
+        String(row?.subscription_type_id).toLowerCase().includes(searchValue) ||
+        String(row?.coupon_type).toLowerCase().includes(searchValue)
+      );
+    });
+    setFilteredData(newFilteredData);
   };
 
-  // const handleSubCategorySearch = (e) => {
-  //   const searchValue = e.target.value.toLowerCase();
-  //   const newRows = rows.filter((row) => {
-  //     return (
-  //       row.mainCategory.toLowerCase().includes(searchValue)
-  //     );
-  //   });
-  //   setSubCatData(newRows);
-  // };
+
 
   const onHandleChange = (e) => {
     const { name, value } = e.target;
@@ -319,7 +325,7 @@ const Discounts = () => {
           <div className="d-flex justify-content-between">
             <h2>Total discounts List - {couponsList?.length} </h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-            Create Single Vendor Discount
+              Create Single Vendor Discount
             </button>
           </div>
         </div>
@@ -330,7 +336,7 @@ const Discounts = () => {
           <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             fixedHeader
             pagination
             selectableRows
