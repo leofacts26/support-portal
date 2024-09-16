@@ -56,8 +56,8 @@ const FoodTypes = () => {
     }
     const newFilteredData = data?.filter((row) => {
       return (
-        row?.name?.toLowerCase().includes(searchValue)
-        // row?.status?.toLowerCase().includes(searchValue)
+        row?.name?.toLowerCase().includes(searchValue) ||
+        row?.order?.toLowerCase().includes(searchValue)
         // row?.order?.toLowerCase().includes(searchValue)
       );
     });

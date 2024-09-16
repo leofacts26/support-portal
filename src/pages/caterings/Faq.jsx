@@ -50,7 +50,7 @@ const Faq = () => {
     dispatch(fetchCatteringFaqs(selectType))
   }, [selectType])
 
-  console.log(faqList, "faqListfaqListfaqListfaqList");
+  // console.log(faqList, "faqListfaqListfaqListfaqList");
 
 
   useEffect(() => {
@@ -78,6 +78,7 @@ const Faq = () => {
     const newFilteredData = data?.filter((row) => {
       return (
         row?.question_text?.toString().toLowerCase().includes(searchValue) ||
+        row?.question_id?.toString().toLowerCase().includes(searchValue) ||
         row?.answer_text?.toLowerCase().includes(searchValue)
       );
     });
@@ -123,6 +124,11 @@ const Faq = () => {
     {
       name: "Answer",
       selector: row => row.answer_text,
+      sortable: true,
+    },
+    {
+      name: "Type",
+      selector: row => row.type,
       sortable: true,
     },
     {
