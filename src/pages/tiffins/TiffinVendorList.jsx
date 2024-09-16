@@ -58,18 +58,33 @@ const TiffinVendorList = () => {
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
+  
     if (!searchValue) {
       setFilteredData(data);
       return;
     }
+  
     const newFilteredData = data?.filter((row) => {
       return (
-        row.id.toString().toLowerCase().includes(searchValue) ||
-        row.vendor_service_name.toLowerCase().includes(searchValue)
+        row?.id?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.phone_number?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.subscription_type_name?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.subscription?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.status?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.listing_status?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.final_status?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.city?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.company_id?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.created_at?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.subscription_start_date?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.subscription_end_date?.toString()?.toLowerCase().includes(searchValue) ||
+        row?.vendor_service_name?.toLowerCase().includes(searchValue)
       );
     });
+  
     setFilteredData(newFilteredData);
   };
+  
 
   const onHandleCateringDetails = (row) => {
     handleShow()
