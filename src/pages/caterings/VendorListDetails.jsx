@@ -315,7 +315,7 @@ const VendorListDetails = () => {
             <thead>
               <tr>
                 <th style={{ fontSize: '10px' }}>Vendor ID</th>
-                <th style={{ fontSize: '10px' }}>Company ID</th>
+                <th style={{ fontSize: '10px' }}>Login ID</th>
                 <th style={{ fontSize: '10px' }}>Vendor Type</th>
                 <th style={{ fontSize: '10px' }}>Subscription Plan</th>
                 <th style={{ fontSize: '10px' }}>Plan Type</th>
