@@ -84,7 +84,9 @@ const Footer = () => {
         String(row?.id).toLowerCase().includes(searchValue) ||
         (row?.category && String(row.category).toLowerCase().includes(searchValue)) ||
         (row?.vendor_type && String(row.vendor_type).toLowerCase().includes(searchValue)) ||
-        (row?.sub_category && String(row.sub_category).toLowerCase().includes(searchValue))
+        (row?.sub_category && String(row.sub_category).toLowerCase().includes(searchValue)) ||
+        (row?.link && String(row.link).toLowerCase().includes(searchValue)) ||
+        (row?.updated_at && String(row.updated_at).toLowerCase().includes(searchValue))
       );
     });
     setFilteredData(newFilteredData);
@@ -136,7 +138,7 @@ const Footer = () => {
     },
     {
       name: "Updated At",
-      selector: row => row.updated_at,
+      selector: row => row.updated_at.slice(0,10),
       sortable: true,
     },
     {

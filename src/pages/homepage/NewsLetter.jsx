@@ -82,9 +82,9 @@ const NewsLetter = () => {
       <div className="container-fluid my-5">
 
         <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
+          {/* <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
             Send Offers
-          </button>
+          </button> */}
           <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={()=> exportToExcel(filteredData, 'newsletter')}>
             Export
           </button>

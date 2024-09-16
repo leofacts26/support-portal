@@ -33,7 +33,7 @@ const ExploreIndia = () => {
   const [editId, setEditId] = useState(null)
   const { onUploadCityImage } = useUploadCusinePhotoos()
 
-  console.log(token, "token token token token");
+  // console.log(token, "token token token token");
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -62,7 +62,8 @@ const ExploreIndia = () => {
         country: city?.country,
         latitude: city?.latitude,
         longitude: city?.longitude,
-        is_active: city?.is_active
+        is_active: city?.is_active,
+        created_at: city?.created_at
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -79,7 +80,8 @@ const ExploreIndia = () => {
     const newFilteredData = data.filter((row) => {
       return (
         row?.id?.toString().toLowerCase().includes(searchValue) ||
-        row?.name?.toLowerCase().includes(searchValue)
+        row?.name?.toLowerCase().includes(searchValue) ||
+        row?.created_at?.toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);
@@ -122,6 +124,11 @@ const ExploreIndia = () => {
           </label>
         </div>
       ),
+      sortable: true,
+    },
+    {
+      name: "Created At",
+      selector: row => row.created_at.slice(0, 10),
       sortable: true,
     },
     {

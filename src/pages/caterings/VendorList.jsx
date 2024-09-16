@@ -13,18 +13,6 @@ import GlobalSearch from '../../components/common/GlobalSearch';
 import { Link } from 'react-router-dom'
 import { cater_vendor_type } from '../../constants';
 
-const rows = [
-  {
-    businessID: 1,
-    fullName: "Mumbai",
-    phoneNo: "7896587458",
-    planType: "Branded",
-    subscription: "Annual",
-    status: "Active",
-    city: "Bangalore",
-    startDate: "03/19/2024",
-  }
-];
 
 
 const VendorList = () => {
@@ -54,22 +42,19 @@ const VendorList = () => {
   useEffect(() => {
     if (cateringVendors) {
       const formattedData = cateringVendors.map((catering, index) => ({
-        id: catering.id,
         businessID: index + 1,
-        fullName: catering?.vendor_service_name || 'N/A',
-        phoneNo: catering?.phone_number || 'N?A',
-        planType: "N/A",
-        subscription: "N/A",
+        id: catering.id,
+        vendor_service_name: catering?.vendor_service_name || 'N/A',
+        phone_number: catering?.phone_number || 'N/A',
+        subscription_type_name: catering?.subscription_type_name || "N/A",
+        subscription: catering?.subscription || "N/A",
         status: catering?.status || 'N/A',
+        listing_status: catering?.listing_status || 'N/A',
+        final_status: catering?.final_status || 'N/A',
+        vendor_type: catering?.vendor_type || 'N/A',
         city: catering?.city || 'N/A',
-        company_id: catering?.company_id,
-        startDate: new Date(catering?.created_at).toLocaleDateString(),
-        // sNO: index + 1,
-        // name: catering?.vendor_service_name,
-        // role: catering?.role || 'NA',
-        // phoneNo: catering?.phone_number,
-        // DateTime: new Date(catering?.created_at).toLocaleDateString(),
-        // EmailID: catering.email,
+        company_id: catering?.company_id || 'N/A',
+        created_at: new Date(catering?.created_at).toLocaleDateString(),
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -85,8 +70,18 @@ const VendorList = () => {
     }
     const newFilteredData = data?.filter((row) => {
       return (
-        row.businessID.toString().toLowerCase().includes(searchValue) ||
-        row.fullName.toLowerCase().includes(searchValue)
+        row.id.toString().toLowerCase().includes(searchValue) ||
+        row.phone_number.toString().toLowerCase().includes(searchValue) ||
+        row.subscription_type_name.toString().toLowerCase().includes(searchValue) ||
+        row.subscription.toString().toLowerCase().includes(searchValue) ||
+        row.status.toString().toLowerCase().includes(searchValue) ||
+        row.listing_status.toString().toLowerCase().includes(searchValue) ||
+        row.final_status.toString().toLowerCase().includes(searchValue) ||
+        row.vendor_type.toString().toLowerCase().includes(searchValue) ||
+        row.city.toString().toLowerCase().includes(searchValue) ||
+        row.company_id.toString().toLowerCase().includes(searchValue) ||
+        row.created_at.toString().toLowerCase().includes(searchValue) ||
+        row.vendor_service_name.toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);
@@ -99,23 +94,28 @@ const VendorList = () => {
 
   const columns = [
     {
-      name: "Business ID",
-      selector: row => row.businessID,
+      name: "ID",
+      selector: row => row.id,
+      sortable: true,
+    },
+    {
+      name: "company id",
+      selector: row => row.company_id,
       sortable: true,
     },
     {
       name: "Business Name",
-      selector: row => row.fullName,
+      selector: row => row.vendor_service_name,
       sortable: true,
     },
     {
       name: "Phone No",
-      selector: row => row.phoneNo,
+      selector: row => row.phone_number,
       sortable: true,
     },
     {
       name: "Plan type",
-      selector: row => row.planType,
+      selector: row => row.subscription_type_name,
       sortable: true,
     },
     {
@@ -129,13 +129,28 @@ const VendorList = () => {
       sortable: true,
     },
     {
+      name: "listing status",
+      selector: row => row.listing_status,
+      sortable: true,
+    },
+    {
+      name: "Final status",
+      selector: row => row.final_status,
+      sortable: true,
+    },
+    {
       name: "City",
       selector: row => row.city,
       sortable: true,
     },
     {
+      name: "vendor type",
+      selector: row => row.vendor_type,
+      sortable: true,
+    },
+    {
       name: "Start Date",
-      selector: row => row.startDate,
+      selector: row => row.created_at,
       sortable: true,
     },
     {
@@ -148,7 +163,7 @@ const VendorList = () => {
               to={`/vendor-list/${row.id}?company_id=${row.company_id}`}
               className='text-primary cursor-pointer'
             >
-              View
+            {row.company_id ? 'View' : 'N/A'}  
             </Link>
           ) : (
             <span>N/A</span>
@@ -165,7 +180,6 @@ const VendorList = () => {
   return (
     <>
       <div className="container-fluid my-5">
-
 
         <h2>Total Registered Caterers - {cateringVendors?.length} </h2>
         <div className="row mb-4 d-flex justify-content-end me-2">
@@ -191,7 +205,7 @@ const VendorList = () => {
 
 
 
-      <Modal centered show={show} onHide={handleClose} size="xl">
+      {/* <Modal centered show={show} onHide={handleClose} size="xl">
         <Modal.Header closeButton>
           <Modal.Title>Vendor Details</Modal.Title>
         </Modal.Header>
@@ -394,7 +408,7 @@ const VendorList = () => {
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
 
 
 

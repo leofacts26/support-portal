@@ -10,6 +10,7 @@ const initialState = {
     cateringVendorsDetail: [],
     cateringFoodTypes: [],
     cuisineList: [],
+    settingsInfo: [],
 }
 
 export const fetchCateringVendors = createAsyncThunk(
@@ -40,13 +41,32 @@ export const fetchCateringVendorDetails = createAsyncThunk(
                 },
             });
             console.log(response, "response123");
-            
+
             return response?.data?.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
         }
     }
 )
+
+
+export const fetchGetVendorSettingsInfo = createAsyncThunk(
+    'catering/fetchGetVendorSettingsInfo',
+    async (vendorId, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-get-vendor-settings-info?vendor_id=${vendorId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
 
 export const fetchCateringFoodTypes = createAsyncThunk(
     'catering/fetchCateringFoodTypes',
@@ -230,6 +250,18 @@ export const cateringSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(addCateringParentCuisine.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // fetchGetVendorSettingsInfo 
+            .addCase(fetchGetVendorSettingsInfo.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchGetVendorSettingsInfo.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.settingsInfo = payload;
+            })
+            .addCase(fetchGetVendorSettingsInfo.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })

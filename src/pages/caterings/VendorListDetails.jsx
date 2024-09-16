@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { fetchCateringCuisines, fetchCateringVendorDetails } from '../../features/catering/cateringSlice';
+import { fetchCateringCuisines, fetchCateringVendorDetails, fetchGetVendorSettingsInfo } from '../../features/catering/cateringSlice';
 
 
 
@@ -61,7 +61,7 @@ const VendorListDetails = () => {
   const dispatch = useDispatch()
   const { cateringVendors, cateringVendorsDetail, isLoading } = useSelector((state) => state.catering)
   const { foodTypes, kitchenTypes, mealTimes, cuisines, occasions, branches, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
-  const { cuisineList } = useSelector((state) => state.catering)
+  const { cuisineList, settingsInfo } = useSelector((state) => state.catering)
 
   const [foodTypesList, setFoodTypesList] = useState(foodTypes)
   const [startPrice, setStartPrice] = useState(cateringVendorsDetail?.start_price || null)
@@ -70,7 +70,7 @@ const VendorListDetails = () => {
   const [maximumCapacity, setMaximumCapacity] = useState(cateringVendorsDetail?.maximum_capacity)
   const [minimumCapacity, setMinimumCapacity] = useState(cateringVendorsDetail?.minimum_capacity)
 
-  console.log(cateringVendorsDetail, "cateringVendorsDetail 897");
+  console.log(settingsInfo, "settingsInfo 897");
 
 
   const [businessProfileValues, setBusinessProfileValues] = useState(businessProfile)
@@ -81,7 +81,7 @@ const VendorListDetails = () => {
   const [showPasswordData, setShowPasswordData] = useState(false)
   const [showCuisineModal, setShowCuisineModal] = useState(false)
 
-  console.log(cuisineList, "cuisineList cuisineList");
+  // console.log(cuisineList, "cuisineList cuisineList");
 
   useEffect(() => {
     dispatch(fetchCateringCuisines())
@@ -155,6 +155,11 @@ const VendorListDetails = () => {
 
   useEffect(() => {
     dispatch(fetchCateringVendorDetails(id));
+  }, [id]);
+
+
+  useEffect(() => {
+    dispatch(fetchGetVendorSettingsInfo(id));
   }, [id]);
 
 
@@ -310,6 +315,7 @@ const VendorListDetails = () => {
             <thead>
               <tr>
                 <th style={{ fontSize: '10px' }}>Vendor ID</th>
+                <th style={{ fontSize: '10px' }}>Company ID</th>
                 <th style={{ fontSize: '10px' }}>Vendor Type</th>
                 <th style={{ fontSize: '10px' }}>Subscription Plan</th>
                 <th style={{ fontSize: '10px' }}>Plan Type</th>
@@ -320,6 +326,7 @@ const VendorListDetails = () => {
             <tbody>
               <tr>
                 <td>{id ? id : 'N/A'}</td>
+                <td>{companyId}</td>
                 <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
@@ -386,22 +393,22 @@ const VendorListDetails = () => {
 
               <thead>
                 <tr>
-                  <th style={{ fontSize: '10px' }}>total_staffs_approx</th>
-                  <th style={{ fontSize: '10px' }}>working_days_hours</th>
-                  <th style={{ fontSize: '10px' }}>working_since</th>
                   <th style={{ fontSize: '10px' }}>street_name</th>
                   <th style={{ fontSize: '10px' }}>state</th>
                   <th style={{ fontSize: '10px' }}>area</th>
+                  <th style={{ fontSize: '10px' }}>latitude</th>
+                  <th style={{ fontSize: '10px' }}>longitude</th>
+                  <th style={{ fontSize: '10px' }}>pincode</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>{cateringVendorsDetail?.total_staffs_approx ? cateringVendorsDetail?.total_staffs_approx : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.working_days_hours ? cateringVendorsDetail?.working_days_hours : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.working_since ? cateringVendorsDetail?.working_since : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.street_name ? cateringVendorsDetail?.street_name : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.state ? cateringVendorsDetail?.state : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.area ? cateringVendorsDetail?.area : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.latitude ? cateringVendorsDetail?.latitude : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.longitude ? cateringVendorsDetail?.longitude : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.pincode ? cateringVendorsDetail?.pincode : 'N/A'}</td>
                 </tr>
               </tbody>
 
@@ -414,9 +421,6 @@ const VendorListDetails = () => {
                   <th style={{ fontSize: '10px' }}>city</th>
                   <th style={{ fontSize: '10px' }}>country</th>
                   <th style={{ fontSize: '10px' }}>formatted_address</th>
-                  <th style={{ fontSize: '10px' }}>latitude</th>
-                  <th style={{ fontSize: '10px' }}>longitude</th>
-                  <th style={{ fontSize: '10px' }}>pincode</th>
                 </tr>
               </thead>
               <tbody>
@@ -424,9 +428,6 @@ const VendorListDetails = () => {
                   <td>{cateringVendorsDetail?.city ? cateringVendorsDetail?.city : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.country ? cateringVendorsDetail?.country : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.formatted_address ? cateringVendorsDetail?.formatted_address : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.latitude ? cateringVendorsDetail?.latitude : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.longitude ? cateringVendorsDetail?.longitude : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.pincode ? cateringVendorsDetail?.pincode : 'N/A'}</td>
                 </tr>
               </tbody>
             </>
@@ -439,7 +440,6 @@ const VendorListDetails = () => {
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Culinary Details</h3>
-            {/* <h3 className='mb-0 text-warning' onClick={handleShow} style={{ cursor: 'pointer' }}>Edit</h3> */}
           </div>
           <Table responsive="xl" className='m-0'>
             <thead>
@@ -469,95 +469,141 @@ const VendorListDetails = () => {
               </tr>
             </tbody>
           </Table>
+
+          <div className="row mt-4">
+            <div className="text-secondary d-flex justify-content-between">
+              <h4 className='mb-0'>Occastions You cater</h4>
+            </div>
+            <div className='mt-3'>
+              {occasions && occasions.length > 0
+                ? occasions.map((item, index) => (
+                  <span key={item.occasion_name} className='cuisine-item'>
+                    {item.occasion_name}  {index < occasions.length - 1 && ', '}
+                  </span>
+                ))
+                : 'N/A'}
+            </div>
+          </div>
+
+
+          <div className="row mt-4">
+            <div className="text-secondary d-flex justify-content-between">
+              <h4 className='mb-0'>Cuisines You cater</h4>
+            </div>
+            <div className='mt-3'>
+              {cuisines && cuisines.length > 0
+                ? cuisines.map((item, index) => (
+                  <span key={item.cuisine_name} className='cuisine-item'>
+                    {item.cuisine_name}
+                    {index < cuisines.length - 1 && ', '}
+                  </span>
+                ))
+                : 'N/A'}
+            </div>
+          </div>
+
+
         </div>
         <hr />
-
-
-        <div className="row mx-2">
-        <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-          <h3 className='mb-0'>Other Branches</h3>
-          {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3> */}
-        </div>
-        <Table responsive="xl" className='m-0'>
-          <thead>
-            <tr>
-              <th style={{ fontSize: '10px' }}>Other Branches</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                {branches?.length > 0 ? branches?.map(item => item.catering_service_name)?.join(', ') : 'N/A'}
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
-      <hr />
-
-
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Cuisines You cater</h3>
-            {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={onHandleCuisineModalOpen}>Edit</h3> */}
-          </div>
-          <div className='mt-3'>
-            {cuisines && cuisines.length > 0
-              ? cuisines.map((item, index) => (
-                <span key={item.cuisine_name} className='cuisine-item'>
-                  {item.cuisine_name}
-                  {index < cuisines.length - 1 && ', '}
-                </span>
-              ))
-              : 'N/A'}
-          </div>
-        </div>
-        <hr />
-
-
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Occastions You cater</h3>
-            {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={onHandleCuisineModalOpen}>Edit</h3> */}
-          </div>
-          <div className='mt-3'>
-          {occasions && occasions.length > 0
-              ? occasions.map((item, index) => (
-                <span key={item.occasion_name} className='cuisine-item'>
-                  {item.occasion_name}  {index < occasions.length - 1 && ', '}
-                </span>
-              ))
-              : 'N/A'}
-          </div>
-        </div>
-        <hr />
-
 
 
 
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Profile</h3>
-            {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={onHandlePasswordShow}>Edit</h3> */}
+            <h3 className='mb-0'>Vintage Details</h3>
           </div>
-          <div className='mt-3'>
-            <Table responsive="xl" className='m-0'>
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>Login ID</th>
-                  <th style={{ fontSize: '10px' }}>Password</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{companyId}</td>
-                  <td>XXXXXXXXXX</td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
+          <Table responsive="xl" className='m-0'>
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>Working Since</th>
+                <th style={{ fontSize: '10px' }}>Total Staffs</th>
+                <th style={{ fontSize: '10px' }}>Work Hours</th>
+                <th style={{ fontSize: '10px' }}>Location Link</th>
+                <th style={{ fontSize: '10px' }}>Other Branches</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{cateringVendorsDetail?.working_since ? cateringVendorsDetail?.working_since : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.total_staffs_approx ? cateringVendorsDetail?.total_staffs_approx : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.working_days_hours ? cateringVendorsDetail?.working_days_hours : 'N/A'}</td>
+                <td>{'N/A'}</td>
+                <td> {branches?.length > 0 ? branches?.map(item => item.catering_service_name)?.join(', ') : 'N/A'}</td>
+              </tr>
+            </tbody>
+          </Table>
         </div>
         <hr />
+
+
+
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className="mb-0">Documents</h3>
+          </div>
+          <Table responsive="xl" className="m-0">
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>Pan Card</th>
+                <th style={{ fontSize: '10px' }}>Aadhar Card (Front)</th>
+                <th style={{ fontSize: '10px' }}>Aadhar Card (Back)</th>
+                <th style={{ fontSize: '10px' }}>Fssai Licence</th>
+                <th style={{ fontSize: '10px' }}>GST Certificate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {/* Pan Card */}
+                <td>
+                  {settingsInfo?.["vendor-encp"]?.[0]?.image_name?.[0]?.large ? (
+                    <a href={settingsInfo["vendor-encp"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                      View Pan Card
+                    </a>
+                  ) : "N/A"}
+                </td>
+
+                {/* Aadhar Card Front */}
+                <td>
+                  {settingsInfo?.["vendor-enca"]?.[0]?.image_name?.[0]?.large ? (
+                    <a href={settingsInfo["vendor-enca"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                      View Aadhar (Front)
+                    </a>
+                  ) : "N/A"}
+                </td>
+
+                {/* Aadhar Card Back */}
+                <td>
+                  {settingsInfo?.["vendor-enca-back"]?.[0]?.image_name?.[0]?.large ? (
+                    <a href={settingsInfo["vendor-enca-back"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                      View Aadhar (Back)
+                    </a>
+                  ) : "N/A"}
+                </td>
+
+                {/* Fssai Licence */}
+                <td>
+                  {settingsInfo?.["vendor-encf"]?.[0]?.image_name?.[0]?.large ? (
+                    <a href={settingsInfo["vendor-encf"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                      View Fssai Licence
+                    </a>
+                  ) : "N/A"}
+                </td>
+
+                {/* GST Certificate */}
+                <td>
+                  {settingsInfo?.gstin_number ? settingsInfo.gstin_number : 'N/A'}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
+
+
+
+
+
 
 
 
