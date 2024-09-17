@@ -67,7 +67,9 @@ const AdminListRoles = () => {
     const newFilteredData = data?.filter((row) => {
       return (
         String(row?.role_id).toLowerCase().includes(searchValue) ||
-        (row?.role_name && String(row.role_name).toLowerCase().includes(searchValue))
+        String(row?.role_id).toLowerCase().includes(searchValue) ||
+        String(row?.created_at).toLowerCase().includes(searchValue) ||
+        (row?.is_active && String(row.is_active).toLowerCase().includes(searchValue))
       );
     });
     setFilteredData(newFilteredData);
@@ -103,6 +105,11 @@ const AdminListRoles = () => {
     {
       name: "is active",
       selector: row => row.is_active,
+      sortable: true,
+    },
+    {
+      name: "created at",
+      selector: row => row.created_at.slice(0, 10),
       sortable: true,
     },
     {

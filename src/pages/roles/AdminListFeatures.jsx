@@ -99,6 +99,13 @@ const AdminListFeatures = () => {
     }
     const newFilteredData = data.filter((row) =>
       String(row.feature_id).toLowerCase().includes(searchValue) ||
+      String(row.is_menu).toLowerCase().includes(searchValue) ||
+      String(row.link).toLowerCase().includes(searchValue) ||
+      String(row.is_active).toLowerCase().includes(searchValue) ||
+      String(row.parent).toLowerCase().includes(searchValue) ||
+      String(row.parent_id).toLowerCase().includes(searchValue) ||
+      String(row.parent_display_order).toLowerCase().includes(searchValue) ||
+      String(row.child_display_order).toLowerCase().includes(searchValue) ||
       (row.feature_name && row.feature_name.toLowerCase().includes(searchValue))
     );
     setFilteredData(newFilteredData);

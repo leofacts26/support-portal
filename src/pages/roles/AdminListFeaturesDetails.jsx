@@ -110,7 +110,13 @@ const AdminListFeaturesDetails = () => {
     const newFilteredData = data?.filter((row) => {
       return (
         String(row?.feature_name).toLowerCase().includes(searchValue) ||
+        (row?.feature_id && String(row.feature_id).toLowerCase().includes(searchValue)) ||
         (row?.link && String(row.link).toLowerCase().includes(searchValue)) ||
+        (row?.role_id && String(row.role_id).toLowerCase().includes(searchValue)) ||
+        (row?.child_display_order && String(row.child_display_order).toLowerCase().includes(searchValue)) ||
+        (row?.parent_display_order && String(row.parent_display_order).toLowerCase().includes(searchValue)) ||
+        (row?.created_by && String(row.created_by).toLowerCase().includes(searchValue)) ||
+        (row?.is_menu && String(row.is_menu).toLowerCase().includes(searchValue)) ||
         (row?.parent_name && String(row.parent_name).toLowerCase().includes(searchValue))
       );
     });
@@ -120,7 +126,7 @@ const AdminListFeaturesDetails = () => {
   const handleSearchOne = (e) => {
     const searchValue = e.target.value.toLowerCase();
     if (!searchValue) {
-      setFilteredData(dataOne);
+      setFilteredDataOne(dataOne);
       return;
     }
     const newFilteredData = dataOne?.filter((row) => {
@@ -129,12 +135,15 @@ const AdminListFeaturesDetails = () => {
         (row?.feature_name && String(row.feature_name).toLowerCase().includes(searchValue)) ||
         (row?.is_menu && String(row.is_menu).toLowerCase().includes(searchValue)) ||
         (row?.link && String(row.link).toLowerCase().includes(searchValue)) ||
+        (row?.is_active && String(row.is_active).toLowerCase().includes(searchValue)) ||
+        (row?.created_at && String(row.created_at).toLowerCase().includes(searchValue)) ||
         (row?.parent_name && String(row.parent_name).toLowerCase().includes(searchValue)) ||
+        (row?.parent_id && String(row.parent_id).toLowerCase().includes(searchValue)) ||
         (row?.parent_display_order && String(row.parent_display_order).toLowerCase().includes(searchValue)) ||
         (row?.child_display_order && String(row.child_display_order).toLowerCase().includes(searchValue))
       );
     });
-    setFilteredData(newFilteredData);
+    setFilteredDataOne(newFilteredData);
   };
 
 
