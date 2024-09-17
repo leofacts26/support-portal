@@ -23,18 +23,44 @@ const initialState = {
 }
 
 
+const categoryInitialtate = {
+  category: '',
+  link: '',
+  is_active: '1',
+  vendor_type: '',
+  category_display_order: '',
+}
+
+const subCategoryInitialtate = {
+  category: '',
+  sub_category: '',
+  link: '',
+  is_active: '1',
+  vendor_type: '',
+  category_display_order: '',
+  sub_category_display_order: '',
+}
+
 const Footer = () => {
   const dispatch = useDispatch()
   const { footerList, isLoading } = useSelector((state) => state.footerSlice)
 
+  console.log(footerList, "footerList footerList footerList");
+
+
   const [values, setValues] = useState(initialState)
+  const [categoryValues, setCategoryValues] = useState(categoryInitialtate)
+  const [subCategoryValues, setSubCategoryValues] = useState(subCategoryInitialtate)
+
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  console.log(selectedCategory, "selectedCategory ggg");
+  
+
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [editId, setEditId] = useState(null)
 
-  // console.log(editId, "editId editId");
-
-
+  // show 
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false)
@@ -43,10 +69,54 @@ const Footer = () => {
   };
   const handleShow = () => setShow(true);
 
+
+  // CatergoryshowModal 
+  const [CatergoryshowModal, setCategoryShowModal] = useState(false);
+  const handleCatergoryModalClose = () => {
+    setCategoryShowModal(false)
+    setEditId(null)
+    setCategoryValues(categoryInitialtate)
+  };
+  const handleCatergoryModalShow = () => setCategoryShowModal(true);
+
+
+  // SubCatergoryshowModal 
+  const [subCatergoryshowModal, setSubCategoryShowModal] = useState(false);
+  const handleSubCatergoryModalClose = () => {
+    setSubCategoryShowModal(false)
+    setEditId(null)
+    setSubCategoryValues(categoryInitialtate)
+  };
+  const handleSubCatergoryModalShow = () => setSubCategoryShowModal(true);
+
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value })
   }
+  const handleCategoryChange = (e) => {
+    const { name, value } = e.target;
+    setCategoryValues({ ...categoryValues, [name]: value })
+  }
+  const handleSubCategoryChange = (e) => {
+    const selectedCategory = footerList.find(item => item.category === e.target.value);
+    setSelectedCategory(selectedCategory);
+    const { name, value } = e.target;
+    setSubCategoryValues({ ...subCategoryValues, [name]: value })
+  }
+
+
+  useEffect(() => {
+    if (selectedCategory) {
+      setSubCategoryValues({
+        ...subCategoryValues,
+        category_display_order: selectedCategory.category_display_order,
+        vendor_type: selectedCategory.vendor_type
+      });
+    }
+  }, [selectedCategory]);
+
 
   useEffect(() => {
     dispatch(fetchFooterData());
@@ -138,7 +208,7 @@ const Footer = () => {
     },
     {
       name: "Updated At",
-      selector: row => row.updated_at.slice(0,10),
+      selector: row => row.updated_at.slice(0, 10),
       sortable: true,
     },
     {
@@ -200,14 +270,6 @@ const Footer = () => {
   const onHandleSubmit = async (e) => {
     e.preventDefault();
 
-    // category: '',
-    // sub_category: '',
-    // link: '',
-    // status: 'active',
-    // vendor_type: '',
-    // category_display_order: '',
-    // sub_category_display_order: '',
-
     const { category, sub_category, link, status, vendor_type, category_display_order, sub_category_display_order } = values;
     const data = {
       category, sub_category, link, status, vendor_type, category_display_order, sub_category_display_order, id: editId
@@ -224,18 +286,54 @@ const Footer = () => {
   }
 
 
+
+  const onHandleCategorySubmit = async (e) => {
+    e.preventDefault();
+    const { category, link, is_active, vendor_type, category_display_order } = categoryValues;
+    const data = {
+      category, link, is_active, vendor_type, category_display_order
+    }
+    console.log(data, "data");
+    await dispatch(createFooter(data))
+    await dispatch(fetchFooterData());
+    setCategoryValues(categoryValues)
+    handleCatergoryModalClose()
+  }
+
+
+  const onHandleSubCategorySubmit = async (e) => {
+    e.preventDefault();
+    const { category, sub_category, link, is_active, vendor_type, category_display_order, sub_category_display_order } = subCategoryValues;
+    const data = {
+      category, sub_category, link, is_active, vendor_type, category_display_order, sub_category_display_order
+    }
+    console.log(data, "data");  // This should now log the updated values
+    await dispatch(createFooter(data))
+    await dispatch(fetchFooterData());
+    setSubCategoryValues(subCategoryInitialtate)
+    handleSubCatergoryModalClose()
+  }
+  
+
   return (
     <>
       <div className="container-fluid my-5">
 
 
-
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
             <h2>Total Footer List - {footerList?.length} </h2>
-            <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Footer Link
-            </button>
+            <div>
+              <button className='btn btn-primary fit-content me-2' variant="primary" onClick={handleCatergoryModalShow}>
+                Create Category
+              </button>
+              <button className='btn btn-primary fit-content me-2' variant="primary" onClick={handleSubCatergoryModalShow}>
+                Create Sub Category
+              </button>
+              {/* <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
+                Create Footer Link
+              </button> */}
+            </div>
           </div>
         </div>
 
@@ -299,6 +397,124 @@ const Footer = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
+
+
+      <Modal centered show={CatergoryshowModal} onHide={handleCatergoryModalClose}>
+        <form onSubmit={onHandleCategorySubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> Create Category </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className='col-12'>
+                <label for="name" className="form-label"> <b>category</b> </label>
+                <input type="text" className="form-control" placeholder="Eg. Home" name="category" onChange={handleCategoryChange} value={categoryValues.category} />
+              </div>
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>Link</b> </label>
+                <input type="text" className="form-control" placeholder="Eg. ct.com/home" name="link" onChange={handleCategoryChange} value={categoryValues.link} />
+              </div>
+              <div className='mt-4'>
+                <label htmlFor="vendor_type" className="form-label"><b>Vendor Type</b></label>
+                <select
+                  name="vendor_type"
+                  className="form-select"
+                  value={categoryValues.vendor_type}
+                  onChange={handleCategoryChange}
+                >
+                  <option value=""><b>Select Vendor Type</b></option>
+                  <option value="Caterer">Caterer</option>
+                  <option value="Tiffin">Tiffin</option>
+                </select>
+              </div>
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>category display order</b> </label>
+                <input type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" onChange={handleCategoryChange} value={categoryValues.category_display_order} />
+              </div>
+
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCatergoryModalClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
+
+
+
+      <Modal centered show={subCatergoryshowModal} onHide={handleSubCatergoryModalClose}>
+        <form onSubmit={onHandleSubCategorySubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title> Create Sub Category </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className='mt-4'>
+                <label htmlFor="category" className="form-label"><b>Select Category</b></label>
+                <select
+                  name="category"
+                  className="form-select"
+                  value={subCategoryValues.category}
+                  onChange={handleSubCategoryChange}
+                >
+                  <option value=""><b>Select Category</b></option>
+                  {footerList?.map((item) => (
+                    <option key={item.id} value={item.category} onClick={() => setSelectedCategory(item)}>
+                      {item.category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+               <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>category display order</b> </label>
+                <input disabled type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" onChange={handleSubCategoryChange} value={subCategoryValues.category_display_order} />
+              </div>
+
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>Sub Category</b> </label>
+                <input type="text" required className="form-control" placeholder="Eg. sub category" name="sub_category" onChange={handleSubCategoryChange} value={subCategoryValues.sub_category} />
+              </div>
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>Link</b> </label>
+                <input type="text" required className="form-control" placeholder="Eg. instagram.com" name="link" onChange={handleSubCategoryChange} value={subCategoryValues.link} />
+              </div>
+              <div className='col-12 mt-4'>
+                <label for="name" className="form-label"> <b>Sub Category Display Order</b> </label>
+                <input type="number" required className="form-control" placeholder="Eg. 1" name="sub_category_display_order" onChange={handleSubCategoryChange} value={subCategoryValues.sub_category_display_order} />
+              </div>
+              <div className='mt-4'>
+                <label htmlFor="vendor_type" className="form-label"><b>Vendor Type</b></label>
+                <select
+                disabled
+                  name="vendor_type"
+                  className="form-select"
+                  value={subCategoryValues.vendor_type}
+                  onChange={handleSubCategoryChange}
+                >
+                  <option value=""><b>Select Vendor Type</b></option>
+                  <option value="Caterer">Caterer</option>
+                  <option value="Tiffin">Tiffin</option>
+                </select>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleSubCatergoryModalClose}>
               Close
             </Button>
             <Button variant="primary" type='submit'>
