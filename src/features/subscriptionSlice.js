@@ -181,7 +181,7 @@ export const updateToggleSubscriptionList = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.post(`${BASE_URL}/apineeded`, data, {
+      const response = await api.post(`${BASE_URL}/admin-toggle-subscription-types`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

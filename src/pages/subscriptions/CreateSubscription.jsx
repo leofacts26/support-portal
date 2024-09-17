@@ -75,12 +75,12 @@ const CreateSubscription = () => {
 
 
   const handleStatusToggle = async (sub) => {
-    // const updatedSub = {
-    //   ...sub,
-    //   is_active: sub.is_active === 1 ? 0 : 1
-    // }
-    // await dispatch(updateToggleSubscriptionList(updatedSub))
-    // await dispatch(fetchVendorSubscriptionList());
+    const updatedSub = {
+      ...sub,
+      is_active: sub.is_active === 1 ? 0 : 1
+    }
+    await dispatch(updateToggleSubscriptionList(updatedSub))
+    await dispatch(fetchVendorSubscriptionList());
   }
 
 
