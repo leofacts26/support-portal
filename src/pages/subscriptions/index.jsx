@@ -124,12 +124,12 @@ const Subscriptions = () => {
       sortable: true,
     },
     {
-      name: "auth_status",
+      name: "Recurring status",
       selector: row => row.auth_status,
       sortable: true,
     },
     {
-      name: "payment_status",
+      name: "One Time Payment status",
       selector: row => row.payment_status,
       sortable: true,
     },
