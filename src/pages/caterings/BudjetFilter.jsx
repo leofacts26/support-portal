@@ -76,12 +76,12 @@ const BudjetFilter = () => {
 
 
   const handleStatusToggle = async (item) => {
-    // const data = {
-    //   ...item,
-    //   is_active: item.is_active === 1 ? 0 : 1
-    // }
-    // await dispatch(updateTogglePriceRanges(data))
-    // await dispatch(fetchpriceRangesList());
+    const data = {
+      ...item,
+      is_active: item.is_active === 1 ? 0 : 1
+    }
+    await dispatch(updateTogglePriceRanges(data))
+    await dispatch(fetchpriceRangesList());
   }
 
 

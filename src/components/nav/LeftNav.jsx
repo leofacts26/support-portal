@@ -236,6 +236,13 @@ const LeftNav = () => {
 
 
                             <li className="nav-item">
+                                <NavLink className="nav-link " to="/admin-list-users">
+                                <i className="fe fe-home" /> Admin List Users
+                                </NavLink>
+                            </li>
+
+
+                            {/* <li className="nav-item">
                                 <a
                                     className="nav-link"
                                     href="#users"
@@ -264,7 +271,7 @@ const LeftNav = () => {
                                         </li>
                                     </ul>
                                 </div>
-                            </li>
+                            </li> */}
 
 
                             <li className="nav-item">
@@ -361,10 +368,15 @@ const LeftNav = () => {
                                     aria-expanded="true"
                                     aria-controls="ManageRoles"
                                 >
-                                    <i className="fe fe-home" /> Admin Roles
+                                    <i className="fe fe-home" /> Customer Care
                                 </a>
                                 <div className="collapse" id="ManageRoles">
                                     <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/users" className="nav-link">
+                                                List Users
+                                            </NavLink>
+                                        </li>
                                         <li className="nav-item">
                                             <NavLink to="/admin-list-roles" className="nav-link">
                                                 Roles
