@@ -13,6 +13,7 @@ import notificationReducer from '../features/notificationSlice'
 import authReducer from '../features/authSlice'
 import footerReduce from '../features/footerSlice'
 import adminRoleReducer from '../features/adminRoleSlice'
+import dashboardReducer from '../features/dashboardSlice'
 
 
 export const store = configureStore({
@@ -30,6 +31,7 @@ export const store = configureStore({
     notifications: notificationReducer,
     authSlice: authReducer,
     footerSlice: footerReduce,
-    roleSlice: adminRoleReducer
+    roleSlice: adminRoleReducer,
+    dashboardSlice: dashboardReducer,
   },
 })

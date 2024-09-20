@@ -1,6 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchDashboardCount } from '../../features/dashboardSlice';
+import DashboardCountChart from '../dashboard/DashboardCountChart'
+import DashboardCityCount from '../dashboard/DashboardCityCount'
+import DashboardAreaCountChart from '../dashboard/DashboardAreaCountChart'
+import DashboardInactiveVendorChart from '../dashboard/DashboardInactiveVendorChart'
+import DashboardSubscriptionChart from '../dashboard/DashboardSubscriptionChart'
+
 
 const Dashboard = () => {
+
+  const { dashboardCount } = useSelector((state) => state.dashboardSlice)
+  console.log(dashboardCount, "dashboardCount");
+
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchDashboardCount());
+  }, [dispatch]);
+
+
   return (
     <>
       <div className="container-fluid">
@@ -31,110 +51,110 @@ const Dashboard = () => {
 
       <div className="container-fluid">
         <div className="row">
-          <div className="col-12 col-lg-6 col-xl">
-            {/* Value  */}
-            <div className="card">
-              <div className="card-body">
-                <div className="row align-items-center gx-0">
-                  <div className="col">
-                    {/* Title */}
-                    <h6 className="text-uppercase text-body-secondary mb-2">Value</h6>
-                    {/* Heading */}
-                    <span className="h2 mb-0">$24,500</span>
-                    {/* Badge */}
-                    <span className="badge text-bg-success-subtle mt-n1">+3.5%</span>
-                  </div>
-                  <div className="col-auto">
-                    {/* Icon */}
-                    <span className="h2 fe fe-dollar-sign text-body-secondary mb-0" />
-                  </div>
-                </div>{" "}
-                {/* / .row */}
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-lg-6 col-xl">
-            {/* Hours */}
-            <div className="card">
-              <div className="card-body">
-                <div className="row align-items-center gx-0">
-                  <div className="col">
-                    {/* Title */}
-                    <h6 className="text-uppercase text-body-secondary mb-2">
-                      Total hours
-                    </h6>
-                    {/* Heading */}
-                    <span className="h2 mb-0">763.5</span>
-                  </div>
-                  <div className="col-auto">
-                    {/* Icon */}
-                    <span className="h2 fe fe-briefcase text-body-secondary mb-0" />
-                  </div>
-                </div>{" "}
-                {/* / .row */}
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-lg-6 col-xl">
-            {/* Exit */}
-            <div className="card">
-              <div className="card-body">
-                <div className="row align-items-center gx-0">
-                  <div className="col">
-                    {/* Title */}
-                    <h6 className="text-uppercase text-body-secondary mb-2">Exit %</h6>
-                    {/* Heading */}
-                    <span className="h2 mb-0">35.5%</span>
-                  </div>
-                  <div className="col-auto">
-                    {/* Chart */}
-                    <div className="chart chart-sparkline">
-                      <canvas
-                        className="chart-canvas"
-                        id="sparklineChart"
-                        style={{
-                          display: "block",
-                          boxSizing: "border-box",
-                          height: 35,
-                          width: 75
-                        }}
-                        width={93}
-                        height={43}
-                      />
-                    </div>
-                  </div>
-                </div>{" "}
-                {/* / .row */}
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-lg-6 col-xl">
-            {/* Time */}
-            <div className="card">
-              <div className="card-body">
-                <div className="row align-items-center gx-0">
-                  <div className="col">
-                    {/* Title */}
-                    <h6 className="text-uppercase text-body-secondary mb-2">
-                      Avg. Time
-                    </h6>
-                    {/* Heading */}
-                    <span className="h2 mb-0">2:37</span>
-                  </div>
-                  <div className="col-auto">
-                    {/* Icon */}
-                    <span className="h2 fe fe-clock text-body-secondary mb-0" />
-                  </div>
-                </div>{" "}
-                {/* / .row */}
-              </div>
-            </div>
-          </div>
-        </div>
 
+          <div className="col-12 col-lg-6 col-xl">
+            <div className="card">
+              <div className="card-body">
+                <div className="row align-items-center gx-0">
+                  <div className="col">
+                    <h6 className="text-uppercase text-body-secondary mb-2">catering vendor count</h6>
+                    <span className="h2 mb-0 text-center">{dashboardCount.catering_vendor_count}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div className="col-12 col-lg-6 col-xl">
+            <div className="card">
+              <div className="card-body">
+                <div className="row align-items-center gx-0">
+                  <div className="col">
+                    <h6 className="text-uppercase text-body-secondary mb-2">tiffins vendor count</h6>
+                    <span className="h2 mb-0 text-center">{dashboardCount.tiffins_vendor_count}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-12 col-lg-6 col-xl">
+            <div className="card">
+              <div className="card-body">
+                <div className="row align-items-center gx-0">
+                  <div className="col">
+                    <h6 className="text-uppercase text-body-secondary mb-2">total inactive vendors</h6>
+                    <span className="h2 mb-0 text-center">{dashboardCount.total_inactive_vendors}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-12 col-lg-6 col-xl">
+            <div className="card">
+              <div className="card-body">
+                <div className="row align-items-center gx-0">
+                  <div className="col">
+                    <h6 className="text-uppercase text-body-secondary mb-2">total newsletter subs</h6>
+                    <span className="h2 mb-0 text-center">{dashboardCount.total_newsletter_subs}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-12 col-lg-6 col-xl">
+            <div className="card">
+              <div className="card-body">
+                <div className="row align-items-center gx-0">
+                  <div className="col">
+                    <h6 className="text-uppercase text-body-secondary mb-2">total registered users</h6>
+                    <span className="h2 mb-0 text-center">{dashboardCount.total_registered_users}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
 
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-6">
+            <DashboardCountChart />
+          </div>
+          <div className="col-lg-6">
+            <DashboardCityCount />
+          </div>
+        </div>
+
+         
+         <div className="row">
+          <div className="col-lg-6">
+            <DashboardAreaCountChart />
+          </div>
+          <div className="col-lg-6">
+            <DashboardInactiveVendorChart />
+          </div>
+         </div>
+
+
+
+         <div className="row">
+          <div className="col-lg-6">
+            <DashboardSubscriptionChart />
+          </div>
+          <div className="col-lg-6">
+            {/* <DashboardInactiveVendorChart /> */}
+          </div>
+         </div>
+
+
+      </div>
     </>
   )
 }
