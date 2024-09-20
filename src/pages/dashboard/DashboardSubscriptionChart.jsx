@@ -48,6 +48,7 @@ const DashboardSubscriptionChart = () => {
 
   const options = {
     responsive: true,
+    aspectRatio: 1,
     plugins: {
       legend: {
         position: 'top',
