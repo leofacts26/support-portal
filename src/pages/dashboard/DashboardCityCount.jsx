@@ -60,7 +60,7 @@ const DashboardCityCount = () => {
 
   const options = {
     responsive: true,
-    aspectRatio: 1,
+    maintainAspectRatio: false, 
     plugins: {
       legend: {
         position: 'top'
@@ -87,8 +87,10 @@ const DashboardCityCount = () => {
         <div className="row">
           <div className="col-12">
             <div className="card">
-              <div className="card-body">
-                <Bar data={data} options={options} />
+              <div className="card-body" style={{ overflowX: 'auto', overflowY: 'hidden', maxHeight: '500px' }}>
+                <div style={{ width: uniqueCities.length * 60 + 'px', height: '400px' }}>
+                  <Bar data={data} options={options} />
+                </div>
               </div>
             </div>
           </div>

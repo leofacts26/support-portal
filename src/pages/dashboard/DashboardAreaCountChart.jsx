@@ -59,7 +59,7 @@ const DashboardAreaCountChart = () => {
 
   const options = {
     responsive: true,
-    aspectRatio: 1,
+    maintainAspectRatio: false, // Ensures custom height works
     plugins: {
       legend: {
         position: 'top',
@@ -67,6 +67,11 @@ const DashboardAreaCountChart = () => {
       title: {
         display: true,
         text: 'Subscription Count by Area',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
       },
     },
   };
@@ -81,12 +86,14 @@ const DashboardAreaCountChart = () => {
         <div className="row">
           <div className="col-12">
             <div className="card">
-              <div className="card-body">
-                {allAreas.length > 0 ? (
-                  <Bar data={chartData} options={options} />
-                ) : (
-                  <p>Loading chart...</p>
-                )}
+              <div className="card-body" style={{ overflowX: 'auto', overflowY: 'hidden', maxHeight: '500px' }}>
+                <div style={{ width: allAreas.length * 60 + 'px', height: '400px' }}>
+                  {allAreas.length > 0 ? (
+                    <Bar data={chartData} options={options} />
+                  ) : (
+                    <p>Loading chart...</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
