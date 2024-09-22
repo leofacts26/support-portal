@@ -10,6 +10,8 @@ const initialState = {
     dashboardAreaCount: [],
     dashboardInactiveVendors: [],
     dashboardSubscriptionChartData: [],
+    vendorCatererSubCount: [],
+    vendorTiffinSubCount: [],
 }
 
 export const fetchDashboardCount = createAsyncThunk(
@@ -103,6 +105,43 @@ export const fetchAdminDashboardSubscriptionChart = createAsyncThunk(
 )
 
 
+export const fetchDashboardVendorSubCountCaterer = createAsyncThunk(
+    'user/fetchDashboardVendorSubCountCaterer',
+    async (user, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-dashboard-vendor-subscription-counts?current_page=1&limit=10000&vendor_type=Caterer`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+export const fetchDashboardVendorSubCountTiffin = createAsyncThunk(
+    'user/fetchDashboardVendorSubCountTiffin',
+    async (user, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/admin-dashboard-vendor-subscription-counts?current_page=1&limit=10000&vendor_type=Tiffin`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+
 export const dashboardSlice = createSlice({
     name: 'dashboardSlice',
     initialState,
@@ -167,6 +206,30 @@ export const dashboardSlice = createSlice({
                 state.dashboardSubscriptionChartData = payload;
             })
             .addCase(fetchAdminDashboardSubscriptionChart.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // fetchDashboardVendorSubCountCaterer 
+            .addCase(fetchDashboardVendorSubCountCaterer.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchDashboardVendorSubCountCaterer.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.vendorCatererSubCount = payload;
+            })
+            .addCase(fetchDashboardVendorSubCountCaterer.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // fetchDashboardVendorSubCountTiffin 
+            .addCase(fetchDashboardVendorSubCountTiffin.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchDashboardVendorSubCountTiffin.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.vendorTiffinSubCount = payload;
+            })
+            .addCase(fetchDashboardVendorSubCountTiffin.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })

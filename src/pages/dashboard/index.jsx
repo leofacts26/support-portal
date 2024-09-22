@@ -6,6 +6,8 @@ import DashboardCityCount from '../dashboard/DashboardCityCount'
 import DashboardAreaCountChart from '../dashboard/DashboardAreaCountChart'
 import DashboardInactiveVendorChart from '../dashboard/DashboardInactiveVendorChart'
 import DashboardSubscriptionChart from '../dashboard/DashboardSubscriptionChart'
+import DashboardVendorSubCountCaterer from './DashboardVendorSubCountCaterer';
+import DashboardVendorSubCountTiffin from './DashboardVendorSubCountTiffin';
 
 
 const Dashboard = () => {
@@ -117,7 +119,7 @@ const Dashboard = () => {
             <DashboardCountChart />
           </div>
           <div className="col-lg-6">
-            <DashboardCityCount />
+            <DashboardInactiveVendorChart />
           </div>
         </div>
 
@@ -127,16 +129,23 @@ const Dashboard = () => {
             <DashboardAreaCountChart />
           </div>
           <div className="col-lg-6">
-            <DashboardInactiveVendorChart />
+            <DashboardCityCount />
           </div>
         </div>
 
         <div className="row">
           <div className="col-lg-6">
-            <DashboardSubscriptionChart />
+            <DashboardVendorSubCountCaterer />
           </div>
           <div className="col-lg-6">
-            {/* <DashboardInactiveVendorChart /> */}
+            <DashboardVendorSubCountTiffin />
+          </div>
+        </div>
+
+
+        <div className="row">
+          <div className="col-lg-12">
+            <DashboardSubscriptionChart />
           </div>
         </div>
 
