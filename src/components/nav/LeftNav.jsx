@@ -124,6 +124,11 @@ const LeftNav = () => {
                                                 Footer
                                             </NavLink>
                                         </li>
+                                        <li className="nav-item">
+                                            <NavLink to="/social" className="nav-link">
+                                                Social
+                                            </NavLink>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -237,7 +242,7 @@ const LeftNav = () => {
 
                             <li className="nav-item">
                                 <NavLink className="nav-link " to="/admin-list-users">
-                                <i className="fe fe-home" /> Admin List Users
+                                    <i className="fe fe-home" /> Admin List Users
                                 </NavLink>
                             </li>
 

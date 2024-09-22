@@ -43,6 +43,7 @@ import AdminListRoles from "./pages/roles/AdminListRoles";
 import AdminListFeatures from "./pages/roles/AdminListFeatures";
 import AdminListFeaturesDetails from "./pages/roles/AdminListFeaturesDetails";
 import AdminListUsers from "./pages/users/AdminListUsers";
+import Social from "./pages/homepage/Social";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
           <Route path="/explore-india" element={<ExploreIndia />} />
           <Route path="/news-letter" element={<NewsLetter />} />
           <Route path="/footer" element={<Footer />} />
+          <Route path="/social" element={<Social />} />
 
           {/* Caterings */}
           <Route path="/vendor-list" element={<VendorList />} />

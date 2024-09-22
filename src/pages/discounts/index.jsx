@@ -9,21 +9,6 @@ import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 
 
-// const rows = [
-//   {
-//     discount_name: '',
-//     vendor_type: '',
-//     coupon_code: '',
-//     valid_from: '',
-//     valid_till: '',
-//     status: '',
-//     coupon_type: '',
-//     discount_percent: '',
-//     discount_price: '',
-//   }
-// ];
-
-
 const initialState = {
   discount_name: '',
   vendor_type: '',
@@ -37,23 +22,9 @@ const initialState = {
 }
 
 
-// const rowsSubCategory = [
-//   {
-//     ID: 1,
-//     vendorID: 23345,
-//     coupons: "MAR3024",
-//     discount: "50%",
-//     validForm: "3/15/24",
-//     validTill: "3/31/24",
-//     status: "Active",
-//     timeToUse: 1,
-//   }
-// ];
-
 const Discounts = () => {
   const dispatch = useDispatch()
   const { couponsList, isLoading } = useSelector((state) => state.coupons)
-
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -325,7 +296,7 @@ const Discounts = () => {
           <div className="d-flex justify-content-between">
             <h2>Total discounts List - {couponsList?.length} </h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Single Vendor Discount
+              Create Multi Vendor Discount
             </button>
           </div>
         </div>
@@ -389,7 +360,7 @@ const Discounts = () => {
                     name="vendor_type" value={values.vendor_type} onChange={onHandleChange}>
                     <option value="">Select an option</option>
                     <option value="user-caterer">Caterer</option>
-                    <option value="user-caterer">Tiffin</option>
+                    <option value="user-tiffin">Tiffin</option>
                   </select>
                 </div>
               </div>
