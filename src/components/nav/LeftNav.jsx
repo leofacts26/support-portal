@@ -316,12 +316,33 @@ const LeftNav = () => {
                                 </div>
                             </li>
 
-
                             <li className="nav-item">
-                                <NavLink className="nav-link " to="/discounts">
-                                    <i className="fe fe-grid" /> Discounts
-                                </NavLink>
+                                <a
+                                    className="nav-link"
+                                    href="#discounts"
+                                    data-bs-toggle="collapse"
+                                    role="button"
+                                    aria-expanded="true"
+                                    aria-controls="discounts"
+                                >
+                                    <i className="fe fe-home" /> Discounts
+                                </a>
+                                <div className="collapse" id="discounts">
+                                    <ul className="nav nav-sm flex-column">
+                                        <li className="nav-item">
+                                            <NavLink to="/discounts" className="nav-link">
+                                               Multi Coupon Discounts
+                                            </NavLink>
+                                        </li>
+                                        <li className="nav-item">
+                                            <NavLink to="/single-vendor-discounts" className="nav-link">
+                                                Single Coupon Discounts
+                                            </NavLink>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
+
 
                             <li className="nav-item">
                                 <a

@@ -44,6 +44,7 @@ import AdminListFeatures from "./pages/roles/AdminListFeatures";
 import AdminListFeaturesDetails from "./pages/roles/AdminListFeaturesDetails";
 import AdminListUsers from "./pages/users/AdminListUsers";
 import Social from "./pages/homepage/Social";
+import SingleVendorDiscounts from "./pages/discounts/SingleVendorDiscounts";
 
 function App() {
   return (
@@ -91,6 +92,7 @@ function App() {
 
           {/* discounts  */}
           <Route path="/discounts" element={<Discounts />} />
+          <Route path="/single-vendor-discounts" element={<SingleVendorDiscounts />} />
 
           {/* notifications  */}
           <Route path="/broadcast-notifications" element={<BroadcastNotification />} />

@@ -7,6 +7,8 @@ import { createCouponList, fetchCouponList, updateCouponList } from '../../featu
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
+import { fetchCateringVendors } from '../../features/catering/cateringSlice';
+import { cater_vendor_type } from '../../constants';
 
 
 const initialState = {
@@ -19,12 +21,18 @@ const initialState = {
   coupon_type: '',
   discount_percent: '',
   discount_price: '',
+  vendor_id: '',
 }
 
 
-const Discounts = () => {
+const SingleVendorDiscounts = () => {
   const dispatch = useDispatch()
   const { couponsList, isLoading } = useSelector((state) => state.coupons)
+  const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering)
+
+  console.log(cateringVendors, "cateringVendors cateringVendors cateringVendors cateringVendors");
+  console.log(couponsList, "couponsList couponsList couponsList couponsList");
+
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -48,6 +56,14 @@ const Discounts = () => {
 
   console.log(values, "values values values");
 
+  useEffect(() => {
+    if (values.vendor_type === 'user-caterer') {
+      dispatch(fetchCateringVendors('Caterer'));
+    } else if (values.vendor_type === 'user-tiffin') {
+      dispatch(fetchCateringVendors('Tiffin'));
+    }
+  }, [values.vendor_type, dispatch]);
+
 
   useEffect(() => {
     dispatch(fetchCouponList())
@@ -56,7 +72,7 @@ const Discounts = () => {
 
   useEffect(() => {
     if (couponsList) {
-      const formattedData = couponsList?.filter((item) => item.vendor_id !== '').map((item, index) => ({
+      const formattedData = couponsList?.filter((item) => item.vendor_id !== null).map((item, index) => ({
         id: item?.id,
         discount_name: item?.discount_name,
         vendor_type: item?.vendor_type,
@@ -68,6 +84,7 @@ const Discounts = () => {
         discount_percent: item?.discount_percent,
         discount_price: item?.discount_price,
         subscription_type_id: item?.subscription_type_id,
+        vendor_id: item?.vendor_id,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -236,6 +253,8 @@ const Discounts = () => {
 
 
   const handleEdit = (data) => {
+    console.log(data, "datadatadatadatadatadatadatadatadatadata");
+    
     setEditId(data?.id)
     setEditSubscriptionTypeId(data?.subscription_type_id)
     handleShow()
@@ -251,6 +270,7 @@ const Discounts = () => {
         coupon_type: data.coupon_type || prevValues.coupon_type,
         discount_percent: data.discount_percent || prevValues.discount_percent,
         discount_price: data.discount_price || prevValues.discount_price,
+        vendor_id: data.vendor_id || prevValues.vendor_id,
       }));
     }
   }
@@ -294,9 +314,9 @@ const Discounts = () => {
 
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
-            <h2>Total Multi Vendor discounts List - {couponsList?.filter((item) => item.vendor_id !== '').length} </h2>
+            <h2>Total Single Vendor discounts List - {couponsList?.filter((item) => item.vendor_id !== null).length} </h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Multi Vendor Discount
+              Create Single Vendor Discount
             </button>
           </div>
         </div>
@@ -434,6 +454,21 @@ const Discounts = () => {
                   />
                 </div>
               </div>
+              {values?.vendor_type && <div className="col-6">
+                <div>
+                  <label htmlFor="vendor_id" className="form-label">Vendor ID</label>
+                  <select className="form-select" name="vendor_id" value={values.vendor_id} onChange={onHandleChange}>
+                    <option value="">Select Vendor</option>
+                    {
+                      cateringVendors?.map((item) => (
+                        <option value={item?.id}>{`${item?.vendor_type} (ID: ${item?.id})`}</option>
+                      ))
+                    }
+                  </select>
+                </div>
+              </div>}
+
+
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -449,68 +484,9 @@ const Discounts = () => {
 
 
 
-      {/* <Modal centered show={showSubCategory} onHide={handleSubClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create Single Vendor List</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="row">
-            <div className="col-6">
-              <div>
-                <label for="name" className="form-label">Vendor ID</label>
-                <input type="text" className="form-control" placeholder="Vendor ID" />
-              </div>
-            </div>
-            <div className="col-6">
-              <div>
-                <label for="name" className="form-label">Coupon Code</label>
-                <input type="text" className="form-control" placeholder="Coupon Code" />
-              </div>
-            </div>
-          </div>
 
-
-          <div className="row mt-3">
-            <div className="col-6">
-              <div>
-                <label for="name" className="form-label">% Discount</label>
-                <input type="text" className="form-control" placeholder="Ex:- 5%" />
-              </div>
-            </div>
-            <div className="col-6">
-              <div>
-                <label for="name" className="form-label">Time To Use</label>
-                <input type="text" className="form-control" placeholder="Ex:- 5" />
-              </div>
-            </div>
-          </div>
-
-          <div className="row mt-3">
-            <div className="col-6">
-              <div>
-                <label for="name" className="form-label">Valid From</label>
-                <input type="date" className="form-control" />
-              </div>
-            </div>
-            <div className="col-6">
-              <div>
-                <label for="name" className="form-label">Valid Till</label>
-                <input type="date" className="form-control" />
-              </div>
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleSubClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubClose}>
-            Create
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </>
   )
 }
 
-export default Discounts
+export default SingleVendorDiscounts
