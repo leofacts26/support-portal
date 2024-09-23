@@ -298,6 +298,16 @@ const LeftNav = () => {
                                             </NavLink>
                                         </li>
                                         <li className="nav-item">
+                                            <NavLink to="/list-benifits-caterer" className="nav-link">
+                                                list-benifits-caterer
+                                            </NavLink>
+                                        </li>
+                                        <li className="nav-item">
+                                            <NavLink to="/list-benifits-tiffin" className="nav-link">
+                                                list-benifits-tiffin
+                                            </NavLink>
+                                        </li>
+                                        <li className="nav-item">
                                             <NavLink to="/razorpay-plans-mapper" className="nav-link">
                                                 Razorpay Plans Mapper
                                             </NavLink>
@@ -331,7 +341,7 @@ const LeftNav = () => {
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
                                             <NavLink to="/discounts" className="nav-link">
-                                               Multi Coupon Discounts
+                                                Multi Coupon Discounts
                                             </NavLink>
                                         </li>
                                         <li className="nav-item">

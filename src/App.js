@@ -45,6 +45,8 @@ import AdminListFeaturesDetails from "./pages/roles/AdminListFeaturesDetails";
 import AdminListUsers from "./pages/users/AdminListUsers";
 import Social from "./pages/homepage/Social";
 import SingleVendorDiscounts from "./pages/discounts/SingleVendorDiscounts";
+import ListBenifits from "./pages/subscriptions/ListBenifits";
+import ListBenifitsTiffin from "./pages/subscriptions/ListBenifitsTiffin";
 
 function App() {
   return (
@@ -89,6 +91,8 @@ function App() {
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="/razorpay-plans-mapper" element={<RazorpayPlansMapper />} />
           <Route path="/vendor-subscription-events" element={<VendorSubscriptionEvents />} />
+          <Route path="/list-benifits-caterer" element={<ListBenifits />} />
+          <Route path="/list-benifits-tiffin" element={<ListBenifitsTiffin />} />
 
           {/* discounts  */}
           <Route path="/discounts" element={<Discounts />} />

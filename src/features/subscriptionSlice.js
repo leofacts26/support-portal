@@ -10,6 +10,7 @@ const initialState = {
   vendorSubscriptionEvents: [],
   vendorSubscriptionList: [],
   vendorSubscriptionTypesList: [],
+  razorpayPlansList: [],
 }
 
 
@@ -90,6 +91,26 @@ export const createSubscriptionData = createAsyncThunk(
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
       const response = await api.post(`${BASE_URL}/admin-create-subscription-type`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const adminAddSubBenifit = createAsyncThunk(
+  'user/adminAddSubBenifit',
+  async (data, thunkAPI) => {
+    console.log("NTRRR");
+
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-create-subscription-benefit`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -214,6 +235,45 @@ export const cancelSubscription = createAsyncThunk(
   }
 )
 
+
+
+
+export const fetchRzrazorpayPlans = createAsyncThunk(
+  'user/fetchRzrazorpayPlans',
+  async (type, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/rz-get-razorpay-plans?vendor_type=${type}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
+export const adminUpdateSubscriptionBenifit = createAsyncThunk(
+  'user/adminUpdateSubscriptionBenifit',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/admin-update-subscription-benefit`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+
 export const subscriptionSlice = createSlice({
   name: 'subscription',
   initialState,
@@ -303,7 +363,40 @@ export const subscriptionSlice = createSlice({
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
-
+      // adminAddSubBenifit 
+      .addCase(adminAddSubBenifit.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(adminAddSubBenifit.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(adminAddSubBenifit.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // fetchRzrazorpayPlans 
+      .addCase(fetchRzrazorpayPlans.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchRzrazorpayPlans.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.razorpayPlansList = payload;
+      })
+      .addCase(fetchRzrazorpayPlans.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // adminUpdateSubscriptionBenifit 
+      .addCase(adminUpdateSubscriptionBenifit.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(adminUpdateSubscriptionBenifit.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(adminUpdateSubscriptionBenifit.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
   }
 })
 

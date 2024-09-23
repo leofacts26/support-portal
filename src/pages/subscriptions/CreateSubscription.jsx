@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
-import { createSubscriptionData, fetchVendorSubscriptionList, updateSubscriptionData, updateToggleSubscriptionList } from '../../features/subscriptionSlice';
+import { adminAddSubBenifit, createSubscriptionData, fetchVendorSubscriptionList, updateSubscriptionData, updateToggleSubscriptionList } from '../../features/subscriptionSlice';
 import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
 import Button from 'react-bootstrap/Button';
+import ListBenifits from './ListBenifits';
+import ListBenifitsTiffin from './ListBenifitsTiffin';
 
 
 
@@ -30,9 +32,18 @@ const CreateSubscription = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [editId, setEditId] = useState(null)
   const [values, setValues] = useState(initialState)
+  const [benifit, setBenifit] = useState("")
+  const [benifitId, setBenifitId] = useState(null)
 
-  console.log(editId, "editId editId");
-  
+
+  const [showBenifit, setShowBenifit] = useState(false);
+  const handleBenifitClose = () => {
+    setShowBenifit(false)
+    setBenifit("")
+    setBenifitId("")
+  };
+  const handleBenifitShow = () => setShowBenifit(true);
+
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -100,11 +111,13 @@ const CreateSubscription = () => {
         String(row?.vendor_type).toLowerCase().includes(searchValue) ||
         String(row?.yearly_charges).toLowerCase().includes(searchValue) ||
         String(row?.search_result_order).toLowerCase().includes(searchValue) ||
-        String(row?.created_at).toLowerCase().includes(searchValue) 
+        String(row?.created_at).toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);
   };
+
+
 
 
   const columns = [
@@ -160,6 +173,18 @@ const CreateSubscription = () => {
     {
       name: "Created At",
       selector: row => row.created_at,
+      sortable: true,
+    },
+    {
+      name: "Add Benifit",
+      cell: row => (
+        <button className="btn btn-success me-1" onClick={() => {
+          handleBenifitShow()
+          setBenifitId(row.id)
+        }}>
+          + Add
+        </button>
+      ),
       sortable: true,
     },
     {
@@ -234,6 +259,24 @@ const CreateSubscription = () => {
     handleClose()
     setValues(initialState);
   }
+
+
+  const onHandleBenifitSubmit = async (e) => {
+    e.preventDefault();
+  
+    const data = {
+      subscription_type_id: benifitId,
+      benefit: benifit
+    };
+  
+    try {
+      await dispatch(adminAddSubBenifit(data)); 
+      handleBenifitClose();
+    } catch (error) {
+      console.error("Error creating benefit:", error);
+    }
+  };
+  
 
 
   return (
@@ -319,6 +362,44 @@ const CreateSubscription = () => {
           </Modal.Footer>
         </form>
       </Modal>
+
+
+      <Modal centered show={showBenifit} onHide={handleBenifitClose}>
+        <form onSubmit={onHandleBenifitSubmit} autocomplete="off">
+          <Modal.Header closeButton>
+            <Modal.Title> {editId ? 'Edit City' : 'Create City'}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>
+              <label for="name" className="form-label">Benifit</label>
+              <input
+                type="text"
+                required
+                className="form-control"
+                placeholder="Enter Benefit"
+                name="benifit"
+                value={benifit}
+                onChange={(e) => setBenifit(e.target.value)}
+              />
+            </div>
+          </Modal.Body>
+        <Modal.Footer>
+            <Button variant="secondary" onClick={handleBenifitClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
+
+
+
+      {/* <ListBenifits />
+      <ListBenifitsTiffin /> */}
+
     </>
   )
 }
