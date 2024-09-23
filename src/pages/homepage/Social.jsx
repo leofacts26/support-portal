@@ -204,7 +204,7 @@ const Social = () => {
             <div className="row">
               <div className='col-6'>
                 <label for="name" className="form-label"> <b>Name</b> </label>
-                <input type="text" className="form-control" placeholder="Your Name" name="name" required onChange={handleChange} value={values.name} />
+                <input type="text" disabled className="form-control" placeholder="Your Name" name="name" required onChange={handleChange} value={values.name} />
               </div>
               <div className='col-6'>
                 <label for="name" className="form-label"> <b>Link</b> </label>
