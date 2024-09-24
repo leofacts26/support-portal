@@ -340,7 +340,7 @@ const Discounts = () => {
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onHandleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>Create Single Vendor Discount</Modal.Title>
+            <Modal.Title>Create Multi Vendor Discount</Modal.Title>
           </Modal.Header>
           <Modal.Body>
 
