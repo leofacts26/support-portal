@@ -242,7 +242,7 @@ const LeftNav = () => {
 
                             <li className="nav-item">
                                 <NavLink className="nav-link " to="/admin-list-users">
-                                    <i className="fe fe-home" /> Admin List Users
+                                    <i className="fe fe-home" />  Users
                                 </NavLink>
                             </li>
 
