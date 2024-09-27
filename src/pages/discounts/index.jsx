@@ -236,6 +236,11 @@ const Discounts = () => {
 
 
   const handleEdit = (data) => {
+    console.log(data, "datadatadatadata");
+    // Map vendor_type and coupon_type to match the values in select options
+    const mappedVendorType = data.vendor_type === 'Caterer' ? 'user-caterer' : data.vendor_type === 'Tiffin' ? 'user-tiffin' : '';
+    const mappedCouponType = data.coupon_type === 'Discount' ? 'discount' : data.coupon_type === 'Offer' ? 'offer' : '';
+
     setEditId(data?.id)
     setEditSubscriptionTypeId(data?.subscription_type_id)
     handleShow()
@@ -243,12 +248,12 @@ const Discounts = () => {
       setValues(prevValues => ({
         ...prevValues,
         discount_name: data.discount_name || prevValues.discount_name,
-        vendor_type: data.vendor_type || prevValues.vendor_type,
+        vendor_type: mappedVendorType || prevValues.vendor_type, // Use mapped value for vendor_type
         coupon_code: data.coupon_code || prevValues.coupon_code,
         valid_from: data.valid_from ? new Date(data.valid_from).toISOString().split('T')[0] : prevValues.valid_from,
         valid_till: data.valid_till ? new Date(data.valid_till).toISOString().split('T')[0] : prevValues.valid_till,
         status: data.status || prevValues.status,
-        coupon_type: data.coupon_type || prevValues.coupon_type,
+        coupon_type: mappedCouponType || prevValues.coupon_type, // Use mapped value for coupon_type
         discount_percent: data.discount_percent || prevValues.discount_percent,
         discount_price: data.discount_price || prevValues.discount_price,
       }));
@@ -355,13 +360,13 @@ const Discounts = () => {
               </div>
               <div className="col-6">
                 <div>
-                  <label for="name" className="form-label">Vendor Type</label>
-                  <select className="form-select" data-choices
-                    name="vendor_type" value={values.vendor_type} onChange={onHandleChange}>
+                  <label htmlFor="name" className="form-label">Vendor Type</label>
+                  <select className="form-select" name="vendor_type" value={values.vendor_type} onChange={onHandleChange}>
                     <option value="">Select an option</option>
                     <option value="user-caterer">Caterer</option>
                     <option value="user-tiffin">Tiffin</option>
                   </select>
+
                 </div>
               </div>
             </div>
