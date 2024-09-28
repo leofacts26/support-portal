@@ -39,50 +39,72 @@ const Subscriptions = () => {
     if (subscriptionList) {
       const formattedData = subscriptionList?.map((subscription, index) => ({
         id: subscription?.id,
-        auth_status: subscription?.auth_status,
-        carried_forward_days: subscription?.carried_forward_days,
-        created_at: subscription?.created_at,
+        vendor_service_name: subscription?.vendor_service_name,
+        subscription_pattern: subscription?.subscription_pattern,
+        sub_amount: subscription?.sub_amount,
         discount_amount: subscription?.discount_amount,
         final_amount: subscription?.final_amount,
-        payment_status: subscription?.payment_status,
-        razorpay_subscription_id: subscription?.razorpay_subscription_id,
         status: subscription?.status,
-        sub_amount: subscription?.sub_amount,
-        subscription_pattern: subscription?.subscription_pattern,
-        vendor_id: subscription?.vendor_id,
-        vendor_service_name: subscription?.vendor_service_name,
+
+        // auth_status: subscription?.auth_status,
+        // carried_forward_days: subscription?.carried_forward_days,
+        // created_at: subscription?.created_at,
+        // payment_status: subscription?.payment_status,
+        // razorpay_subscription_id: subscription?.razorpay_subscription_id,
+        // vendor_id: subscription?.vendor_id,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
     }
   }, [subscriptionList]);
 
-
   const handleSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase();
+    const searchValue = e.target.value.toLowerCase().trim();
     if (!searchValue) {
       setFilteredData(data);
       return;
     }
-    const newFilteredData = data?.filter((row) => {
-      return (
-        String(row?.id).toLowerCase().includes(searchValue) ||
-        (row?.auth_status && String(row.auth_status).toLowerCase().includes(searchValue)) ||
-        (row?.created_at && String(row.created_at).toLowerCase().includes(searchValue)) ||
-        (row?.discount_amount && String(row.discount_amount).toLowerCase().includes(searchValue)) ||
-        (row?.final_amount && String(row.final_amount).toLowerCase().includes(searchValue)) ||
-        (row?.payment_status && String(row.payment_status).toLowerCase().includes(searchValue)) ||
-        (row?.razorpay_subscription_id && String(row.razorpay_subscription_id).toLowerCase().includes(searchValue)) ||
-        (row?.status && String(row.status).toLowerCase().includes(searchValue)) ||
-        (row?.sub_amount && String(row.sub_amount).toLowerCase().includes(searchValue)) ||
-        (row?.subscription_pattern && String(row.subscription_pattern).toLowerCase().includes(searchValue)) ||
-        (row?.vendor_id && String(row.vendor_id).toLowerCase().includes(searchValue)) ||
-        (row?.vendor_service_name && String(row.vendor_service_name).toLowerCase().includes(searchValue)) ||
-        (row?.carried_forward_days && String(row.carried_forward_days).toLowerCase().includes(searchValue))
+
+    // Split the input value into multiple keywords based on commas or spaces
+    const searchKeywords = searchValue.split(/[, ]+/).filter(Boolean);
+
+    const newFilteredData = data.filter((row) => {
+      // Check if any of the keywords match the values in the row
+      return searchKeywords.some((keyword) =>
+        Object.values(row).some(value =>
+          value !== null && value.toString().toLowerCase().includes(keyword) // Check for null before toString()
+        )
       );
     });
+
     setFilteredData(newFilteredData);
   };
+
+  // const handleSearch = (e) => {
+  //   const searchValue = e.target.value.toLowerCase();
+  //   if (!searchValue) {
+  //     setFilteredData(data);
+  //     return;
+  //   }
+  //   const newFilteredData = data?.filter((row) => {
+  //     return (
+  //       String(row?.id).toLowerCase().includes(searchValue) ||
+  //       (row?.auth_status && String(row.auth_status).toLowerCase().includes(searchValue)) ||
+  //       (row?.created_at && String(row.created_at).toLowerCase().includes(searchValue)) ||
+  //       (row?.discount_amount && String(row.discount_amount).toLowerCase().includes(searchValue)) ||
+  //       (row?.final_amount && String(row.final_amount).toLowerCase().includes(searchValue)) ||
+  //       (row?.payment_status && String(row.payment_status).toLowerCase().includes(searchValue)) ||
+  //       (row?.razorpay_subscription_id && String(row.razorpay_subscription_id).toLowerCase().includes(searchValue)) ||
+  //       (row?.status && String(row.status).toLowerCase().includes(searchValue)) ||
+  //       (row?.sub_amount && String(row.sub_amount).toLowerCase().includes(searchValue)) ||
+  //       (row?.subscription_pattern && String(row.subscription_pattern).toLowerCase().includes(searchValue)) ||
+  //       (row?.vendor_id && String(row.vendor_id).toLowerCase().includes(searchValue)) ||
+  //       (row?.vendor_service_name && String(row.vendor_service_name).toLowerCase().includes(searchValue)) ||
+  //       (row?.carried_forward_days && String(row.carried_forward_days).toLowerCase().includes(searchValue))
+  //     );
+  //   });
+  //   setFilteredData(newFilteredData);
+  // };
 
 
 
@@ -124,23 +146,18 @@ const Subscriptions = () => {
       sortable: true,
     },
     {
-      name: "Recurring status",
-      selector: row => row.auth_status,
+      name: "vendor_service_name",
+      selector: row => row.vendor_service_name,
       sortable: true,
     },
     {
-      name: "One Time Payment status",
-      selector: row => row.payment_status,
+      name: "subscription_pattern",
+      selector: row => row.subscription_pattern,
       sortable: true,
     },
     {
-      name: "carried_forward_days",
-      selector: row => row.carried_forward_days,
-      sortable: true,
-    },
-    {
-      name: "created_at",
-      selector: row => row.created_at,
+      name: "sub_amount",
+      selector: row => row.sub_amount,
       sortable: true,
     },
     {
@@ -154,35 +171,46 @@ const Subscriptions = () => {
       sortable: true,
     },
     {
-      name: "razorpay_subscription_id",
-      selector: row => row.razorpay_subscription_id,
-      sortable: true,
-    },
-    {
       name: "status",
       selector: row => row.status,
       sortable: true,
     },
-    {
-      name: "sub_amount",
-      selector: row => row.sub_amount,
-      sortable: true,
-    },
-    {
-      name: "subscription_pattern",
-      selector: row => row.subscription_pattern,
-      sortable: true,
-    },
-    {
-      name: "vendor_id",
-      selector: row => row.vendor_id,
-      sortable: true,
-    },
-    {
-      name: "vendor_service_name",
-      selector: row => row.vendor_service_name,
-      sortable: true,
-    },
+
+
+
+
+
+    // {
+    //   name: "Recurring status",
+    //   selector: row => row.auth_status,
+    //   sortable: true,
+    // },
+    // {
+    //   name: "One Time Payment status",
+    //   selector: row => row.payment_status,
+    //   sortable: true,
+    // },
+    // {
+    //   name: "carried_forward_days",
+    //   selector: row => row.carried_forward_days,
+    //   sortable: true,
+    // },
+    // {
+    //   name: "created_at",
+    //   selector: row => row.created_at,
+    //   sortable: true,
+    // },
+    // {
+    //   name: "razorpay_subscription_id",
+    //   selector: row => row.razorpay_subscription_id,
+    //   sortable: true,
+    // },
+    // {
+    //   name: "vendor_id",
+    //   selector: row => row.vendor_id,
+    //   sortable: true,
+    // },
+
     // {
     //   name: "Action",
     //   cell: (row) => (

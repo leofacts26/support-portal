@@ -241,8 +241,8 @@ const LeftNav = () => {
 
 
                             <li className="nav-item">
-                                <NavLink className="nav-link " to="/admin-list-users">
-                                    <i className="fe fe-home" />  Users
+                                <NavLink className="nav-link " to="/users">
+                                    <i className="fe fe-home" /> Users
                                 </NavLink>
                             </li>
 
@@ -409,8 +409,8 @@ const LeftNav = () => {
                                 <div className="collapse" id="ManageRoles">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <NavLink to="/users" className="nav-link">
-                                                List Users
+                                            <NavLink to="/admin-list-users" className="nav-link">
+                                            List Users
                                             </NavLink>
                                         </li>
                                         <li className="nav-item">

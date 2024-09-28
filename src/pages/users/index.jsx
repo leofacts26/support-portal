@@ -61,30 +61,30 @@ const Users = () => {
       sortable: true,
     },
     {
-      name: "Name",
+      name: "Username",
       selector: (row) => row.name,
       sortable: true,
     },
-    {
-      name: "Role",
-      selector: (row) => row.role,
-      sortable: true,
-    },
+    // {
+    //   name: "Role",
+    //   selector: (row) => row.role,
+    //   sortable: true,
+    // },
     {
       name: "Phone No",
       selector: (row) => row.phoneNo,
       sortable: true,
     },
     {
-      name: "Date Time",
+      name: "Date Created",
       selector: (row) => row.DateTime,
       sortable: true,
     },
-    {
-      name: "Email ID",
-      selector: (row) => row.EmailID,
-      sortable: true,
-    }
+    // {
+    //   name: "Email ID",
+    //   selector: (row) => row.EmailID,
+    //   sortable: true,
+    // }
   ];
 
 
@@ -108,6 +108,7 @@ const Users = () => {
             columns={columns}
             data={filteredData}
             fixedHeader
+            paginationPerPage={100}
             pagination
             selectableRows
             customStyles={tableCustomStyles}
