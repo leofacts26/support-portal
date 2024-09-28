@@ -60,6 +60,7 @@ const DashboardAreaCountChart = () => {
   const options = {
     responsive: true,
     maintainAspectRatio: false, // Ensures custom height works
+    aspectRatio: 2,
     plugins: {
       legend: {
         position: 'top',

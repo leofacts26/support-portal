@@ -34,7 +34,7 @@ const DashboardVendorSubCountCaterer = () => {
 
     const options = {
         responsive: true,
-        aspectRatio: 1,
+        aspectRatio: 2,
         plugins: {
             legend: {
                 position: 'top',
