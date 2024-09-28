@@ -183,19 +183,19 @@ const Subscriptions = () => {
       selector: row => row.vendor_service_name,
       sortable: true,
     },
-    {
-      name: "Action",
-      cell: (row) => (
-        <>
-          <button className="btn btn-success me-1">
-            <FaEdit />
-          </button>
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
+    // {
+    //   name: "Action",
+    //   cell: (row) => (
+    //     <>
+    //       <button className="btn btn-success me-1">
+    //         <FaEdit />
+    //       </button>
+    //     </>
+    //   ),
+    //   ignoreRowClick: true,
+    //   allowOverflow: true,
+    //   button: true,
+    // },
     {
       name: "Cancel",
       cell: (row) => (
