@@ -1,102 +1,121 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import {  fetchCateringVendors, setVendorListId } from '../../features/catering/cateringSlice';
-import * as XLSX from "xlsx";
-import useExportData from '../../hooks/useExportData';
-import toast from 'react-hot-toast';
-import Table from 'react-bootstrap/Table';
-import { tableCustomStyles } from '../../components/tableCustomStyles';
 import GlobalSearch from '../../components/common/GlobalSearch';
-import { Link } from 'react-router-dom'
-import { cater_vendor_type } from '../../constants';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
+import { FaEdit } from "react-icons/fa";
+import { cancelSubscription, fetchSubscriptionData } from '../../features/subscriptionSlice';
+import { MdDelete } from "react-icons/md";
+import { Modal, Button } from 'react-bootstrap';
 
 
 
-const VendorList = () => {
+const Subscriptions = () => {
+
   const dispatch = useDispatch()
-  const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering)
+  const { subscriptionList, isLoading } = useSelector((state) => state.subscription)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const { exportToExcel } = useExportData()
-  // console.log(cateringVendorsDetail.vendorDetails, "cateringVendorsDetail");
-  const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const [selectedRow, setSelectedRow] = useState(null);
+  // console.log(subscriptionList, "subscriptionList subscriptionList");
+  const [showModal, setShowModal] = useState(false);
 
-  // const { token } = useSelector((state) => state.authSlice)
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
 
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
+  // useEffect(() => {
+  //   dispatch(fetchVendorSubscriptionList());
+  // }, [dispatch]);
+
 
   useEffect(() => {
-    dispatch(fetchCateringVendors(cater_vendor_type));
+    dispatch(fetchSubscriptionData());
   }, [dispatch]);
 
 
   useEffect(() => {
-    if (cateringVendors) {
-      const formattedData = cateringVendors.map((catering, index) => ({
-        businessID: index + 1,
-        id: catering.id,
-        vendor_service_name: catering?.vendor_service_name || 'N/A',
-        phone_number: catering?.phone_number || 'N/A',
-        subscription_type_name: catering?.subscription_type_name || "N/A",
-        subscription: catering?.subscription || "N/A",
-        status: catering?.status || 'N/A',
-        listing_status: catering?.listing_status || 'N/A',
-        final_status: catering?.final_status || 'N/A',
-        vendor_type: catering?.vendor_type || 'N/A',
-        city: catering?.city || 'N/A',
-        company_id: catering?.company_id || 'N/A',
-        created_at: new Date(catering?.created_at).toLocaleDateString(),
+    if (subscriptionList) {
+      const formattedData = subscriptionList?.map((subscription, index) => ({
+        id: subscription?.id,
+        auth_status: subscription?.auth_status,
+        carried_forward_days: subscription?.carried_forward_days,
+        created_at: subscription?.created_at,
+        discount_amount: subscription?.discount_amount,
+        final_amount: subscription?.final_amount,
+        payment_status: subscription?.payment_status,
+        razorpay_subscription_id: subscription?.razorpay_subscription_id,
+        status: subscription?.status,
+        sub_amount: subscription?.sub_amount,
+        subscription_pattern: subscription?.subscription_pattern,
+        vendor_id: subscription?.vendor_id,
+        vendor_service_name: subscription?.vendor_service_name,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
     }
-  }, [cateringVendors]);
+  }, [subscriptionList]);
 
 
   const handleSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase().trim();
+    const searchValue = e.target.value.toLowerCase();
     if (!searchValue) {
       setFilteredData(data);
       return;
     }
-  
-    // Split the input value into multiple keywords based on commas or spaces
-    const searchKeywords = searchValue.split(/[, ]+/).filter(Boolean);
-  
-    const newFilteredData = data.filter((row) => {
-      // Check if any of the keywords match the values in the row
-      return searchKeywords.some((keyword) =>
-        row.id.toString().toLowerCase().includes(keyword) ||
-        row.phone_number.toString().toLowerCase().includes(keyword) ||
-        row.subscription_type_name.toString().toLowerCase().includes(keyword) ||
-        row.subscription.toString().toLowerCase().includes(keyword) ||
-        row.status.toString().toLowerCase().includes(keyword) ||
-        row.listing_status.toString().toLowerCase().includes(keyword) ||
-        row.final_status.toString().toLowerCase().includes(keyword) ||
-        row.vendor_type.toString().toLowerCase().includes(keyword) ||
-        row.city.toString().toLowerCase().includes(keyword) ||
-        row.company_id.toString().toLowerCase().includes(keyword) ||
-        row.created_at.toString().toLowerCase().includes(keyword) ||
-        row.vendor_service_name.toLowerCase().includes(keyword)
+    const newFilteredData = data?.filter((row) => {
+      return (
+        String(row?.id).toLowerCase().includes(searchValue) ||
+        (row?.auth_status && String(row.auth_status).toLowerCase().includes(searchValue)) ||
+        (row?.created_at && String(row.created_at).toLowerCase().includes(searchValue)) ||
+        (row?.discount_amount && String(row.discount_amount).toLowerCase().includes(searchValue)) ||
+        (row?.final_amount && String(row.final_amount).toLowerCase().includes(searchValue)) ||
+        (row?.payment_status && String(row.payment_status).toLowerCase().includes(searchValue)) ||
+        (row?.razorpay_subscription_id && String(row.razorpay_subscription_id).toLowerCase().includes(searchValue)) ||
+        (row?.status && String(row.status).toLowerCase().includes(searchValue)) ||
+        (row?.sub_amount && String(row.sub_amount).toLowerCase().includes(searchValue)) ||
+        (row?.subscription_pattern && String(row.subscription_pattern).toLowerCase().includes(searchValue)) ||
+        (row?.vendor_id && String(row.vendor_id).toLowerCase().includes(searchValue)) ||
+        (row?.vendor_service_name && String(row.vendor_service_name).toLowerCase().includes(searchValue)) ||
+        (row?.carried_forward_days && String(row.carried_forward_days).toLowerCase().includes(searchValue))
       );
     });
-  
     setFilteredData(newFilteredData);
   };
-  
 
-  const onHandleCateringDetails = (row) => {
-    handleShow()
-    dispatch(setVendorListId(row?.id));
+
+
+  // const onHandleCancelSubscription = async (row) => {
+  //   const { razorpay_subscription_id, vendor_id } = row;
+  //   const data = { subscription_id: razorpay_subscription_id, vendor_id };
+  //   console.log(row, "row data");
+
+  //   await dispatch(cancelSubscription(data));
+  //   handleClose();
+  // }
+
+
+  const onHandleCancelSubscription = async (row) => {
+    const { razorpay_subscription_id, vendor_id, status } = row;
+
+    if ((status === "active" || status === "pending") && razorpay_subscription_id !== null) {
+      const data = { subscription_id: razorpay_subscription_id, vendor_id };
+      await dispatch(cancelSubscription(data));
+      handleClose();
+    } else {
+      alert("Cancellation not allowed: Subscription is either not active/queued or does not have a valid Razorpay subscription ID.")
+      console.log("Cancellation not allowed: Subscription is either not active/queued or does not have a valid Razorpay subscription ID.");
+    }
   }
+
+
+
+  const onHandleSubscriptionModal = (row) => {
+    setSelectedRow(row);
+    handleShow();
+  }
+
 
   const columns = [
     {
@@ -105,93 +124,109 @@ const VendorList = () => {
       sortable: true,
     },
     {
-      name: "company id",
-      selector: row => row.company_id,
+      name: "Recurring status",
+      selector: row => row.auth_status,
       sortable: true,
     },
     {
-      name: "Business Name",
-      selector: row => row.vendor_service_name,
+      name: "One Time Payment status",
+      selector: row => row.payment_status,
       sortable: true,
     },
     {
-      name: "Phone No",
-      selector: row => row.phone_number,
+      name: "carried_forward_days",
+      selector: row => row.carried_forward_days,
       sortable: true,
     },
     {
-      name: "Plan type",
-      selector: row => row.subscription_type_name,
-      sortable: true,
-    },
-    {
-      name: "Subscription",
-      selector: row => row.subscription,
-      sortable: true,
-    },
-    {
-      name: "Status",
-      selector: row => row.status,
-      sortable: true,
-    },
-    {
-      name: "listing status",
-      selector: row => row.listing_status,
-      sortable: true,
-    },
-    {
-      name: "Final status",
-      selector: row => row.final_status,
-      sortable: true,
-    },
-    {
-      name: "City",
-      selector: row => row.city,
-      sortable: true,
-    },
-    {
-      name: "vendor type",
-      selector: row => row.vendor_type,
-      sortable: true,
-    },
-    {
-      name: "Start Date",
+      name: "created_at",
       selector: row => row.created_at,
       sortable: true,
     },
     {
-      name: "Details",
+      name: "discount_amount",
+      selector: row => row.discount_amount,
+      sortable: true,
+    },
+    {
+      name: "final_amount",
+      selector: row => row.final_amount,
+      sortable: true,
+    },
+    {
+      name: "razorpay_subscription_id",
+      selector: row => row.razorpay_subscription_id,
+      sortable: true,
+    },
+    {
+      name: "status",
+      selector: row => row.status,
+      sortable: true,
+    },
+    {
+      name: "sub_amount",
+      selector: row => row.sub_amount,
+      sortable: true,
+    },
+    {
+      name: "subscription_pattern",
+      selector: row => row.subscription_pattern,
+      sortable: true,
+    },
+    {
+      name: "vendor_id",
+      selector: row => row.vendor_id,
+      sortable: true,
+    },
+    {
+      name: "vendor_service_name",
+      selector: row => row.vendor_service_name,
+      sortable: true,
+    },
+    // {
+    //   name: "Action",
+    //   cell: (row) => (
+    //     <>
+    //       <button className="btn btn-success me-1">
+    //         <FaEdit />
+    //       </button>
+    //     </>
+    //   ),
+    //   ignoreRowClick: true,
+    //   allowOverflow: true,
+    //   button: true,
+    // },
+    {
+      name: "Cancel",
       cell: (row) => (
         <>
-          {row?.company_id ? (
-            <Link
-              onClick={() => onHandleCateringDetails(row)}
-              to={`/vendor-list/${row.id}?company_id=${row.company_id}`}
-              className='text-primary cursor-pointer'
+          {(row.status === "active" || row.status === "pending") && row.razorpay_subscription_id !== null && (
+            <button
+              className="btn btn-danger me-1"
+              onClick={() => onHandleSubscriptionModal(row)}
             >
-            {row.company_id ? 'View' : 'N/A'}  
-            </Link>
-          ) : (
-            <span>N/A</span>
+              Cancel <MdDelete />
+            </button>
           )}
         </>
       ),
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
-    },
+    }
   ];
 
 
   return (
     <>
       <div className="container-fluid my-5">
-
-        <h2>Total Registered Caterers - {cateringVendors?.length} </h2>
-        <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-secondary fit-content' variant="primary" onClick={() => exportToExcel(filteredData, 'vendorlist')}>
-            Export
-          </button>
+        <div className="row mb-4 me-2">
+          <div className="d-flex justify-content-between">
+            <h2>Total Vendor Subscription List - {subscriptionList?.length} </h2>
+            {/* <button className='btn btn-primary fit-content' variant="primary">
+              Create Subscription List
+            </button> */}
+          </div>
         </div>
 
         <div className="card">
@@ -211,215 +246,32 @@ const VendorList = () => {
 
 
 
-      {/* <Modal centered show={show} onHide={handleClose} size="xl">
+      {/* React Bootstrap Modal */}
+      <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Vendor Details</Modal.Title>
+          <Modal.Title>Cancel Subscription</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-
-          <div>
-            <Table responsive="xl">
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>vendor_service_name</th>
-                  <th style={{ fontSize: '10px' }}>vendor_type</th>
-                  <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
-                  <th style={{ fontSize: '10px' }}>working_days_hours</th>
-                  <th style={{ fontSize: '10px' }}>working_since</th>
-                  <th style={{ fontSize: '10px' }}>about_description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.vendor_service_name ? vendorDetails?.vendor_service_name : 'N/A'}</td>
-                  <td>{vendorDetails?.vendor_type ? vendorDetails?.vendor_type : 'N/A'}</td>
-                  <td>{vendorDetails?.point_of_contact_name ? vendorDetails?.point_of_contact_name : 'N/A'}</td>
-                  <td>{vendorDetails?.working_days_hours ? vendorDetails?.working_days_hours : 'N/A'}</td>
-                  <td>{vendorDetails?.working_since ? vendorDetails?.working_since : 'N/A'}</td>
-                  <td>{vendorDetails?.about_description ? vendorDetails?.about_description : 'N/A'}</td>
-                </tr>
-              </tbody>
-            </Table>
-
-            <Table responsive="xl">
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>total_staffs_approx</th>
-                  <th style={{ fontSize: '10px' }}>pincode</th>
-                  <th style={{ fontSize: '10px' }}>business_email</th>
-                  <th style={{ fontSize: '10px' }}>business_phone_number</th>
-                  <th style={{ fontSize: '10px' }}>landline_number</th>
-                  <th style={{ fontSize: '10px' }}>whatsapp_business_phone_number</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.total_staffs_approx ? vendorDetails?.total_staffs_approx : 'N/A'}</td>
-                  <td>{vendorDetails?.pincode ? vendorDetails?.pincode : 'N/A'}</td>
-                  <td>{vendorDetails?.business_email ? vendorDetails?.business_email : 'N/A'}</td>
-                  <td>{vendorDetails?.business_phone_number ? vendorDetails?.business_phone_number : 'N/A'}</td>
-                  <td>{vendorDetails?.landline_number ? vendorDetails?.landline_number : 'N/A'}</td>
-                  <td>{vendorDetails?.whatsapp_business_phone_number ? vendorDetails?.whatsapp_business_phone_number : 'N/A'}</td>
-                </tr>
-              </tbody>
-            </Table>
-
-            <Table responsive="xl">
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>website_link</th>
-                  <th style={{ fontSize: '10px' }}>twitter_id</th>
-                  <th style={{ fontSize: '10px' }}>instagram_link</th>
-                  <th style={{ fontSize: '10px' }}>facebook_link</th>
-                  <th style={{ fontSize: '10px' }}>latitude</th>
-                  <th style={{ fontSize: '10px' }}>longitude</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.website_link ? vendorDetails?.website_link : 'N/A'}</td>
-                  <td>{vendorDetails?.twitter_id ? vendorDetails?.twitter_id : 'N/A'}</td>
-                  <td>{vendorDetails?.instagram_link ? vendorDetails?.instagram_link : 'N/A'}</td>
-                  <td>{vendorDetails?.facebook_link ? vendorDetails?.facebook_link : 'N/A'}</td>
-                  <td>{vendorDetails?.latitude ? vendorDetails?.latitude : 'N/A'}</td>
-                  <td>{vendorDetails?.longitude ? vendorDetails?.longitude : 'N/A'}</td>
-                </tr>
-              </tbody>
-            </Table>
-
-
-            <Table responsive="xl">
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>area</th>
-                  <th style={{ fontSize: '10px' }}>street_name</th>
-                  <th style={{ fontSize: '10px' }}>country</th>
-                  <th style={{ fontSize: '10px' }}>state</th>
-                  <th style={{ fontSize: '10px' }}>formatted_address</th>
-                  <th style={{ fontSize: '10px' }}>city</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.area ? vendorDetails?.area : 'N/A'}</td>
-                  <td>{vendorDetails?.street_name ? vendorDetails?.street_name : 'N/A'}</td>
-                  <td>{vendorDetails?.country ? vendorDetails?.country : 'N/A'}</td>
-                  <td>{vendorDetails?.state ? vendorDetails?.state : 'N/A'}</td>
-                  <td>{vendorDetails?.formatted_address ? vendorDetails?.formatted_address : 'N/A'}</td>
-                  <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
-                </tr>
-              </tbody>
-            </Table>
-
-            <Table responsive="xl">
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>place_id</th>
-                  <th style={{ fontSize: '10px' }}>minimum_capacity</th>
-                  <th style={{ fontSize: '10px' }}>maximum_capacity</th>
-                  <th style={{ fontSize: '10px' }}>start_price</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.place_id ? vendorDetails?.place_id : 'N/A'}</td>
-                  <td>{vendorDetails?.minimum_capacity ? vendorDetails?.minimum_capacity : 'N/A'}</td>
-                  <td>{vendorDetails?.maximum_capacity ? vendorDetails?.maximum_capacity : 'N/A'}</td>
-                  <td>{vendorDetails?.start_price ? vendorDetails?.start_price : 'N/A'}</td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-
-          <hr />
-
-          <div className="row">
-            <div className="col-lg-6">
-              <div>
-                <h2 className='vd-detail-headings'>Food Types</h2>
-                <p>{foodTypes?.map((item) => {
-                  return (
-                    <span>
-                      {item?.food_type_name}, {" "}
-                    </span>
-                  )
-                })}</p>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div>
-                <h2 className='vd-detail-headings'>kitchen Types</h2>
-                <p>{kitchenTypes?.map((item) => {
-                  return (
-                    <span>
-                      {item?.kitchen_type_name}, {" "}
-                    </span>
-                  )
-                })}</p>
-              </div>
-            </div>
-          </div>
-
-          <hr />
-
-
-          <div className="row">
-            <div className="col-lg-6">
-              <div>
-                <h2 className='vd-detail-headings'>Meal Types</h2>
-                <p>{mealTimes?.map((item) => {
-                  return (
-                    <span>
-                      {item?.meal_time_name}, {" "}
-                    </span>
-                  )
-                })}</p>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div>
-                <h2 className='vd-detail-headings'>Service Types</h2>
-                <p>{serviceTypes?.map((item) => {
-                  return (
-                    <span>
-                      {item?.service_type_name}, {" "}
-                    </span>
-                  )
-                })}</p>
-              </div>
-
-            </div>
-          </div>
-
-          <hr />
-
-
-          <div>
-            <h2 className='vd-detail-headings'>Serving Types</h2>
-            <p>{servingTypes?.map((item) => {
-              return (
-                <span>
-                  {item?.serving_type_name}, {" "}
-                </span>
-              )
-            })}</p>
-          </div>
-
-
-
-
+          <h2 className='text-center'>Are you sure you want to cancel the subscription?</h2>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            No, Keep Subscription
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              onHandleCancelSubscription(selectedRow);
+            }}
+          >
+            Yes, Cancel Subscription
           </Button>
         </Modal.Footer>
-      </Modal> */}
-
+      </Modal>
 
 
     </>
   )
 }
 
-export default VendorList
+export default Subscriptions
