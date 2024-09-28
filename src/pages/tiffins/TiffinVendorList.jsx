@@ -36,19 +36,21 @@ const TiffinVendorList = () => {
   useEffect(() => {
     if (cateringVendors) {
       const formattedData = cateringVendors.map((catering, index) => ({
-        id: catering.id,
+        // id: catering.id,
+
+        company_id: catering?.company_id,
         vendor_service_name: catering?.vendor_service_name || 'N/A',
         phone_number: catering?.phone_number || 'N?A',
+        city: catering?.city || 'N/A',
         subscription_type_name: catering?.subscription_type_name || "N/A",
         subscription: catering?.subscription || "N/A",
-        status: catering?.status || 'N/A',
-        listing_status: catering?.listing_status || 'N/A',
-        final_status: catering?.final_status || 'N/A',
-        city: catering?.city || 'N/A',
-        company_id: catering?.company_id,
         created_at: catering?.created_at,
-        subscription_start_date: new Date(catering?.subscription_start_date).toLocaleDateString(),
-        subscription_end_date: new Date(catering?.subscription_end_date).toLocaleDateString(),
+        final_status: catering?.final_status || 'N/A',
+
+        // status: catering?.status || 'N/A',
+        // listing_status: catering?.listing_status || 'N/A',
+        // subscription_start_date: new Date(catering?.subscription_start_date).toLocaleDateString(),
+        // subscription_end_date: new Date(catering?.subscription_end_date).toLocaleDateString(),
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -57,28 +59,21 @@ const TiffinVendorList = () => {
 
 
   const handleSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase();
-  
+    const searchValue = e.target.value.toLowerCase().trim();
     if (!searchValue) {
       setFilteredData(data);
       return;
     }
   
-    const newFilteredData = data?.filter((row) => {
-      return (
-        row?.id?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.phone_number?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.subscription_type_name?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.subscription?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.status?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.listing_status?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.final_status?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.city?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.company_id?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.created_at?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.subscription_start_date?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.subscription_end_date?.toString()?.toLowerCase().includes(searchValue) ||
-        row?.vendor_service_name?.toLowerCase().includes(searchValue)
+    // Split the input value into multiple keywords based on commas or spaces
+    const searchKeywords = searchValue.split(/[, ]+/).filter(Boolean);
+  
+    const newFilteredData = data.filter((row) => {
+      // Check if any of the keywords match the values in the row
+      return searchKeywords.some((keyword) =>
+        Object.values(row).some(value =>
+          value !== null && value.toString().toLowerCase().includes(keyword) // Check for null before toString()
+        )
       );
     });
   
@@ -86,15 +81,21 @@ const TiffinVendorList = () => {
   };
   
 
+
   const onHandleCateringDetails = (row) => {
     handleShow()
     dispatch(setVendorListId(row?.id));
   }
 
   const columns = [
+    // {
+    //   name: "ID",
+    //   selector: row => row.id,
+    //   sortable: true,
+    // },
     {
-      name: "ID",
-      selector: row => row.id,
+      name: "company id",
+      selector: row => row.company_id,
       sortable: true,
     },
     {
@@ -108,6 +109,11 @@ const TiffinVendorList = () => {
       sortable: true,
     },
     {
+      name: "City",
+      selector: row => row.city,
+      sortable: true,
+    },
+    {
       name: "Plan type",
       selector: row => row.subscription_type_name,
       sortable: true,
@@ -118,13 +124,8 @@ const TiffinVendorList = () => {
       sortable: true,
     },
     {
-      name: "Status",
-      selector: row => row.status,
-      sortable: true,
-    },
-    {
-      name: "Listing Status",
-      selector: row => row.listing_status,
+      name: "Start Date",
+      selector: row => row.subscription_start_date,
       sortable: true,
     },
     {
@@ -132,26 +133,29 @@ const TiffinVendorList = () => {
       selector: row => row.final_status,
       sortable: true,
     },
-    {
-      name: "City",
-      selector: row => row.city,
-      sortable: true,
-    },
-    {
-      name: "Created At",
-      selector: row => row.created_at,
-      sortable: true,
-    },
-    {
-      name: "Start Date",
-      selector: row => row.subscription_start_date,
-      sortable: true,
-    },
-    {
-      name: "End Date",
-      selector: row => row.subscription_end_date,
-      sortable: true,
-    },
+  
+
+    // {
+    //   name: "Status",
+    //   selector: row => row.status,
+    //   sortable: true,
+    // },
+    // {
+    //   name: "Listing Status",
+    //   selector: row => row.listing_status,
+    //   sortable: true,
+    // },
+    // {
+    //   name: "Created At",
+    //   selector: row => row.created_at,
+    //   sortable: true,
+    // },
+   
+    // {
+    //   name: "End Date",
+    //   selector: row => row.subscription_end_date,
+    //   sortable: true,
+    // },
     {
       name: "Details",
       cell: (row) => (
