@@ -23,6 +23,8 @@ const initialState = {
 const AdminListFeatures = () => {
   const dispatch = useDispatch();
   const { adminFeatureRoleList, isLoading } = useSelector((state) => state.roleSlice);
+  console.log(adminFeatureRoleList, "adminFeatureRoleList adminFeatureRoleList");
+
 
   const [values, setValues] = useState(initialState);
   const [data, setData] = useState([]);
@@ -123,7 +125,7 @@ const AdminListFeatures = () => {
 
   const handleDelete = async (item) => {
     console.log(item, "item");
-    
+
     const data = {
       feature_id: item.feature_id,
       is_active: item.is_active === 1 ? 0 : 1,
@@ -157,7 +159,7 @@ const AdminListFeatures = () => {
         </a>
       ),
       sortable: true,
-    },    
+    },
     {
       name: "Is Active",
       selector: row => row.is_active === 1 ? "Active" : "Inactive",
@@ -332,24 +334,11 @@ const AdminListFeatures = () => {
                 </select>
               </div>
 
-              {/* Is Menu Input */}
-              <div className='col-12 mt-3'>
-                <label htmlFor="is_menu" className="form-label"><b>Is Menu</b></label>
-                <select
-                  className="form-control"
-                  name="is_menu"
-                  onChange={handleChange}
-                  value={values.is_menu}
-                >
-                  <option value="">Select</option>
-                  <option value="1">Yes</option>
-                  <option value="0">No</option>
-                </select>
-              </div>
+
 
               {/* Link Input */}
               <div className='col-12 mt-3'>
-                <label htmlFor="link" className="form-label"><b>Link</b></label>
+                <label htmlFor="link" className="form-label"><b>Link / Constant</b></label>
                 <input
                   type="text"
                   className="form-control"
@@ -359,41 +348,74 @@ const AdminListFeatures = () => {
                 />
               </div>
 
-              {/* Parent ID Input */}
+              {/* Parent ID Input changed to Dropdown */}
               <div className='col-12 mt-3'>
                 <label htmlFor="parent_id" className="form-label"><b>Parent ID</b></label>
-                <input
-                  type="number"
+                <select
                   className="form-control"
                   name="parent_id"
                   onChange={handleChange}
                   value={values.parent_id}
-                />
+                >
+                  <option value="">Select Parent</option>
+                  {/* Populate the dropdown with options excluding children */}
+                  {adminFeatureRoleList
+                    .filter(feature => feature.parent_id === null) // Only include parent features
+                    .map((feature) => (
+                      <option key={feature.feature_id} value={feature.feature_id}>
+                        {feature.feature_name}
+                      </option>
+                    ))}
+                </select>
               </div>
 
-              {/* Parent Display Order Input */}
+              {/* Is Menu Input */}
+              {/* Is Menu Input */}
               <div className='col-12 mt-3'>
-                <label htmlFor="parent_display_order" className="form-label"><b>Parent Display Order</b></label>
-                <input
-                  type="number"
+                <label htmlFor="is_menu" className="form-label"><b>Is Menu</b></label>
+                <select
                   className="form-control"
-                  name="parent_display_order"
+                  name="is_menu"
                   onChange={handleChange}
-                  value={values.parent_display_order}
-                />
+                  value={values.is_menu}
+                >
+                  <option value="0">No</option> {/* Set "No" as the first option */}
+                  <option value="1">Yes</option>
+                </select>
               </div>
 
-              {/* Child Display Order Input */}
-              <div className='col-12 mt-3'>
-                <label htmlFor="child_display_order" className="form-label"><b>Child Display Order</b></label>
-                <input
-                  type="number"
-                  className="form-control"
-                  name="child_display_order"
-                  onChange={handleChange}
-                  value={values.child_display_order}
-                />
-              </div>
+
+              {/* Show Parent Display Order and Child Display Order inputs when is_menu is "1" */}
+              {values.is_menu === '1' && (
+                <>
+                  <div className='col-12 mt-3'>
+                    <label htmlFor="parent_display_order" className="form-label"><b>Parent Display Order</b></label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      name="parent_display_order"
+                      onChange={handleChange}
+                      value={values.parent_display_order}
+                    />
+                  </div>
+
+                  {/* Child Display Order Input */}
+                  <div className='col-12 mt-3'>
+                    <label htmlFor="child_display_order" className="form-label"><b>Child Display Order</b></label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      name="child_display_order"
+                      onChange={handleChange}
+                      value={values.child_display_order}
+                    />
+                  </div>
+                </>
+              )}
+
+
+
+
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -403,7 +425,7 @@ const AdminListFeatures = () => {
             </Button>
           </Modal.Footer>
         </form>
-      </Modal>
+      </Modal >
 
 
     </>
