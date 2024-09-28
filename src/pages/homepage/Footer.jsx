@@ -361,7 +361,7 @@ const Footer = () => {
           <Modal.Body>
             <div className="row">
               <div className='col-12'>
-                <label for="name" className="form-label"> <b>category</b> </label>
+                <label for="name" className="form-label"> <b>Category</b> </label>
                 <input type="text" className="form-control" placeholder="Eg. Home" name="category" onChange={handleChange} value={values.category} />
               </div>
               <div className='col-12 mt-4'>
@@ -373,7 +373,7 @@ const Footer = () => {
                 <input type="text" className="form-control" placeholder="Eg. instagram.com" name="link" onChange={handleChange} value={values.link} />
               </div>
               <div className='col-12 mt-4'>
-                <label for="name" className="form-label"> <b>category display order</b> </label>
+                <label for="name" className="form-label"> <b>Category Display Order</b> </label>
                 <input type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" onChange={handleChange} value={values.category_display_order} />
               </div>
               <div className='col-12 mt-4'>
@@ -416,7 +416,7 @@ const Footer = () => {
           <Modal.Body>
             <div className="row">
               <div className='col-12'>
-                <label for="name" className="form-label"> <b>category</b> </label>
+                <label for="name" className="form-label"> <b>Category</b> </label>
                 <input type="text" className="form-control" placeholder="Eg. Home" name="category" onChange={handleCategoryChange} value={categoryValues.category} />
               </div>
               <div className='col-12 mt-4'>
@@ -437,7 +437,7 @@ const Footer = () => {
                 </select>
               </div>
               <div className='col-12 mt-4'>
-                <label for="name" className="form-label"> <b>category display order</b> </label>
+                <label for="name" className="form-label"> <b>Category Display Order</b> </label>
                 <input type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" onChange={handleCategoryChange} value={categoryValues.category_display_order} />
               </div>
 

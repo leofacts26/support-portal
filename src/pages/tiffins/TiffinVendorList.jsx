@@ -44,12 +44,12 @@ const TiffinVendorList = () => {
         city: catering?.city || 'N/A',
         subscription_type_name: catering?.subscription_type_name || "N/A",
         subscription: catering?.subscription || "N/A",
-        created_at: catering?.created_at,
+        subscription_start_date: new Date(catering?.subscription_start_date).toLocaleDateString(),
+        // created_at: catering?.created_at,
         final_status: catering?.final_status || 'N/A',
 
         // status: catering?.status || 'N/A',
         // listing_status: catering?.listing_status || 'N/A',
-        // subscription_start_date: new Date(catering?.subscription_start_date).toLocaleDateString(),
         // subscription_end_date: new Date(catering?.subscription_end_date).toLocaleDateString(),
       }));
       setData(formattedData);
@@ -64,10 +64,10 @@ const TiffinVendorList = () => {
       setFilteredData(data);
       return;
     }
-  
+
     // Split the input value into multiple keywords based on commas or spaces
     const searchKeywords = searchValue.split(/[, ]+/).filter(Boolean);
-  
+
     const newFilteredData = data.filter((row) => {
       // Check if any of the keywords match the values in the row
       return searchKeywords.some((keyword) =>
@@ -76,10 +76,10 @@ const TiffinVendorList = () => {
         )
       );
     });
-  
+
     setFilteredData(newFilteredData);
   };
-  
+
 
 
   const onHandleCateringDetails = (row) => {
@@ -117,7 +117,12 @@ const TiffinVendorList = () => {
       name: "Plan type",
       selector: row => row.subscription_type_name,
       sortable: true,
-    },
+      cell: row => (
+        <span className="badge text-bg-success-subtle mt-n1">
+          {row.subscription_type_name ? row.subscription_type_name : 'N/A'}
+        </span>
+      ),
+    },    
     {
       name: "Subscription",
       selector: row => row.subscription,
@@ -133,7 +138,7 @@ const TiffinVendorList = () => {
       selector: row => row.final_status,
       sortable: true,
     },
-  
+
 
     // {
     //   name: "Status",
@@ -150,7 +155,7 @@ const TiffinVendorList = () => {
     //   selector: row => row.created_at,
     //   sortable: true,
     // },
-   
+
     // {
     //   name: "End Date",
     //   selector: row => row.subscription_end_date,
