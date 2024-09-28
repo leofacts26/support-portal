@@ -14,7 +14,7 @@ export const fetchCouponList = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.get(`${BASE_URL}/admin-list-coupons`, {
+      const response = await api.get(`${BASE_URL}/admin-list-coupons?current_page=1&limit=1000`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
