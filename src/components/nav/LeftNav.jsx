@@ -167,7 +167,7 @@ const LeftNav = () => {
                                         </li>
                                         <li className="nav-item">
                                             <NavLink to="/budjet-filter" className="nav-link">
-                                                Budjet Filter
+                                            Budget Filter
                                             </NavLink>
                                         </li>
                                         <li className="nav-item">
@@ -222,7 +222,7 @@ const LeftNav = () => {
                                         </li>
                                         <li className="nav-item">
                                             <NavLink to="/tiffin-budjet" className="nav-link">
-                                                Tiffin Budjet
+                                                Tiffin Budget
                                             </NavLink>
                                         </li>
                                         {/* <li className="nav-item">

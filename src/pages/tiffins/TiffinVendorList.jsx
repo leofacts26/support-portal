@@ -36,7 +36,7 @@ const TiffinVendorList = () => {
   useEffect(() => {
     if (cateringVendors) {
       const formattedData = cateringVendors.map((catering, index) => ({
-        // id: catering.id,
+        id: catering.id,
 
         company_id: catering?.company_id,
         vendor_service_name: catering?.vendor_service_name || 'N/A',

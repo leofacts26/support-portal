@@ -218,7 +218,7 @@ const MealTime = () => {
           <Modal.Body>
             <div className="row">
               <div className='col-12'>
-                <label for="name" className="form-label"> <b>name</b> </label>
+                <label for="name" className="form-label"> <b>Name</b> </label>
                 <input type="text" className="form-control" placeholder="Dinner"
                   name="name" required onChange={handleChange} value={values.name} />
               </div>

@@ -9,6 +9,7 @@ import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { fetchCateringVendors } from '../../features/catering/cateringSlice';
 import { cater_vendor_type } from '../../constants';
+import Select from 'react-select';
 
 
 const initialState = {
@@ -305,6 +306,15 @@ const SingleVendorDiscounts = () => {
     handleClose()
   }
 
+
+  const vendorOptions = cateringVendors
+    ?.filter(item => item.company_id) // Only include items with a non-empty company_id
+    .map((item) => ({
+      value: item.id,
+      label: item.company_id,
+    }));
+
+
   return (
     <>
       <div className="container-fluid my-5">
@@ -458,20 +468,22 @@ const SingleVendorDiscounts = () => {
                   />
                 </div>
               </div>
-              {values?.vendor_type && <div className="col-6">
-                <div>
-                  <label htmlFor="vendor_id" className="form-label">Vendor ID</label>
-                  <select className="form-select" name="vendor_id" value={values.vendor_id} onChange={onHandleChange}>
-                    <option value="">Select Vendor</option>
-                    {
-                      cateringVendors?.map((item) => (
-                        <option value={item?.id}>{`${item?.vendor_type} (ID: ${item?.id})`}</option>
-                      ))
-                    }
-                  </select>
+              {values?.vendor_type && (
+                <div className="col-6">
+                  <div>
+                    <label htmlFor="vendor_id" className="form-label">Vendor ID</label>
+                    <Select
+                      options={vendorOptions}
+                      onChange={(selectedOption) =>
+                        onHandleChange({ target: { name: 'vendor_id', value: selectedOption ? selectedOption.value : '' } })
+                      }
+                      placeholder="Select Vendor"
+                      isClearable // Allows the user to clear the selection
+                      isSearchable // Enables search functionality
+                    />
+                  </div>
                 </div>
-              </div>}
-
+              )}
 
             </div>
           </Modal.Body>

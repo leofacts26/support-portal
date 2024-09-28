@@ -29,7 +29,7 @@ const VendorList = () => {
     if (cateringVendors) {
       const formattedData = cateringVendors.map((catering, index) => ({
         // businessID: index + 1,
-        // id: catering.id,
+        id: catering.id,
         company_id: catering?.company_id || 'N/A',
         vendor_service_name: catering?.vendor_service_name || 'N/A',
         phone_number: catering?.phone_number || 'N/A',

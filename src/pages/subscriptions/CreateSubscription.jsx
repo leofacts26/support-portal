@@ -310,7 +310,7 @@ const CreateSubscription = () => {
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={handleSubmit} autocomplete="off">
           <Modal.Header closeButton>
-            <Modal.Title> {editId ? 'Edit City' : 'Create City'}</Modal.Title>
+            <Modal.Title> {editId ? 'Edit Subscription Plan' : 'Create Subscription Plan'}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div>
@@ -322,12 +322,12 @@ const CreateSubscription = () => {
               <input type="text" required className="form-control" placeholder="display_name" name="display_name" value={values.display_name} onChange={handleChange} />
             </div>
             <div className='mt-3'>
-              <label for="name" className="form-label">Display Color</label>
+              <label for="name" className="form-label me-3" >Display Color</label>
               <input type="color" id="favcolor" placeholder="display_color"
                 name="display_color" value={values.display_color} onChange={handleChange} />
             </div>
             <div>
-              <label htmlFor="vendor_type" className="form-label">Vendor Type</label>
+              <label htmlFor="vendor_type" className="form-label mt-3">Vendor Type</label>
               <select
                 name="vendor_type"
                 className="form-select"

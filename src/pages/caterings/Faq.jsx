@@ -227,10 +227,10 @@ const Faq = () => {
           <div style={{ width: 'fit-content' }}>
             <Form.Select aria-label="Default select example" name="selectType"
               value={selectType} onChange={(e) => setSelectType(e.target.value)} style={{ width: '300px' }}>
-              <option value="user-caterer">user caterer Faq</option>
-              <option value="user-tiffin">user tiffin Faq</option>
-              <option value="vendor-caterer">vendor caterer Faq</option>
-              <option value="vendor-tiffin">vendor tiffin Faq</option>
+              <option value="user-caterer">User Caterer Faq</option>
+              <option value="user-tiffin">User Tiffin Faq</option>
+              <option value="vendor-caterer">Vendor Caterer Faq</option>
+              <option value="vendor-tiffin">Vendor Tiffin Faq</option>
             </Form.Select>
           </div>
         </div>
@@ -290,8 +290,8 @@ const Faq = () => {
 
 
             <div className='mt-4'>
-              <label for="name" className="form-label"> {editId ? "Edit" : "Add"}  Question</label>
-              <input type="text" className="form-control" placeholder="City Name" required
+              <label for="name" className="form-label"> {editId ? "Edit" : "Add"}  Question Text</label>
+              <input type="text" className="form-control" placeholder="Question Text" required
                 name='question_text' value={values.question_text} onChange={onHandleChange}
               />
             </div>

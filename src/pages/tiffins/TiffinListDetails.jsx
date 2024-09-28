@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { fetchCateringVendorDetails, fetchGetVendorSettingsInfo } from "../../features/catering/cateringSlice"
 import { useEffect } from "react"
-import { useLocation, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Table from 'react-bootstrap/Table';
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 
 
@@ -10,6 +11,7 @@ import Table from 'react-bootstrap/Table';
 const TiffinListDetails = () => {
   const { cateringVendors, cateringVendorsDetail, settingsInfo, isLoading } = useSelector((state) => state.catering)
   const { foodTypes, kitchenTypes, mealTimes, branches, cuisines, occasions, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const navigate = useNavigate();
 
   const dispatch = useDispatch()
   const location = useLocation();
@@ -30,6 +32,12 @@ const TiffinListDetails = () => {
 
   return (
     <div className="container-fluid my-5">
+
+      <div className="mb-4 cursor-pointer">
+        <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
+          <IoMdArrowRoundBack /> Back
+        </button>
+      </div>
 
       <div className="row mx-2">
         <div className="bg-secondary text-white py-3 d-flex justify-content-between">
@@ -53,7 +61,11 @@ const TiffinListDetails = () => {
               <td>{id ? id : 'N/A'}</td>
               <td>{companyId ? companyId : 'N/A'}</td>
               <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
-              <td>{cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'}</td>
+              <td>
+                <span class="badge text-bg-success-subtle mt-n1">
+                  {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'}
+                </span>
+              </td>
               <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
               <td>{cateringVendorsDetail?.start_date ? cateringVendorsDetail?.start_date : 'N/A'}</td>
               <td>{cateringVendorsDetail?.expiry_date ? cateringVendorsDetail?.expiry_date : 'N/A'}</td>
@@ -65,100 +77,100 @@ const TiffinListDetails = () => {
 
 
       <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Business Information</h3>
-            {/* <h3 className='mb-0 text-warning' onClick={handleBusinessProfileEditShow} style={{ cursor: 'pointer' }}>Edit</h3> */}
-          </div>
-          <Table responsive="xl" className='m-0'>
-            <>
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>vendor_service_name</th>
-                  <th style={{ fontSize: '10px' }}>vendor_type</th>
-                  <th style={{ fontSize: '10px' }}>business_email</th>
-                  <th style={{ fontSize: '10px' }}>business_phone_number</th>
-                  <th style={{ fontSize: '10px' }}>landline_number</th>
-                  <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{cateringVendorsDetail?.vendor_service_name ? cateringVendorsDetail?.vendor_service_name : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.business_email ? cateringVendorsDetail?.business_email : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.business_phone_number ? cateringVendorsDetail?.business_phone_number : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.landline_number ? cateringVendorsDetail?.landline_number : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.point_of_contact_name ? cateringVendorsDetail?.point_of_contact_name : 'N/A'}</td>
-                </tr>
-              </tbody>
-
-
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>whatsapp_business_phone_number</th>
-                  <th style={{ fontSize: '10px' }}>about_description</th>
-                  <th style={{ fontSize: '10px' }}>facebook_link</th>
-                  <th style={{ fontSize: '10px' }}>instagram_link</th>
-                  <th style={{ fontSize: '10px' }}>twitter_id</th>
-                  <th style={{ fontSize: '10px' }}>website_link</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{cateringVendorsDetail?.whatsapp_business_phone_number ? cateringVendorsDetail?.whatsapp_business_phone_number : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.about_description ? cateringVendorsDetail?.about_description : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.facebook_link ? cateringVendorsDetail?.facebook_link : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.instagram_link ? cateringVendorsDetail?.instagram_link : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.twitter_id ? cateringVendorsDetail?.twitter_id : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.website_link ? cateringVendorsDetail?.website_link : 'N/A'}</td>
-                </tr>
-              </tbody>
-
-
-
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>street_name</th>
-                  <th style={{ fontSize: '10px' }}>state</th>
-                  <th style={{ fontSize: '10px' }}>area</th>
-                  <th style={{ fontSize: '10px' }}>latitude</th>
-                  <th style={{ fontSize: '10px' }}>longitude</th>
-                  <th style={{ fontSize: '10px' }}>pincode</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{cateringVendorsDetail?.street_name ? cateringVendorsDetail?.street_name : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.state ? cateringVendorsDetail?.state : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.area ? cateringVendorsDetail?.area : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.latitude ? cateringVendorsDetail?.latitude : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.longitude ? cateringVendorsDetail?.longitude : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.pincode ? cateringVendorsDetail?.pincode : 'N/A'}</td>
-                </tr>
-              </tbody>
-
-
-
-
-
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>city</th>
-                  <th style={{ fontSize: '10px' }}>country</th>
-                  <th style={{ fontSize: '10px' }}>formatted_address</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{cateringVendorsDetail?.city ? cateringVendorsDetail?.city : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.country ? cateringVendorsDetail?.country : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.formatted_address ? cateringVendorsDetail?.formatted_address : 'N/A'}</td>
-                </tr>
-              </tbody>
-            </>
-          </Table>
+        <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+          <h3 className='mb-0'>Business Information</h3>
+          {/* <h3 className='mb-0 text-warning' onClick={handleBusinessProfileEditShow} style={{ cursor: 'pointer' }}>Edit</h3> */}
         </div>
-        <hr />
+        <Table responsive="xl" className='m-0'>
+          <>
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>vendor_service_name</th>
+                <th style={{ fontSize: '10px' }}>vendor_type</th>
+                <th style={{ fontSize: '10px' }}>business_email</th>
+                <th style={{ fontSize: '10px' }}>business_phone_number</th>
+                <th style={{ fontSize: '10px' }}>landline_number</th>
+                <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{cateringVendorsDetail?.vendor_service_name ? cateringVendorsDetail?.vendor_service_name : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.business_email ? cateringVendorsDetail?.business_email : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.business_phone_number ? cateringVendorsDetail?.business_phone_number : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.landline_number ? cateringVendorsDetail?.landline_number : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.point_of_contact_name ? cateringVendorsDetail?.point_of_contact_name : 'N/A'}</td>
+              </tr>
+            </tbody>
+
+
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>whatsapp_business_phone_number</th>
+                {/* <th style={{ fontSize: '10px' }}>about_description</th> */}
+                <th style={{ fontSize: '10px' }}>facebook_link</th>
+                <th style={{ fontSize: '10px' }}>instagram_link</th>
+                <th style={{ fontSize: '10px' }}>twitter_id</th>
+                <th style={{ fontSize: '10px' }}>website_link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{cateringVendorsDetail?.whatsapp_business_phone_number ? cateringVendorsDetail?.whatsapp_business_phone_number : 'N/A'}</td>
+                {/* <td>{cateringVendorsDetail?.about_description ? cateringVendorsDetail?.about_description : 'N/A'}</td> */}
+                <td>{cateringVendorsDetail?.facebook_link ? cateringVendorsDetail?.facebook_link : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.instagram_link ? cateringVendorsDetail?.instagram_link : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.twitter_id ? cateringVendorsDetail?.twitter_id : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.website_link ? cateringVendorsDetail?.website_link : 'N/A'}</td>
+              </tr>
+            </tbody>
+
+
+
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>street_name</th>
+                <th style={{ fontSize: '10px' }}>state</th>
+                <th style={{ fontSize: '10px' }}>area</th>
+                <th style={{ fontSize: '10px' }}>latitude</th>
+                <th style={{ fontSize: '10px' }}>longitude</th>
+                <th style={{ fontSize: '10px' }}>pincode</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{cateringVendorsDetail?.street_name ? cateringVendorsDetail?.street_name : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.state ? cateringVendorsDetail?.state : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.area ? cateringVendorsDetail?.area : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.latitude ? cateringVendorsDetail?.latitude : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.longitude ? cateringVendorsDetail?.longitude : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.pincode ? cateringVendorsDetail?.pincode : 'N/A'}</td>
+              </tr>
+            </tbody>
+
+
+
+
+
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>city</th>
+                <th style={{ fontSize: '10px' }}>country</th>
+                <th style={{ fontSize: '10px' }}>formatted_address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{cateringVendorsDetail?.city ? cateringVendorsDetail?.city : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.country ? cateringVendorsDetail?.country : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.formatted_address ? cateringVendorsDetail?.formatted_address : 'N/A'}</td>
+              </tr>
+            </tbody>
+          </>
+        </Table>
+      </div>
+      <hr />
 
 
       <div className="row mx-2">
@@ -291,6 +303,27 @@ const TiffinListDetails = () => {
       </div>
       <hr />
 
+
+
+      <div className="row mx-2">
+        <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+          <h3 className="mb-0">About</h3>
+        </div>
+        <Table responsive="xl" className="m-0">
+          <thead>
+            <tr>
+              <th style={{ fontSize: '10px' }}>About Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {/* about_description */}
+              <td>{cateringVendorsDetail?.about_description ? cateringVendorsDetail?.about_description : 'N/A'}</td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
+      <hr />
 
 
 

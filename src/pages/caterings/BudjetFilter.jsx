@@ -181,7 +181,7 @@ const BudjetFilter = () => {
 
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
-            <h2>Total Catering Budjet List - {priceRangesList?.length} </h2>
+            <h2>Total Catering Budget List - {priceRangesList?.length} </h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Catering Budget
             </button>

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { fetchCateringCuisines, fetchCateringVendorDetails, fetchGetVendorSettingsInfo } from '../../features/catering/cateringSlice';
 
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 
 const businessProfile = {
@@ -54,7 +55,7 @@ const passwordData = {
 const VendorListDetails = () => {
   const location = useLocation();
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const companyId = queryParams.get('company_id');
 
@@ -70,7 +71,7 @@ const VendorListDetails = () => {
   const [maximumCapacity, setMaximumCapacity] = useState(cateringVendorsDetail?.maximum_capacity)
   const [minimumCapacity, setMinimumCapacity] = useState(cateringVendorsDetail?.minimum_capacity)
 
-  console.log(settingsInfo, "settingsInfo 897");
+  console.log(id, "id idididid");
 
 
   const [businessProfileValues, setBusinessProfileValues] = useState(businessProfile)
@@ -204,7 +205,7 @@ const VendorListDetails = () => {
       company_id: companyId
     }
 
-    console.log(data, "Datatatatat");
+    console.log(companyId, "companyIdcompanyIdcompanyId");
 
     // handleClose()
   }
@@ -306,6 +307,13 @@ const VendorListDetails = () => {
     <>
       <div className="container-fluid my-5">
 
+
+        <div className="mb-4 cursor-pointer">
+          <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
+            <IoMdArrowRoundBack /> Back
+          </button>
+        </div>
+
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Vendor Details</h3>
@@ -328,7 +336,12 @@ const VendorListDetails = () => {
                 <td>{id ? id : 'N/A'}</td>
                 <td>{companyId}</td>
                 <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
-                <td>{cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'}</td>
+                <td>
+                  {/* {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'} */}
+                  <span class="badge text-bg-success-subtle mt-n1">
+                    {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'}
+                  </span>
+                </td>
                 <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.start_date ? cateringVendorsDetail?.start_date : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.expiry_date ? cateringVendorsDetail?.expiry_date : 'N/A'}</td>
@@ -371,7 +384,7 @@ const VendorListDetails = () => {
               <thead>
                 <tr>
                   <th style={{ fontSize: '10px' }}>whatsapp_business_phone_number</th>
-                  <th style={{ fontSize: '10px' }}>about_description</th>
+                  {/* <th style={{ fontSize: '10px' }}>about_description</th> */}
                   <th style={{ fontSize: '10px' }}>facebook_link</th>
                   <th style={{ fontSize: '10px' }}>instagram_link</th>
                   <th style={{ fontSize: '10px' }}>twitter_id</th>
@@ -381,7 +394,7 @@ const VendorListDetails = () => {
               <tbody>
                 <tr>
                   <td>{cateringVendorsDetail?.whatsapp_business_phone_number ? cateringVendorsDetail?.whatsapp_business_phone_number : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.about_description ? cateringVendorsDetail?.about_description : 'N/A'}</td>
+                  {/* <td>{cateringVendorsDetail?.about_description ? cateringVendorsDetail?.about_description : 'N/A'}</td> */}
                   <td>{cateringVendorsDetail?.facebook_link ? cateringVendorsDetail?.facebook_link : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.instagram_link ? cateringVendorsDetail?.instagram_link : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.twitter_id ? cateringVendorsDetail?.twitter_id : 'N/A'}</td>
@@ -600,6 +613,26 @@ const VendorListDetails = () => {
         </div>
         <hr />
 
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className="mb-0">About</h3>
+          </div>
+          <Table responsive="xl" className="m-0">
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>About Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {/* about_description */}
+                <td>{cateringVendorsDetail?.about_description ? cateringVendorsDetail?.about_description : 'N/A'}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
 
 
 

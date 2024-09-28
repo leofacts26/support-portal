@@ -189,7 +189,7 @@ const TiffinBudjet = () => {
 
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
-            <h2>Total Tiffin Budjet List - {priceRangesListTiffin?.length} </h2>
+            <h2>Total Tiffin Budget List - {priceRangesListTiffin?.length} </h2>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Tiffin Budget
             </button>

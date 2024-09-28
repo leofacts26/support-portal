@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
 import { fetchSubscriptionData } from '../../features/subscriptionSlice';
+import Select from 'react-select';
 
 
 
@@ -23,6 +24,7 @@ const VendorNotification = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
+  console.log(vendorNotificationList, "vendorNotificationList");
 
 
   const [show, setShow] = useState(false);
@@ -43,7 +45,7 @@ const VendorNotification = () => {
   useEffect(() => {
     if (vendorNotificationList) {
       const formattedData = vendorNotificationList?.map((broadcast, index) => ({
-        vendor_type: broadcast?.vendor_type,
+        // vendor_type: broadcast?.type,
         title: broadcast?.title,
         message: broadcast?.message,
         created_at: broadcast?.created_at,
@@ -63,22 +65,22 @@ const VendorNotification = () => {
     }
     const newFilteredData = data?.filter((row) => {
       return (
-        String(row?.vendor_type).toLowerCase().includes(searchValue) ||
+        // String(row?.type).toLowerCase().includes(searchValue) ||
         String(row?.title).toLowerCase().includes(searchValue) ||
         String(row?.message).toLowerCase().includes(searchValue) ||
         String(row?.type).toLowerCase().includes(searchValue) ||
-        String(row?.created_at).toLowerCase().includes(searchValue) 
+        String(row?.created_at).toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);
   };
 
   const columns = [
-    {
-      name: "vendor_type",
-      selector: row => row.vendor_type,
-      sortable: true,
-    },
+    // {
+    //   name: "vendor_type",
+    //   selector: row => row.type,
+    //   sortable: true,
+    // },
     {
       name: "title",
       selector: row => row.title,
@@ -135,6 +137,13 @@ const VendorNotification = () => {
     // handleClose()
   }
 
+  // Prepare options from vendorNotificationList
+  const receiverOptions = vendorNotificationList?.map((item) => ({
+    value: item.receiver_id,
+    label: item.receiver_id,
+  }));
+
+
   return (
     <>
       <div className="container-fluid my-5">
@@ -174,20 +183,16 @@ const VendorNotification = () => {
           <Modal.Body>
 
             <div>
-              <label htmlFor="type" className="form-label">Receiver ID</label>
-              <select
-                className="form-select"
-                name="receiverId"
-                value={values.receiverId}
-                onChange={handleChange}
-              >
-                <option value="">Select Receiver ID</option>
-                {vendorNotificationList?.map((item) => (
-                  <option value={item.receiver_id} key={item.receiver_id}>
-                    {item.receiver_id}
-                  </option>
-                ))}
-              </select>
+              <label htmlFor="receiverId" className="form-label">Receiver ID</label>
+              <Select
+                options={receiverOptions}
+                onChange={(selectedOption) =>
+                  handleChange({ target: { name: 'receiverId', value: selectedOption ? selectedOption.value : '' } })
+                }
+                placeholder="Select Receiver ID"
+                isClearable // Allows the user to clear the selection
+                isSearchable // Enables search functionality
+              />
             </div>
 
 
