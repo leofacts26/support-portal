@@ -13,7 +13,7 @@ import DashboardVendorSubCountTiffin from './DashboardVendorSubCountTiffin';
 const Dashboard = () => {
 
   const { dashboardCount } = useSelector((state) => state.dashboardSlice)
-  console.log(dashboardCount, "dashboardCount");
+  // console.log(dashboardCount, "dashboardCount");
 
 
   const dispatch = useDispatch()

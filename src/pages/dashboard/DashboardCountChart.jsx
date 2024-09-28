@@ -55,7 +55,7 @@ const DashboardCountChart = () => {
   const options = {
     responsive: true,
     maintainAspectRatio: true,
-    aspectRatio: 1,
+    aspectRatio: 2,
     plugins: {
       legend: {
         position: 'top'
