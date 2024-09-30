@@ -46,6 +46,7 @@ const TiffinVendorList = () => {
         subscription: catering?.subscription || "N/A",
         subscription_start_date: new Date(catering?.subscription_start_date).toLocaleDateString(),
         // created_at: catering?.created_at,
+        final_status_description: catering?.final_status_description || 'N/A',
         final_status: catering?.final_status || 'N/A',
 
         // status: catering?.status || 'N/A',
@@ -122,7 +123,7 @@ const TiffinVendorList = () => {
           {row.subscription_type_name ? row.subscription_type_name : 'N/A'}
         </span>
       ),
-    },    
+    },
     {
       name: "Subscription",
       selector: row => row.subscription,
@@ -134,11 +135,15 @@ const TiffinVendorList = () => {
       sortable: true,
     },
     {
+      name: "Status Description",
+      selector: row => row.final_status_description,
+      sortable: true,
+    },
+    {
       name: "Final Status",
       selector: row => row.final_status,
       sortable: true,
     },
-
 
     // {
     //   name: "Status",
@@ -185,6 +190,21 @@ const TiffinVendorList = () => {
   ];
 
 
+  const formatDataForExport = () => {
+    return filteredData.map((row) => {
+      // Create a new formatted row object
+      const formattedRow = {};
+
+      // Loop through each column and get the value using the selector function
+      columns.forEach((col) => {
+        formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
+      });
+
+      return formattedRow;
+    });
+  };
+
+
   return (
     <>
       <div className="container-fluid my-5">
@@ -192,7 +212,7 @@ const TiffinVendorList = () => {
 
         <h2>Total Registered Tiffins - {cateringVendors?.length} </h2>
         <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-secondary fit-content' variant="primary" onClick={() => exportToExcel(filteredData, 'vendorlist')}>
+          <button className='btn btn-secondary fit-content' variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
             Export
           </button>
         </div>

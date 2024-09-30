@@ -37,8 +37,9 @@ const VendorList = () => {
         subscription_type_name: catering?.subscription_type_name || "N/A",
         subscription: catering?.subscription || "N/A",
         created_at: new Date(catering?.created_at).toLocaleDateString(),
+        final_status_description: catering?.final_status_description || 'N/A',
         final_status: catering?.final_status || 'N/A',
-        
+
         // status: catering?.status || 'N/A',
         // listing_status: catering?.listing_status || 'N/A',
         // vendor_type: catering?.vendor_type || 'N/A',
@@ -112,6 +113,11 @@ const VendorList = () => {
       sortable: true,
     },
     {
+      name: "Status Description",
+      selector: row => row.final_status_description,
+      sortable: true,
+    },
+    {
       name: "Final Status",
       selector: row => row.final_status,
       sortable: true,
@@ -134,6 +140,20 @@ const VendorList = () => {
   ];
 
 
+  const formatDataForExport = () => {
+    return filteredData.map((row) => {
+      // Create a new formatted row object
+      const formattedRow = {};
+
+      // Loop through each column and get the value using the selector function
+      columns.forEach((col) => {
+        formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
+      });
+
+      return formattedRow;
+    });
+  };
+
 
   return (
     <>
@@ -141,7 +161,7 @@ const VendorList = () => {
 
         <h2>Total Registered Caterers - {cateringVendors?.length} </h2>
         <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-secondary fit-content' variant="primary" onClick={() => exportToExcel(filteredData, 'vendorlist')}>
+          <button className='btn btn-secondary fit-content' variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
             Export
           </button>
         </div>
