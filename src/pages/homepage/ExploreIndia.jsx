@@ -119,9 +119,9 @@ const ExploreIndia = () => {
             checked={row.is_active === 1}
             onChange={() => handleStatusToggle(row)}
           />
-          <label className="form-check-label" htmlFor={`status-${row.id}`}>
-            {row.is_active === 1 ? 'Active' : 'Inactive'}
-          </label>
+          {/* <label className="form-check-label" htmlFor={`status-${row.id}`}>
+            {row.is_active === 1 ? 'Active' : 'In-active'}
+          </label> */}
         </div>
       ),
       sortable: true,

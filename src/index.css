@@ -52,3 +52,21 @@ input:focus {
   margin-right: 0.5rem; 
   margin-top: 10px;
 }
+
+.higher-zindex {
+  z-index: 1050 !important; /* Set a higher z-index */
+}
+
+
+.text-bg-normal-bage {
+  background-color: #d9822b !important;
+}
+.text-bg-popular-bage {
+  background-color: #8e11a5 !important;
+}
+.text-bg-branded-bage {
+  background-color: #459412 !important;
+}
+.text-bg-default-bage {
+  background-color: #94121f !important;
+}

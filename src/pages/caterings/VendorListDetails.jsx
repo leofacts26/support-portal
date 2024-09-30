@@ -301,7 +301,22 @@ const VendorListDetails = () => {
     onHandlePasswordClose()
   }
 
-
+  const subscriptionType = cateringVendorsDetail?.subscription_type_display?.toLowerCase();
+  let badgeClass = "badge mt-n1";
+  switch (subscriptionType) {
+    case "popular":
+      badgeClass += " text-bg-popular-bage"; 
+      break;
+    case "normal":
+      badgeClass += " text-bg-normal-bage"; 
+      break;
+    case "branded":
+      badgeClass += " text-bg-branded-bage";
+      break;
+    default:
+      badgeClass += " text-bg-default-bage";
+      break;
+  }
 
   return (
     <>
@@ -338,8 +353,8 @@ const VendorListDetails = () => {
                 <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
                 <td>
                   {/* {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'} */}
-                  <span class="badge text-bg-success-subtle mt-n1">
-                    {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'}
+                  <span className={badgeClass}>
+                    {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail.subscription_type_display : 'N/A'}
                   </span>
                 </td>
                 <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
