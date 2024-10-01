@@ -319,22 +319,19 @@ const SingleVendorDiscounts = () => {
     <>
       <div className="container-fluid my-5">
 
-        {/* <div className="row mb-4 d-flex justify-content-between me-2">
-          <button className='btn btn-primary fit-content ms-3' variant="primary" onClick={handleShow}>
-            Create Single Vendor Discount
-          </button>
-        </div>
-        <hr /> */}
 
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Single Vendor discounts List - {couponsList?.filter((item) => item.vendor_id !== null).length} </h2>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Single Vendor discounts List - {couponsList?.filter((item) => item.vendor_id !== null).length}
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Single Vendor Discount
             </button>
           </div>
         </div>
         <hr />
+
 
 
         <div className="card">

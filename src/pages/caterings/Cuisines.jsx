@@ -434,19 +434,24 @@ const Cuisines = () => {
     <>
       <div className="container-fluid my-5">
 
-        <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-            Create Main Category
-          </button>
-
-          <button className='btn btn-primary fit-content ms-3' variant="primary" onClick={handleSubShow}>
-            Create Sub Category
-          </button>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Main Categories - {parentList?.length}
+            </h1>
+            <div>
+              <button className='btn btn-primary fit-content me-2' variant="primary" onClick={handleShow}>
+                Create Main Category
+              </button>
+              <button className='btn btn-primary fit-content me-2' variant="primary" onClick={handleSubShow}>
+                Create Sub Category
+              </button>
+            </div>
+          </div>
         </div>
-
         <hr />
 
-        <h2>Total Main Categories - {parentList?.length} </h2>
+
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />

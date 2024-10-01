@@ -147,15 +147,21 @@ const VendorNotification = () => {
   return (
     <>
       <div className="container-fluid my-5">
+
         <div className="row mb-4  me-2">
           <div className="d-flex justify-content-between align-items-center">
-            <h2>Total Vendor Notifications - {vendorNotificationList?.length}</h2>
+            <h1 className="header-title">
+              Total Vendor Notifications - {vendorNotificationList?.length}
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Vendor Notifications
             </button>
           </div>
         </div>
         <hr />
+
+
+
 
 
         <div className="card">

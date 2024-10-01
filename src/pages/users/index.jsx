@@ -44,10 +44,10 @@ const Users = () => {
       return (
         row?.sNO?.toString().toLowerCase().includes(searchValue) ||
         row?.name?.toLowerCase().includes(searchValue) ||
-        row?.role?.toLowerCase().includes(searchValue) ||
+        // row?.role?.toLowerCase().includes(searchValue) ||
         row?.phoneNo?.toLowerCase().includes(searchValue) ||
-        row?.DateTime?.toLowerCase().includes(searchValue) ||
-        row?.EmailID?.toLowerCase().includes(searchValue)
+        row?.DateTime?.toLowerCase().includes(searchValue) 
+        // row?.EmailID?.toLowerCase().includes(searchValue)
       );
     });
     setFilteredData(newFilteredData);
@@ -91,14 +91,18 @@ const Users = () => {
   return (
     <>
       <div className="container-fluid my-5">
-        <Heading length={userList?.length} />
-        <hr />
 
-        <div className="row mb-4 d-flex justify-content-end me-2">
-          <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={()=> exportToExcel(filteredData, 'users')}>
-            Export
-          </button>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Registered Users  - {userList?.length}
+            </h1>
+            <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={() => exportToExcel(filteredData, 'users')}>
+              Export
+            </button>
+          </div>
         </div>
+        <hr />
 
 
         <div className="card">

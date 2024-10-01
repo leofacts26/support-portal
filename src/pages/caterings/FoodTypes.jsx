@@ -117,7 +117,7 @@ const FoodTypes = () => {
   }
 
 
-  console.log(cateringFoodTypes, "cateringFoodTypes");
+  // console.log(cateringFoodTypes, "cateringFoodTypes");
 
   return (
     <>
@@ -128,6 +128,15 @@ const FoodTypes = () => {
             Add Food Types
           </button>
         </div> */}
+
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+             Food Types - {cateringFoodTypes.length}
+            </h1>
+          </div>
+        </div>
+        <hr />
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />

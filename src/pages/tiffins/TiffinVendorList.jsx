@@ -24,8 +24,8 @@ const TiffinVendorList = () => {
   const { exportToExcel } = useExportData();
   const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
-  const [startDate, setStartDate] = useState(null); 
-  const [endDate, setEndDate] = useState(null); 
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -207,7 +207,15 @@ const TiffinVendorList = () => {
   return (
     <>
       <div className="container-fluid my-5">
-        <h2 className='mb-5'>Total Registered Tiffins - {cateringVendors?.length} </h2>
+
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Registered Tiffins - {cateringVendors?.length}
+            </h1>
+          </div>
+        </div>
+        <hr />
 
 
         {/* Date filter */}
@@ -221,7 +229,7 @@ const TiffinVendorList = () => {
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
-                  showYearDropdown 
+                  showYearDropdown
                   scrollableYearDropdown
                   yearDropdownItemNumber={50}
                   placeholderText="Select start date"
@@ -235,7 +243,7 @@ const TiffinVendorList = () => {
                 <DatePicker
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
-                  showYearDropdown 
+                  showYearDropdown
                   scrollableYearDropdown
                   yearDropdownItemNumber={50}
                   placeholderText="Select end date"
@@ -257,6 +265,7 @@ const TiffinVendorList = () => {
 
         </div>
 
+        <hr />
 
 
 
@@ -265,14 +274,14 @@ const TiffinVendorList = () => {
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
           <DataTable
-             columns={columns}
-             data={filteredData}
-             paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
-             paginationPerPage="100"
-             fixedHeader
-             pagination
-             selectableRows
-             customStyles={tableCustomStyles}
+            columns={columns}
+            data={filteredData}
+            paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
+            paginationPerPage="100"
+            fixedHeader
+            pagination
+            selectableRows
+            customStyles={tableCustomStyles}
           />
         </div>
       </div>

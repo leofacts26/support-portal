@@ -277,14 +277,19 @@ const AdminListFeatures = () => {
   return (
     <>
       <div className="container-fluid my-5">
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Admin Feature List - {adminFeatureRoleList?.length}</h2>
+
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Admin Feature List - {adminFeatureRoleList?.length}
+            </h1>
             <button className='btn btn-primary' onClick={handleShow}>
               Create Feature Role
             </button>
           </div>
         </div>
+        <hr />
+
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />

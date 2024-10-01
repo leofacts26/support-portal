@@ -101,7 +101,7 @@ const AdminListUsers = () => {
   };
 
 
-  
+
 
   const handleStatusToggle = async (item) => {
     const data = {
@@ -270,7 +270,9 @@ const AdminListUsers = () => {
 
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between">
-            <h2>Total Admin User List - {adminUserList?.length} </h2>
+            <h1 className="header-title">
+              Total Admin User List - {adminUserList?.length}
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Admin User
             </button>

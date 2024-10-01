@@ -14,7 +14,7 @@ const VendorSubscriptionEvents = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
-  console.log(vendorSubscriptionEvents, "vendorSubscriptionEvents");
+  // console.log(vendorSubscriptionEvents, "vendorSubscriptionEvents");
 
 
   useEffect(() => {
@@ -109,20 +109,23 @@ const VendorSubscriptionEvents = () => {
   return (
     <>
       <div className="container-fluid my-5">
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Vendor Subscription Events - {vendorSubscriptionEvents?.length} </h2>
-            {/* <button className='btn btn-primary fit-content' variant="primary">
-              Create Subscription List
-            </button> */}
+
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Vendor Subscription Events - {vendorSubscriptionEvents?.length}
+            </h1>
           </div>
         </div>
+        <hr />
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
           <DataTable
             columns={columns}
             data={filteredData}
+            paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
+            paginationPerPage="100"
             fixedHeader
             pagination
             selectableRows

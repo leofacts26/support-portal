@@ -200,14 +200,20 @@ const AdminListRoles = () => {
   return (
     <>
       <div className="container-fluid my-5">
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Admin Role List - {adminRoleList?.length} </h2>
+
+
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+            Total Admin Role List - {adminRoleList?.length}
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Admin Role
             </button>
           </div>
         </div>
+        <hr />
+
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
@@ -228,7 +234,7 @@ const AdminListRoles = () => {
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onHandleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title> {editId ? 'Edit Budget' : 'Create Budget'} </Modal.Title>
+            <Modal.Title> {editId ? 'Edit Admin Role' : 'Create Admin Role'} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="row">

@@ -81,15 +81,17 @@ const NewsLetter = () => {
     <>
       <div className="container-fluid my-5">
 
-        <div className="row mb-4 d-flex justify-content-end me-2">
-          {/* <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-            Send Offers
-          </button> */}
-          <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={()=> exportToExcel(filteredData, 'newsletter')}>
-            Export
-          </button>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total News Letters - {newsLetters.length}
+            </h1>
+            <button className='btn btn-secondary fit-content ms-2' variant="primary" onClick={() => exportToExcel(filteredData, 'newsletter')}>
+              Export
+            </button>
+          </div>
         </div>
-
+        <hr />
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />

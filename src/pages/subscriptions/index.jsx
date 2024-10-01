@@ -248,14 +248,18 @@ const Subscriptions = () => {
   return (
     <>
       <div className="container-fluid my-5">
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Vendor Subscription List - {subscriptionList?.length} </h2>
-            {/* <button className='btn btn-primary fit-content' variant="primary">
-              Create Subscription List
-            </button> */}
+
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Vendor Subscription List - {subscriptionList?.length}
+            </h1>
           </div>
         </div>
+        <hr />
+
+
+      
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />

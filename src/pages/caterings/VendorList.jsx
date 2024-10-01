@@ -50,7 +50,7 @@ const VendorList = () => {
       setFilteredData(formattedData);
     }
   }, [cateringVendors]);
-  
+
 
 
   const handleDateFilter = () => {
@@ -63,7 +63,7 @@ const VendorList = () => {
     });
     setFilteredData(filtered);
   };
-  
+
 
   // Apply date filter whenever the date range is updated
   useEffect(() => {
@@ -203,7 +203,18 @@ const VendorList = () => {
     <>
       <div className="container-fluid my-5">
 
-        <h2>Total Registered Caterers - {cateringVendors?.length} </h2>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Registered Caterers - {cateringVendors?.length}
+            </h1>
+            <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
+              Export
+            </Button>
+          </div>
+        </div>
+        <hr />
+
         <div className="row d-flex justify-content-between mb-4">
           <div className="col-lg-6">
             <div className=" d-flex justify-content-between">
@@ -237,16 +248,9 @@ const VendorList = () => {
               </div>
             </div>
           </div>
-
-          <div className="col-lg-6">
-            <div className="d-flex justify-content-end">
-              <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
-                Export
-              </Button>
-            </div>
-          </div>
-
         </div>
+
+        <hr />
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />

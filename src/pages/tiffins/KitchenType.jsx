@@ -177,15 +177,17 @@ const KitchenType = () => {
       <div className="container-fluid my-5">
 
 
-
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Kitchen Type List - {kitchenTypesList?.length} </h2>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+            Total Kitchen Type List - {kitchenTypesList?.length}
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Kitchen  Type
             </button>
           </div>
         </div>
+        <hr />
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />

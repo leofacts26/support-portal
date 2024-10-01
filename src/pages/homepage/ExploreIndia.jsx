@@ -248,9 +248,12 @@ const ExploreIndia = () => {
     <>
       <div className="container-fluid my-5">
 
+
         <div className="row mb-4  me-2">
           <div className="d-flex justify-content-between align-items-center">
-            <h2>Total Cities - 12</h2>
+            <h1 className="header-title">
+              Total Cities - 12
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create City
             </button>

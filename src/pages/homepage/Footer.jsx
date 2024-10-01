@@ -54,7 +54,7 @@ const Footer = () => {
 
   const [selectedCategory, setSelectedCategory] = useState(null)
   console.log(selectedCategory, "selectedCategory ggg");
-  
+
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -313,16 +313,17 @@ const Footer = () => {
     setSubCategoryValues(subCategoryInitialtate)
     handleSubCatergoryModalClose()
   }
-  
+
 
   return (
     <>
       <div className="container-fluid my-5">
 
-
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Footer List - {footerList?.length} </h2>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Footer List - {footerList?.length}
+            </h1>
             <div>
               <button className='btn btn-primary fit-content me-2' variant="primary" onClick={handleCatergoryModalShow}>
                 Create Category
@@ -330,12 +331,11 @@ const Footer = () => {
               <button className='btn btn-primary fit-content me-2' variant="primary" onClick={handleSubCatergoryModalShow}>
                 Create Sub Category
               </button>
-              {/* <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-                Create Footer Link
-              </button> */}
             </div>
           </div>
         </div>
+        <hr />
+
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
@@ -480,7 +480,7 @@ const Footer = () => {
                   ))}
                 </select>
               </div>
-               <div className='col-12 mt-4'>
+              <div className='col-12 mt-4'>
                 <label for="name" className="form-label"> <b>category display order</b> </label>
                 <input disabled type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" onChange={handleSubCategoryChange} value={subCategoryValues.category_display_order} />
               </div>
@@ -500,7 +500,7 @@ const Footer = () => {
               <div className='mt-4'>
                 <label htmlFor="vendor_type" className="form-label"><b>Vendor Type</b></label>
                 <select
-                disabled
+                  disabled
                   name="vendor_type"
                   className="form-select"
                   value={subCategoryValues.vendor_type}

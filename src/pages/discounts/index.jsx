@@ -242,7 +242,7 @@ const Discounts = () => {
     const mappedCouponType = data.coupon_type === 'discount' ? 'discount' : data.coupon_type === 'Offer' ? 'offer' : '';
 
     console.log(data, "data data");
-    
+
 
     setEditId(data?.id)
     setEditSubscriptionTypeId(data?.subscription_type_id)
@@ -293,22 +293,18 @@ const Discounts = () => {
     <>
       <div className="container-fluid my-5">
 
-        {/* <div className="row mb-4 d-flex justify-content-between me-2">
-          <button className='btn btn-primary fit-content ms-3' variant="primary" onClick={handleShow}>
-            Create Single Vendor Discount
-          </button>
-        </div>
-        <hr /> */}
-
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Multi Vendor discounts List - {couponsList?.filter((item) => item.vendor_id !== '').length} </h2>
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Total Multi Vendor discounts List - {couponsList?.filter((item) => item.vendor_id !== '').length}
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Multi Vendor Discount
             </button>
           </div>
         </div>
         <hr />
+
 
 
         <div className="card">

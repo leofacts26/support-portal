@@ -222,7 +222,9 @@ const Faq = () => {
 
         <div className='row w-100 mb-4 d-flex justify-content-between'>
           <div style={{ width: 'fit-content' }}>
-            <h2>Vendor FAQ's</h2>
+            <h1 className="header-title">
+              Vendor FAQ's 
+            </h1>
           </div>
           <div style={{ width: 'fit-content' }}>
             <Form.Select aria-label="Default select example" name="selectType"

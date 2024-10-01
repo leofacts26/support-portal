@@ -263,33 +263,39 @@ const CreateSubscription = () => {
 
   const onHandleBenifitSubmit = async (e) => {
     e.preventDefault();
-  
+
     const data = {
       subscription_type_id: benifitId,
       benefit: benifit
     };
-  
+
     try {
-      await dispatch(adminAddSubBenifit(data)); 
+      await dispatch(adminAddSubBenifit(data));
       handleBenifitClose();
     } catch (error) {
       console.error("Error creating benefit:", error);
     }
   };
-  
+
 
 
   return (
     <>
       <div className="container-fluid my-5">
-        <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Subscription Plans List - {vendorSubscriptionList?.length} </h2>
+
+
+        <div className="row mb-4  me-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="header-title">
+              Subscription Plans List - {vendorSubscriptionList?.length}
+            </h1>
             <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
               Create Subscription Plan
             </button>
           </div>
         </div>
+        <hr />
+
 
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
@@ -383,7 +389,7 @@ const CreateSubscription = () => {
               />
             </div>
           </Modal.Body>
-        <Modal.Footer>
+          <Modal.Footer>
             <Button variant="secondary" onClick={handleBenifitClose}>
               Close
             </Button>

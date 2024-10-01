@@ -4,6 +4,7 @@ import { Link, NavLink } from 'react-router-dom'
 const LeftNav = () => {
     return (
         <>
+        <div data-bs-theme="dark">
             <nav
                 className="navbar navbar-vertical fixed-start navbar-expand-md"
                 id="sidebar"
@@ -490,7 +491,7 @@ const LeftNav = () => {
                     </div>
                 </div>
             </nav>
-
+            </div>
         </>
     )
 }
