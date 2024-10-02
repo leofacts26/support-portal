@@ -223,7 +223,7 @@ const Faq = () => {
         <div className='row w-100 mb-4 d-flex justify-content-between'>
           <div style={{ width: 'fit-content' }}>
             <h1 className="header-title">
-              Vendor FAQ's 
+              Vendor FAQ's
             </h1>
           </div>
           <div style={{ width: 'fit-content' }}>
@@ -284,10 +284,10 @@ const Faq = () => {
             <label for="name" className="form-label"> {editId ? "Edit" : "Add"}  Question</label>
             <Form.Select required aria-label="Default select example" name="type" value={values.type} onChange={onHandleChange}>
               <option value="">Select an option</option>
-              <option value="user-caterer">user caterer Faq</option>
-              <option value="user-tiffin">user tiffin Faq</option>
-              <option value="vendor-caterer">vendor caterer Faq</option>
-              <option value="vendor-tiffin">vendor tiffin Faq</option>
+              <option value="user-caterer">User Caterer Faq</option>
+              <option value="user-tiffin">User Tiffin Faq</option>
+              <option value="vendor-caterer">Vendor Caterer Faq</option>
+              <option value="vendor-tiffin">Vendor Tiffin Faq</option>
             </Form.Select>
 
 
