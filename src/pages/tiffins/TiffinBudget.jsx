@@ -121,9 +121,9 @@ const TiffinBudjet = () => {
             checked={row.is_active === 1}
             onChange={() => handleStatusToggle(row)}
           />
-          <label className="form-check-label" htmlFor={`status-${row.id}`}>
+          {/* <label className="form-check-label" htmlFor={`status-${row.id}`}>
             {row.is_active === 1 ? 'Active' : 'Inactive'}
-          </label>
+          </label> */}
         </div>
       ),
       sortable: true,
