@@ -161,8 +161,27 @@ const TiffinVendorList = () => {
       sortable: true,
     },
     {
-      name: "Final Status",
-      selector: row => row.final_status,
+      name: "Is Active",
+      cell: (row) => {
+        let badgeClass = "badge mt-n1";
+
+        switch (row.final_status.toLowerCase()) {
+          case "yes":
+            badgeClass += " text-bg-branded-bage";
+            break;
+          case "no":
+            badgeClass += " text-bg-default-bage";
+            break;
+          default:
+            badgeClass += " text-bg-default-bage";
+            break;
+        }
+        return (
+          <span className={badgeClass}>
+            {row.final_status}
+          </span>
+        );
+      },
       sortable: true,
     },
     {
