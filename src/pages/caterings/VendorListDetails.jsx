@@ -71,7 +71,7 @@ const VendorListDetails = () => {
   const [maximumCapacity, setMaximumCapacity] = useState(cateringVendorsDetail?.maximum_capacity)
   const [minimumCapacity, setMinimumCapacity] = useState(cateringVendorsDetail?.minimum_capacity)
 
-  console.log(id, "id idididid");
+  // console.log(cateringVendorsDetail, "cateringVendorsDetailcateringVendorsDetailcateringVendorsDetailcateringVendorsDetail");
 
 
   const [businessProfileValues, setBusinessProfileValues] = useState(businessProfile)
@@ -584,6 +584,7 @@ const VendorListDetails = () => {
               <tr>
                 {/* Pan Card */}
                 <td>
+                  <p>{cateringVendorsDetail?.pan_number}</p>
                   {settingsInfo?.["vendor-encp"]?.[0]?.image_name?.[0]?.large ? (
                     <a href={settingsInfo["vendor-encp"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                       View Pan Card
@@ -593,6 +594,7 @@ const VendorListDetails = () => {
 
                 {/* Aadhar Card Front */}
                 <td>
+                  <p>{cateringVendorsDetail?.aadhar_card_number}</p>
                   {settingsInfo?.["vendor-enca"]?.[0]?.image_name?.[0]?.large ? (
                     <a href={settingsInfo["vendor-enca"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                       View Aadhar (Front)
@@ -611,6 +613,7 @@ const VendorListDetails = () => {
 
                 {/* Fssai Licence */}
                 <td>
+                  <p>{cateringVendorsDetail?.fssai_number}</p>
                   {settingsInfo?.["vendor-encf"]?.[0]?.image_name?.[0]?.large ? (
                     <a href={settingsInfo["vendor-encf"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                       View Fssai Licence

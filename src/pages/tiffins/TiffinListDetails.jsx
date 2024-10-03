@@ -277,6 +277,7 @@ const TiffinListDetails = () => {
             <tr>
               {/* Pan Card */}
               <td>
+                <p>{cateringVendorsDetail?.pan_number}</p>
                 {settingsInfo?.["vendor-encp"]?.[0]?.image_name?.[0]?.large ? (
                   <a href={settingsInfo["vendor-encp"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                     View Pan Card
@@ -286,6 +287,7 @@ const TiffinListDetails = () => {
 
               {/* Aadhar Card Front */}
               <td>
+                <p>{cateringVendorsDetail?.aadhar_card_number}</p>
                 {settingsInfo?.["vendor-enca"]?.[0]?.image_name?.[0]?.large ? (
                   <a href={settingsInfo["vendor-enca"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                     View Aadhar (Front)
@@ -304,6 +306,7 @@ const TiffinListDetails = () => {
 
               {/* Fssai Licence */}
               <td>
+                <p>{cateringVendorsDetail?.fssai_number}</p>
                 {settingsInfo?.["vendor-encf"]?.[0]?.image_name?.[0]?.large ? (
                   <a href={settingsInfo["vendor-encf"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                     View Fssai Licence
