@@ -27,8 +27,15 @@ const TiffinListDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    dispatch(fetchGetVendorSettingsInfo(id));
-  }, [id]);
+    if (companyId && id && cateringVendorsDetail?.phone_number) {
+      const data = {
+        company_id: companyId,
+        id: id,
+        phone_number: cateringVendorsDetail.phone_number
+      };
+      dispatch(fetchGetVendorSettingsInfo(data));
+    }
+  }, [companyId, id, cateringVendorsDetail?.phone_number]);
 
 
   const subscriptionType = cateringVendorsDetail?.subscription_type_display?.toLowerCase();
@@ -107,7 +114,7 @@ const TiffinListDetails = () => {
                 <th style={{ fontSize: '10px' }}>vendor_type</th>
                 <th style={{ fontSize: '10px' }}>business_email</th>
                 <th style={{ fontSize: '10px' }}>business_phone_number</th>
-                <th style={{ fontSize: '10px' }}>landline_number</th>
+                <th style={{ fontSize: '10px' }}>phone_number</th>
                 <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
               </tr>
             </thead>
@@ -117,7 +124,7 @@ const TiffinListDetails = () => {
                 <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.business_email ? cateringVendorsDetail?.business_email : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.business_phone_number ? cateringVendorsDetail?.business_phone_number : 'N/A'}</td>
-                <td>{cateringVendorsDetail?.landline_number ? cateringVendorsDetail?.landline_number : 'N/A'}</td>
+                <td>{cateringVendorsDetail?.phone_number ? cateringVendorsDetail?.phone_number : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.point_of_contact_name ? cateringVendorsDetail?.point_of_contact_name : 'N/A'}</td>
               </tr>
             </tbody>

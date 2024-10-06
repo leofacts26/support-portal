@@ -52,10 +52,11 @@ export const fetchCateringVendorDetails = createAsyncThunk(
 
 export const fetchGetVendorSettingsInfo = createAsyncThunk(
     'catering/fetchGetVendorSettingsInfo',
-    async (vendorId, thunkAPI) => {
+    async (vendorData, thunkAPI) => {
         try {
+            const { company_id, id, phone_number } = vendorData;
             const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-            const response = await api.get(`${BASE_URL}/admin-get-vendor-settings-info?vendor_id=${vendorId}`, {
+            const response = await api.get(`${BASE_URL}/admin-get-vendor-settings-info?company_id=${company_id}&vendor_id=${id}&phone_number=${phone_number}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

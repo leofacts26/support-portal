@@ -71,7 +71,7 @@ const VendorListDetails = () => {
   const [maximumCapacity, setMaximumCapacity] = useState(cateringVendorsDetail?.maximum_capacity)
   const [minimumCapacity, setMinimumCapacity] = useState(cateringVendorsDetail?.minimum_capacity)
 
-  // console.log(cateringVendorsDetail, "cateringVendorsDetailcateringVendorsDetailcateringVendorsDetailcateringVendorsDetail");
+  console.log(cateringVendorsDetail, "cateringVendorsDetailcateringVendorsDetailcateringVendorsDetailcateringVendorsDetail");
 
 
   const [businessProfileValues, setBusinessProfileValues] = useState(businessProfile)
@@ -160,9 +160,15 @@ const VendorListDetails = () => {
 
 
   useEffect(() => {
-    dispatch(fetchGetVendorSettingsInfo(id));
-  }, [id]);
-
+    if (companyId && id && cateringVendorsDetail?.phone_number) {
+      const data = {
+        company_id: companyId,
+        id: id,
+        phone_number: cateringVendorsDetail.phone_number
+      };
+      dispatch(fetchGetVendorSettingsInfo(data));
+    }
+  }, [companyId, id, cateringVendorsDetail?.phone_number]);
 
 
 
@@ -305,10 +311,10 @@ const VendorListDetails = () => {
   let badgeClass = "badge mt-n1";
   switch (subscriptionType) {
     case "popular":
-      badgeClass += " text-bg-popular-bage"; 
+      badgeClass += " text-bg-popular-bage";
       break;
     case "normal":
-      badgeClass += " text-bg-normal-bage"; 
+      badgeClass += " text-bg-normal-bage";
       break;
     case "branded":
       badgeClass += " text-bg-branded-bage";
@@ -380,7 +386,7 @@ const VendorListDetails = () => {
                   <th style={{ fontSize: '10px' }}>vendor_type</th>
                   <th style={{ fontSize: '10px' }}>business_email</th>
                   <th style={{ fontSize: '10px' }}>business_phone_number</th>
-                  <th style={{ fontSize: '10px' }}>landline_number</th>
+                  <th style={{ fontSize: '10px' }}>phone_number</th>
                   <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
                 </tr>
               </thead>
@@ -390,7 +396,7 @@ const VendorListDetails = () => {
                   <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.business_email ? cateringVendorsDetail?.business_email : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.business_phone_number ? cateringVendorsDetail?.business_phone_number : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.landline_number ? cateringVendorsDetail?.landline_number : 'N/A'}</td>
+                  <td>{cateringVendorsDetail?.phone_number ? cateringVendorsDetail?.phone_number : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.point_of_contact_name ? cateringVendorsDetail?.point_of_contact_name : 'N/A'}</td>
                 </tr>
               </tbody>
@@ -500,15 +506,17 @@ const VendorListDetails = () => {
 
           <div className="row mt-4">
             <div className="text-secondary d-flex justify-content-between">
-              <h4 className='mb-0'>Occastions You cater</h4>
+              <h4 className='mb-0'> Occastions You cater</h4>
             </div>
             <div className='mt-3'>
               {occasions && occasions.length > 0
-                ? occasions.map((item, index) => (
-                  <span key={item.occasion_name} className='cuisine-item'>
-                    {item.occasion_name}  {index < occasions.length - 1 && ', '}
-                  </span>
-                ))
+                ? occasions
+                  .filter((item) => item.selected === '1')
+                  .map((item, index) => (
+                    <span key={item.occasion_name} className='cuisine-item'>
+                      {item.occasion_name}  {index < occasions.length - 1 && ', '}
+                    </span>
+                  ))
                 : 'N/A'}
             </div>
           </div>
@@ -520,14 +528,16 @@ const VendorListDetails = () => {
             </div>
             <div className='mt-3'>
               {cuisines && cuisines.length > 0
-                ? cuisines.map((item, index) => (
-                  <span key={item.cuisine_name} className='cuisine-item'>
-                    {item.cuisine_name}
-                    {index < cuisines.length - 1 && ', '}
-                  </span>
-                ))
+                ? cuisines
+                  .filter((item) => item.selected === '1') // Filter cuisines based on selected value
+                  .map((item, index) => (
+                    <span key={item.cuisine_name} className='cuisine-item'>
+                      {item.cuisine_name}
+                    </span>
+                  ))
                 : 'N/A'}
             </div>
+
           </div>
 
 
