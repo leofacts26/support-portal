@@ -415,8 +415,8 @@ const Discounts = () => {
                   <label for="name" className="form-label">Coupon Type</label>
                   <select className="form-select" name="coupon_type" value={values.coupon_type} onChange={onHandleChange}>
                     <option value="">Select Coupon Type</option>
-                    <option value="discount">Discount</option>
-                    <option value="Cashback ">Cashback </option>
+                    <option value="trial">Trial</option>
+                    <option value="regular ">Regular </option>
                   </select>
                 </div>
               </div>
