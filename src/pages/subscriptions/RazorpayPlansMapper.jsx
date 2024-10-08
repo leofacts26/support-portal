@@ -7,56 +7,51 @@ import { createRazorpayPlansMapper, fetchRazorpayPlansMapper, fetchSubscriptionT
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-
 const initialState = {
-  // vendor_type: '',
   subscription_type_id: '',
   plan_id: '',
   duration: '',
 }
 
 const RazorpayPlansMapper = () => {
+  const dispatch = useDispatch();
+  const { razorpayPlansMapperList, isLoading, vendorSubscriptionTypesList } = useSelector((state) => state.subscription);
 
-  const dispatch = useDispatch()
-  const { razorpayPlansMapperList, isLoading, vendorSubscriptionTypesList } = useSelector((state) => state.subscription)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [values, setValues] = useState(initialState)
-  const [editId, setEditId] = useState(null)
-
-  const [type, setType] = useState("")
-
-
-
-
+  const [values, setValues] = useState(initialState);
+  const [editId, setEditId] = useState(null);
+  const [type, setType] = useState("");
+  const [mode, setMode] = useState("live"); // Mode state
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
-    setShow(false)
-    setEditId(null)
+    setShow(false);
+    setEditId(null);
   };
   const handleShow = () => setShow(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value })
-  }
+    setValues({ ...values, [name]: value });
+  };
 
+  // Fetch data based on mode
   useEffect(() => {
-    dispatch(fetchRazorpayPlansMapper());
-  }, [dispatch]);
+    dispatch(fetchRazorpayPlansMapper(mode));
+  }, [dispatch, mode]);
 
-
+  // Fetch subscription types based on type selection
   useEffect(() => {
     if (type !== '') {
       dispatch(fetchSubscriptionTypeCaterer(type));
     }
   }, [type]);
 
-
+  // Update data formatting
   useEffect(() => {
     if (razorpayPlansMapperList) {
-      const formattedData = razorpayPlansMapperList?.map((subscription, index) => ({
+      const formattedData = razorpayPlansMapperList?.map((subscription) => ({
         id: subscription?.id,
         subscription_type_name: subscription?.subscription_type_name,
         vendor_type: subscription?.vendor_type,
@@ -69,7 +64,7 @@ const RazorpayPlansMapper = () => {
     }
   }, [razorpayPlansMapperList]);
 
-
+  // Handle search functionality
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     if (!searchValue) {
@@ -89,43 +84,17 @@ const RazorpayPlansMapper = () => {
     setFilteredData(newFilteredData);
   };
 
-
+  // Columns for the DataTable
   const columns = [
-    {
-      name: "ID",
-      selector: row => row.id,
-      sortable: true,
-    },
-    {
-      name: "Plan Id",
-      selector: row => row.plan_id,
-      sortable: true,
-    },
-    {
-      name: "Subscription Type Id",
-      selector: row => row.subscription_type_id,
-      sortable: true,
-    },
-    {
-      name: "Duration",
-      selector: row => row.duration,
-      sortable: true,
-    },
-    {
-      name: "Subscription Type Name",
-      selector: row => row.subscription_type_name,
-      sortable: true,
-    },
-    {
-      name: "Vendor Type",
-      selector: row => row.vendor_type,
-      sortable: true,
-    },
+    { name: "ID", selector: row => row.id, sortable: true },
+    { name: "Plan Id", selector: row => row.plan_id, sortable: true },
+    { name: "Subscription Type Id", selector: row => row.subscription_type_id, sortable: true },
+    { name: "Duration", selector: row => row.duration, sortable: true },
+    { name: "Subscription Type Name", selector: row => row.subscription_type_name, sortable: true },
+    { name: "Vendor Type", selector: row => row.vendor_type, sortable: true },
   ];
 
-
-
-
+  // Handle form submission
   const onHandleSubmit = async (e) => {
     e.preventDefault();
     const { subscription_type_id, plan_id, duration } = values;
@@ -137,26 +106,42 @@ const RazorpayPlansMapper = () => {
     }
 
     if (editId === null) {
-      await dispatch(createRazorpayPlansMapper(data))
+      await dispatch(createRazorpayPlansMapper(data));
     } else {
-      await dispatch(updateRazorpayPlansMapper(data))
+      await dispatch(updateRazorpayPlansMapper(data));
     }
-    await dispatch(fetchRazorpayPlansMapper());
-    setValues(initialState)
-    handleClose()
+    await dispatch(fetchRazorpayPlansMapper(mode));
+    setValues(initialState);
+    handleClose();
   }
-
-
 
   return (
     <>
       <div className="container-fluid my-5">
         <div className="row mb-4 me-2">
-          <div className="d-flex justify-content-between">
-            <h2>Total Razorpay Plans Mapper List - {razorpayPlansMapperList?.length} </h2>
-            <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Razorpay Plans Mapper
-            </button>
+            <h2>Total Razorpay Plans Mapper List - {razorpayPlansMapperList?.length}</h2>
+          <div className="d-flex justify-content-between align-items-center">
+
+            <div>
+            <label className="me-2" htmlFor="mode">Select Mode:</label>
+              <select
+                id="mode"
+                className="form-select me-3"
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+              >
+                <option value="live">Live</option>
+                <option value="test">Test</option>
+              </select>
+            </div>
+
+            {/* Dropdown to select mode (test/live) */}
+            <div className="d-flex align-items-center">
+
+              <button className='btn btn-primary' onClick={handleShow}>
+                Create Razorpay Plans Mapper
+              </button>
+            </div>
           </div>
         </div>
 
@@ -175,10 +160,11 @@ const RazorpayPlansMapper = () => {
 
       <br />
 
+      {/* Modal for Create/Edit Razorpay Plan Mapper */}
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onHandleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title> {editId ? 'Edit Budget' : 'Create Budget'} </Modal.Title>
+            <Modal.Title> {editId ? 'Edit Razorpay Plan' : 'Create Razorpay Plan'} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="row">
@@ -198,7 +184,7 @@ const RazorpayPlansMapper = () => {
               </div>
 
               {type && <div className='mt-4'>
-                <label htmlFor="subscription_type_id" className="form-label">Subscription type id </label>
+                <label htmlFor="subscription_type_id" className="form-label">Subscription type id</label>
                 <select
                   required
                   name="subscription_type_id"
@@ -208,20 +194,27 @@ const RazorpayPlansMapper = () => {
                 >
                   {
                     vendorSubscriptionTypesList?.map((item) => (
-                      <option value={item?.id}>{item?.display_name}</option>
+                      <option key={item.id} value={item.id}>{item.display_name}</option>
                     ))
                   }
                 </select>
               </div>}
 
-
               <div className='col-12 mt-4'>
-                <label for="name" className="form-label"> Plan ID </label>
-                <input type="text" className="form-control" placeholder="Plan ID" name="plan_id" required onChange={handleChange} value={values.plan_id} />
+                <label htmlFor="plan_id" className="form-label">Plan ID</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Plan ID"
+                  name="plan_id"
+                  required
+                  onChange={handleChange}
+                  value={values.plan_id}
+                />
               </div>
 
               <div className='mt-4'>
-                <label htmlFor="vendor_type" className="form-label">Duration</label>
+                <label htmlFor="duration" className="form-label">Duration</label>
                 <select
                   required
                   name="duration"
@@ -234,9 +227,6 @@ const RazorpayPlansMapper = () => {
                   <option value="yearly">Yearly</option>
                 </select>
               </div>
-
-
-
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -253,4 +243,4 @@ const RazorpayPlansMapper = () => {
   )
 }
 
-export default RazorpayPlansMapper
+export default RazorpayPlansMapper;

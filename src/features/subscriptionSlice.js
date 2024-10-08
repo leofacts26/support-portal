@@ -34,10 +34,10 @@ export const fetchSubscriptionData = createAsyncThunk(
 
 export const fetchRazorpayPlansMapper = createAsyncThunk(
   'user/fetchRazorpayPlansMapper',
-  async (user, thunkAPI) => {
+  async (mode, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.get(`${BASE_URL}/admin-list-razorpay-plans-mapper?limit=1000&current_page=1`, {
+      const response = await api.get(`${BASE_URL}/admin-list-razorpay-plans-mapper?limit=1000&current_page=1&mode=${mode}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

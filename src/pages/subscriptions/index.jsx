@@ -7,8 +7,8 @@ import { FaEdit } from "react-icons/fa";
 import { cancelSubscription, fetchSubscriptionData } from '../../features/subscriptionSlice';
 import { MdDelete } from "react-icons/md";
 import { Modal, Button } from 'react-bootstrap';
-
-
+import DatePicker from 'react-datepicker';  // Step 1: Import react-datepicker
+import 'react-datepicker/dist/react-datepicker.css';  // Step 1: Import datepicker CSS
 
 const Subscriptions = () => {
 
@@ -17,41 +17,31 @@ const Subscriptions = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  // console.log(subscriptionList, "subscriptionList subscriptionList");
   const [showModal, setShowModal] = useState(false);
+
+  // State for date filters
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-
-
-
-  // useEffect(() => {
-  //   dispatch(fetchVendorSubscriptionList());
-  // }, [dispatch]);
-
 
   useEffect(() => {
     dispatch(fetchSubscriptionData());
   }, [dispatch]);
 
-
   useEffect(() => {
     if (subscriptionList) {
-      const formattedData = subscriptionList?.map((subscription, index) => ({
-        id: subscription?.id,
+      const formattedData = subscriptionList?.map((subscription) => ({
+        company_id: subscription?.company_id,
         vendor_service_name: subscription?.vendor_service_name,
+        vendor_type: subscription?.vendor_id,
         subscription_pattern: subscription?.subscription_pattern,
         sub_amount: subscription?.sub_amount,
         discount_amount: subscription?.discount_amount,
         final_amount: subscription?.final_amount,
         status: subscription?.status,
-
-        // auth_status: subscription?.auth_status,
-        // carried_forward_days: subscription?.carried_forward_days,
-        // created_at: subscription?.created_at,
-        // payment_status: subscription?.payment_status,
-        // razorpay_subscription_id: subscription?.razorpay_subscription_id,
-        // vendor_id: subscription?.vendor_id,
+        created_at: new Date(subscription?.created_at) // Ensure the date is a Date object
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -65,14 +55,12 @@ const Subscriptions = () => {
       return;
     }
 
-    // Split the input value into multiple keywords based on commas or spaces
     const searchKeywords = searchValue.split(/[, ]+/).filter(Boolean);
 
     const newFilteredData = data.filter((row) => {
-      // Check if any of the keywords match the values in the row
       return searchKeywords.some((keyword) =>
         Object.values(row).some(value =>
-          value !== null && value.toString().toLowerCase().includes(keyword) // Check for null before toString()
+          value !== null && value.toString().toLowerCase().includes(keyword)
         )
       );
     });
@@ -80,43 +68,18 @@ const Subscriptions = () => {
     setFilteredData(newFilteredData);
   };
 
-  // const handleSearch = (e) => {
-  //   const searchValue = e.target.value.toLowerCase();
-  //   if (!searchValue) {
-  //     setFilteredData(data);
-  //     return;
-  //   }
-  //   const newFilteredData = data?.filter((row) => {
-  //     return (
-  //       String(row?.id).toLowerCase().includes(searchValue) ||
-  //       (row?.auth_status && String(row.auth_status).toLowerCase().includes(searchValue)) ||
-  //       (row?.created_at && String(row.created_at).toLowerCase().includes(searchValue)) ||
-  //       (row?.discount_amount && String(row.discount_amount).toLowerCase().includes(searchValue)) ||
-  //       (row?.final_amount && String(row.final_amount).toLowerCase().includes(searchValue)) ||
-  //       (row?.payment_status && String(row.payment_status).toLowerCase().includes(searchValue)) ||
-  //       (row?.razorpay_subscription_id && String(row.razorpay_subscription_id).toLowerCase().includes(searchValue)) ||
-  //       (row?.status && String(row.status).toLowerCase().includes(searchValue)) ||
-  //       (row?.sub_amount && String(row.sub_amount).toLowerCase().includes(searchValue)) ||
-  //       (row?.subscription_pattern && String(row.subscription_pattern).toLowerCase().includes(searchValue)) ||
-  //       (row?.vendor_id && String(row.vendor_id).toLowerCase().includes(searchValue)) ||
-  //       (row?.vendor_service_name && String(row.vendor_service_name).toLowerCase().includes(searchValue)) ||
-  //       (row?.carried_forward_days && String(row.carried_forward_days).toLowerCase().includes(searchValue))
-  //     );
-  //   });
-  //   setFilteredData(newFilteredData);
-  // };
-
-
-
-  // const onHandleCancelSubscription = async (row) => {
-  //   const { razorpay_subscription_id, vendor_id } = row;
-  //   const data = { subscription_id: razorpay_subscription_id, vendor_id };
-  //   console.log(row, "row data");
-
-  //   await dispatch(cancelSubscription(data));
-  //   handleClose();
-  // }
-
+  // Handle date range filtering
+  useEffect(() => {
+    if (startDate && endDate) {
+      const filteredByDate = data.filter((row) => {
+        const createdDate = row.created_at;  // Date object of subscription created_at
+        return createdDate >= startDate && createdDate <= endDate;
+      });
+      setFilteredData(filteredByDate);
+    } else {
+      setFilteredData(data);
+    }
+  }, [startDate, endDate, data]);
 
   const onHandleCancelSubscription = async (row) => {
     const { razorpay_subscription_id, vendor_id, status } = row;
@@ -127,103 +90,73 @@ const Subscriptions = () => {
       handleClose();
     } else {
       alert("Cancellation not allowed: Subscription is either not active/queued or does not have a valid Razorpay subscription ID.")
-      console.log("Cancellation not allowed: Subscription is either not active/queued or does not have a valid Razorpay subscription ID.");
     }
   }
-
-
 
   const onHandleSubscriptionModal = (row) => {
     setSelectedRow(row);
     handleShow();
   }
 
-
   const columns = [
     {
-      name: "ID",
-      selector: row => row.id,
+      name: "Company ID",
+      selector: row => row.company_id,
       sortable: true,
     },
     {
-      name: "vendor_service_name",
+      name: "Vendor Name",
       selector: row => row.vendor_service_name,
       sortable: true,
     },
     {
-      name: "subscription_pattern",
+      name: "Vendor Type",
+      selector: row => row.vendor_type,
+      sortable: true,
+    },
+    {
+      name: "Subscription Pattern",
       selector: row => row.subscription_pattern,
       sortable: true,
     },
     {
-      name: "sub_amount",
+      name: "Sub Amount",
       selector: row => row.sub_amount,
       sortable: true,
     },
     {
-      name: "discount_amount",
+      name: "Discount Amount",
       selector: row => row.discount_amount,
       sortable: true,
     },
     {
-      name: "final_amount",
+      name: "Final Amount",
       selector: row => row.final_amount,
       sortable: true,
     },
     {
-      name: "status",
+      name: "Status",
       selector: row => row.status,
       sortable: true,
     },
-
-
-
-
-
-    // {
-    //   name: "Recurring status",
-    //   selector: row => row.auth_status,
-    //   sortable: true,
-    // },
-    // {
-    //   name: "One Time Payment status",
-    //   selector: row => row.payment_status,
-    //   sortable: true,
-    // },
-    // {
-    //   name: "carried_forward_days",
-    //   selector: row => row.carried_forward_days,
-    //   sortable: true,
-    // },
-    // {
-    //   name: "created_at",
-    //   selector: row => row.created_at,
-    //   sortable: true,
-    // },
-    // {
-    //   name: "razorpay_subscription_id",
-    //   selector: row => row.razorpay_subscription_id,
-    //   sortable: true,
-    // },
-    // {
-    //   name: "vendor_id",
-    //   selector: row => row.vendor_id,
-    //   sortable: true,
-    // },
-
-    // {
-    //   name: "Action",
-    //   cell: (row) => (
-    //     <>
-    //       <button className="btn btn-success me-1">
-    //         <FaEdit />
-    //       </button>
-    //     </>
-    //   ),
-    //   ignoreRowClick: true,
-    //   allowOverflow: true,
-    //   button: true,
-    // },
+    {
+      name: "Created At",  // Displaying created_at date
+      selector: row => row.created_at.toLocaleDateString(),  // Convert date object to readable format
+      sortable: true,
+    },
+    {
+      name: "View",
+      cell: (row) => (
+        <>
+          <button className="btn btn-success me-1">
+            View
+          </button>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
     {
       name: "Cancel",
       cell: (row) => (
@@ -244,12 +177,10 @@ const Subscriptions = () => {
     }
   ];
 
-
   return (
     <>
       <div className="container-fluid my-5">
-
-        <div className="row mb-4  me-2">
+        <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between align-items-center">
             <h1 className="header-title">
               Total Vendor Subscription List - {subscriptionList?.length}
@@ -258,11 +189,34 @@ const Subscriptions = () => {
         </div>
         <hr />
 
-
-      
-
         <div className="card">
           <GlobalSearch handleSearch={handleSearch} />
+          {/* Date Filter Component */}
+          <div className="d-flex my-3">
+            <div className="me-3">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                showYearDropdown
+                scrollableYearDropdown
+                yearDropdownItemNumber={50}
+                placeholderText="Start Date"
+                isClearable
+                className="form-control"
+                popperClassName="higher-zindex"
+              />
+            </div>
+            <div>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                placeholderText="End Date"
+                isClearable
+                className="form-control"
+              />
+            </div>
+          </div>
+
           <DataTable
             columns={columns}
             data={filteredData}
@@ -274,11 +228,6 @@ const Subscriptions = () => {
         </div>
       </div>
 
-      <br />
-
-
-
-      {/* React Bootstrap Modal */}
       <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Cancel Subscription</Modal.Title>
@@ -300,10 +249,8 @@ const Subscriptions = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-
     </>
   )
 }
 
-export default Subscriptions
+export default Subscriptions;
