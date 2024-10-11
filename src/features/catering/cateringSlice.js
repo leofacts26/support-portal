@@ -264,7 +264,7 @@ export const cateringSlice = createSlice({
             })
             .addCase(fetchGetVendorSettingsInfo.rejected, (state, { payload }) => {
                 state.isLoading = false;
-                toast.error(datavalidationerror(payload));
+                // toast.error(datavalidationerror(payload));
             })
     }
 })
