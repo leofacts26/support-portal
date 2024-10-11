@@ -465,7 +465,9 @@ const Footer = () => {
           <Modal.Body>
             <div className="row">
               <div className='mt-4'>
-                <label htmlFor="category" className="form-label"><b>Select Category</b></label>
+                <label htmlFor="category" className="form-label">
+                  <b>Select Category</b>
+                </label>
                 <select
                   name="category"
                   className="form-select"
@@ -473,13 +475,14 @@ const Footer = () => {
                   onChange={handleSubCategoryChange}
                 >
                   <option value=""><b>Select Category</b></option>
-                  {footerList?.map((item) => (
-                    <option key={item.id} value={item.category} onClick={() => setSelectedCategory(item)}>
-                      {item.category}
+                  {[...new Set(footerList?.map(item => item.category))]?.map((category, index) => (
+                    <option key={index} value={category}>
+                      {category}
                     </option>
                   ))}
                 </select>
               </div>
+
               <div className='col-12 mt-4'>
                 <label for="name" className="form-label"> <b>category display order</b> </label>
                 <input disabled type="number" className="form-control" placeholder="Eg. 1" name="category_display_order" onChange={handleSubCategoryChange} value={subCategoryValues.category_display_order} />
