@@ -242,6 +242,8 @@ const Faq = () => {
           <DataTable
             columns={columns}
             data={filteredData}
+            paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
+            paginationPerPage="100"
             fixedHeader
             pagination
             selectableRows

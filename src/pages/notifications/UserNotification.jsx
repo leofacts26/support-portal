@@ -73,11 +73,11 @@ const UserNotification = () => {
   };
 
   const columns = [
-    {
-      name: "vendor_type",
-      selector: row => row.vendor_type,
-      sortable: true,
-    },
+    // {
+    //   name: "vendor_type",
+    //   selector: row => row.vendor_type,
+    //   sortable: true,
+    // },
     {
       name: "title",
       selector: row => row.title,
@@ -151,6 +151,8 @@ const UserNotification = () => {
           <DataTable
             columns={columns}
             data={filteredData}
+            paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
+            paginationPerPage="100"
             fixedHeader
             pagination
             selectableRows

@@ -45,7 +45,7 @@ const VendorNotification = () => {
   useEffect(() => {
     if (vendorNotificationList) {
       const formattedData = vendorNotificationList?.map((broadcast, index) => ({
-        // vendor_type: broadcast?.type,
+        vendorID: broadcast?.id,
         title: broadcast?.title,
         message: broadcast?.message,
         created_at: broadcast?.created_at,
@@ -65,7 +65,7 @@ const VendorNotification = () => {
     }
     const newFilteredData = data?.filter((row) => {
       return (
-        // String(row?.type).toLowerCase().includes(searchValue) ||
+        String(row?.id).toLowerCase().includes(searchValue) ||
         String(row?.title).toLowerCase().includes(searchValue) ||
         String(row?.message).toLowerCase().includes(searchValue) ||
         String(row?.type).toLowerCase().includes(searchValue) ||
@@ -76,11 +76,16 @@ const VendorNotification = () => {
   };
 
   const columns = [
-    // {
-    //   name: "vendor_type",
-    //   selector: row => row.type,
-    //   sortable: true,
-    // },
+    {
+      name: "vendor ID",
+      selector: row => row.vendorID,
+      sortable: true,
+    },
+    {
+      name: "Vendor Type",
+      selector: row => row.type,
+      sortable: true,
+    },
     {
       name: "title",
       selector: row => row.title,
@@ -89,11 +94,6 @@ const VendorNotification = () => {
     {
       name: "message",
       selector: row => row.message,
-      sortable: true,
-    },
-    {
-      name: "type",
-      selector: row => row.type,
       sortable: true,
     },
     {
@@ -140,7 +140,7 @@ const VendorNotification = () => {
   // Prepare options from vendorNotificationList
   const receiverOptions = vendorNotificationList?.map((item) => ({
     value: item.receiver_id,
-    label: item.receiver_id,
+    label: item.id,
   }));
 
 
@@ -170,6 +170,8 @@ const VendorNotification = () => {
           <DataTable
             columns={columns}
             data={filteredData}
+            paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
+            paginationPerPage="100"
             fixedHeader
             pagination
             selectableRows

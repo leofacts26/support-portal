@@ -60,8 +60,8 @@ const VendorListDetails = () => {
   const companyId = queryParams.get('company_id');
 
   const dispatch = useDispatch()
-  const { cateringVendors, cateringVendorsDetail, isLoading } = useSelector((state) => state.catering)
-  const { foodTypes, kitchenTypes, mealTimes, cuisines, occasions, branches, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const { cateringVendors, cateringVendorsDetail,  isLoading } = useSelector((state) => state.catering)
+  const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, cuisines, occasions, branches, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
   const { cuisineList, settingsInfo } = useSelector((state) => state.catering)
 
   const [foodTypesList, setFoodTypesList] = useState(foodTypes)
@@ -71,7 +71,7 @@ const VendorListDetails = () => {
   const [maximumCapacity, setMaximumCapacity] = useState(cateringVendorsDetail?.maximum_capacity)
   const [minimumCapacity, setMinimumCapacity] = useState(cateringVendorsDetail?.minimum_capacity)
 
-  console.log(cateringVendorsDetail, "cateringVendorsDetailcateringVendorsDetailcateringVendorsDetailcateringVendorsDetail");
+  console.log(subscriptionDetails, "subscriptionDetailssubscriptionDetailssubscriptionDetails");
 
 
   const [businessProfileValues, setBusinessProfileValues] = useState(businessProfile)
@@ -338,7 +338,6 @@ const VendorListDetails = () => {
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Vendor Details</h3>
-            {/* <h3 className='mb-0 text-warning'>Upgrade</h3> */}
           </div>
           <Table responsive="xl" className='m-0'>
             <thead>
@@ -346,10 +345,6 @@ const VendorListDetails = () => {
                 <th style={{ fontSize: '10px' }}>Vendor ID</th>
                 <th style={{ fontSize: '10px' }}>Login ID</th>
                 <th style={{ fontSize: '10px' }}>Vendor Type</th>
-                <th style={{ fontSize: '10px' }}>Subscription Plan</th>
-                <th style={{ fontSize: '10px' }}>Plan Type</th>
-                <th style={{ fontSize: '10px' }}>Start Date</th>
-                <th style={{ fontSize: '10px' }}>Expiry Date</th>
               </tr>
             </thead>
             <tbody>
@@ -357,16 +352,45 @@ const VendorListDetails = () => {
                 <td>{id ? id : 'N/A'}</td>
                 <td>{companyId}</td>
                 <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
-                <td>
-                  {/* {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail?.subscription_type_display : 'N/A'} */}
-                  <span className={badgeClass}>
-                    {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail.subscription_type_display : 'N/A'}
-                  </span>
-                </td>
-                <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
-                <td>{cateringVendorsDetail?.start_date ? cateringVendorsDetail?.start_date : 'N/A'}</td>
-                <td>{cateringVendorsDetail?.expiry_date ? cateringVendorsDetail?.expiry_date : 'N/A'}</td>
               </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
+
+        <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className='mb-0'>Subscription Details</h3>
+          </div>
+
+          <Table responsive="xl" className='m-0'>
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>Subscription Plan</th>
+                <th style={{ fontSize: '10px' }}>Plan Type</th>
+                <th style={{ fontSize: '10px' }}>Start Date</th>
+                <th style={{ fontSize: '10px' }}>Expiry Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {subscriptionDetails && subscriptionDetails.length > 0 ? (
+                subscriptionDetails.map((subscription, index) => (
+                  <tr key={index}>
+                    <td>
+                      <span className={badgeClass}>
+                        {subscription?.subscription_type_display ? subscription.subscription_type_display : 'N/A'}
+                      </span>
+                    </td>
+                    <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail.plan_type : 'N/A'}</td>
+                    <td>{subscription?.subscriptionStartDate ? new Date(subscription.subscriptionStartDate).toLocaleDateString() : 'N/A'}</td>
+                    <td>{subscription?.subscriptionExpiryDate ? new Date(subscription.subscriptionExpiryDate).toLocaleDateString() : 'N/A'}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4">No Subscription Details Available</td>
+                </tr>
+              )}
             </tbody>
           </Table>
         </div>
@@ -506,37 +530,41 @@ const VendorListDetails = () => {
 
           <div className="row mt-4">
             <div className="text-secondary d-flex justify-content-between">
-              <h4 className='mb-0'> Occastions You cater</h4>
+              <h4 className='mb-0'> Occastions You Cater</h4>
             </div>
             <div className='mt-3'>
               {occasions && occasions.length > 0
                 ? occasions
                   .filter((item) => item.selected === '1')
-                  .map((item, index) => (
+                  .map((item, index, filteredOccasions) => (
                     <span key={item.occasion_name} className='cuisine-item'>
-                      {item.occasion_name}  {index < occasions.length - 1 && ', '}
+                      {item.occasion_name}
+                      {index < filteredOccasions.length - 1 && ', '}
                     </span>
                   ))
                 : 'N/A'}
             </div>
+
           </div>
 
 
           <div className="row mt-4">
             <div className="text-secondary d-flex justify-content-between">
-              <h4 className='mb-0'>Cuisines You cater</h4>
+              <h4 className='mb-0'>Cuisines You Cater</h4>
             </div>
             <div className='mt-3'>
               {cuisines && cuisines.length > 0
                 ? cuisines
-                  .filter((item) => item.selected === '1') // Filter cuisines based on selected value
-                  .map((item, index) => (
+                  .filter((item) => item.selected === '1')
+                  .map((item, index, filteredCuisines) => (
                     <span key={item.cuisine_name} className='cuisine-item'>
                       {item.cuisine_name}
+                      {index < filteredCuisines.length - 1 && ', '}
                     </span>
                   ))
                 : 'N/A'}
             </div>
+
 
           </div>
 
@@ -565,7 +593,17 @@ const VendorListDetails = () => {
                 <td>{cateringVendorsDetail?.working_since ? cateringVendorsDetail?.working_since : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.total_staffs_approx ? cateringVendorsDetail?.total_staffs_approx : 'N/A'}</td>
                 <td>{cateringVendorsDetail?.working_days_hours ? cateringVendorsDetail?.working_days_hours : 'N/A'}</td>
-                <td>{'N/A'}</td>
+                <td>
+                  {cateringVendorsDetail?.latitude && cateringVendorsDetail?.longitude ? (
+                    <a
+                      href={`https://www.google.com/maps?q=${cateringVendorsDetail.latitude},${cateringVendorsDetail.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View on Map
+                    </a>
+                  ) : 'N/A'}
+                </td>
                 <td> {branches?.length > 0 ? branches?.map(item => item.catering_service_name)?.join(', ') : 'N/A'}</td>
               </tr>
             </tbody>

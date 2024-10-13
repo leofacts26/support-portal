@@ -185,7 +185,17 @@ const VendorList = () => {
         );
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const statusA = rowA.final_status.toLowerCase();
+        const statusB = rowB.final_status.toLowerCase();
+
+        // Define a custom order for sorting
+        const order = { "yes": 1, "no": 0 };
+
+        return (order[statusA] || 0) - (order[statusB] || 0);
+      },
     },
+
     {
       name: "Details",
       cell: (row) => (

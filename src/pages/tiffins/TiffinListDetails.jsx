@@ -10,7 +10,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 
 const TiffinListDetails = () => {
   const { cateringVendors, cateringVendorsDetail, settingsInfo, isLoading } = useSelector((state) => state.catering)
-  const { foodTypes, kitchenTypes, mealTimes, branches, cuisines, occasions, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, branches, cuisines, occasions, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
   const navigate = useNavigate();
 
   const dispatch = useDispatch()
@@ -75,10 +75,6 @@ const TiffinListDetails = () => {
               <th style={{ fontSize: '10px' }}>Vendor ID</th>
               <th style={{ fontSize: '10px' }}>Login ID</th>
               <th style={{ fontSize: '10px' }}>Vendor Type</th>
-              <th style={{ fontSize: '10px' }}>Subscription Plan</th>
-              <th style={{ fontSize: '10px' }}>Plan Type</th>
-              <th style={{ fontSize: '10px' }}>Start Date</th>
-              <th style={{ fontSize: '10px' }}>Expiry Date</th>
             </tr>
           </thead>
           <tbody>
@@ -86,15 +82,46 @@ const TiffinListDetails = () => {
               <td>{id ? id : 'N/A'}</td>
               <td>{companyId ? companyId : 'N/A'}</td>
               <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
-              <td>
-                <span className={badgeClass}>
-                  {cateringVendorsDetail?.subscription_type_display ? cateringVendorsDetail.subscription_type_display : 'N/A'}
-                </span>
-              </td>
-              <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail?.plan_type : 'N/A'}</td>
-              <td>{cateringVendorsDetail?.start_date ? cateringVendorsDetail?.start_date : 'N/A'}</td>
-              <td>{cateringVendorsDetail?.expiry_date ? cateringVendorsDetail?.expiry_date : 'N/A'}</td>
             </tr>
+          </tbody>
+        </Table>
+      </div>
+      <hr />
+
+
+      <div className="row mx-2">
+        <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+          <h3 className='mb-0'>Subscription Details</h3>
+        </div>
+
+        <Table responsive="xl" className='m-0'>
+          <thead>
+            <tr>
+              <th style={{ fontSize: '10px' }}>Subscription Plan</th>
+              <th style={{ fontSize: '10px' }}>Plan Type</th>
+              <th style={{ fontSize: '10px' }}>Start Date</th>
+              <th style={{ fontSize: '10px' }}>Expiry Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subscriptionDetails && subscriptionDetails.length > 0 ? (
+              subscriptionDetails.map((subscription, index) => (
+                <tr key={index}>
+                  <td>
+                    <span className={badgeClass}>
+                      {subscription?.subscription_type_display ? subscription.subscription_type_display : 'N/A'}
+                    </span>
+                  </td>
+                  <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail.plan_type : 'N/A'}</td>
+                  <td>{subscription?.subscriptionStartDate ? new Date(subscription.subscriptionStartDate).toLocaleDateString() : 'N/A'}</td>
+                  <td>{subscription?.subscriptionExpiryDate ? new Date(subscription.subscriptionExpiryDate).toLocaleDateString() : 'N/A'}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">No Subscription Details Available</td>
+              </tr>
+            )}
           </tbody>
         </Table>
       </div>
@@ -254,7 +281,17 @@ const TiffinListDetails = () => {
               <td>{cateringVendorsDetail?.working_since ? cateringVendorsDetail?.working_since : 'N/A'}</td>
               <td>{cateringVendorsDetail?.total_staffs_approx ? cateringVendorsDetail?.total_staffs_approx : 'N/A'}</td>
               <td>{cateringVendorsDetail?.working_days_hours ? cateringVendorsDetail?.working_days_hours : 'N/A'}</td>
-              <td>{'N/A'}</td>
+              <td>
+                {cateringVendorsDetail?.latitude && cateringVendorsDetail?.longitude ? (
+                  <a
+                    href={`https://www.google.com/maps?q=${cateringVendorsDetail.latitude},${cateringVendorsDetail.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View on Map
+                  </a>
+                ) : 'N/A'}
+              </td>
               <td> {branches?.length > 0 ? branches?.map(item => item.catering_service_name)?.join(', ') : 'N/A'}</td>
             </tr>
           </tbody>

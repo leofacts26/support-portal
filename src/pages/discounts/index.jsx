@@ -109,21 +109,21 @@ const Discounts = () => {
 
 
   const columns = [
-    {
-      name: "S.No",
-      selector: row => row.id,
-      sortable: true,
-    },
+    // {
+    //   name: "S.No",
+    //   selector: row => row.id,
+    //   sortable: true,
+    // },
     {
       name: "Discount Name",
       selector: row => row.discount_name,
       sortable: true,
     },
-    {
-      name: "Sub Id",
-      selector: row => row.subscription_type_id,
-      sortable: true,
-    },
+    // {
+    //   name: "Sub Id",
+    //   selector: row => row.subscription_type_id,
+    //   sortable: true,
+    // },
     {
       name: "Vendor Type",
       selector: row => row.vendor_type,
@@ -136,12 +136,12 @@ const Discounts = () => {
     },
     {
       name: "Valid From",
-      selector: row => row.valid_from,
+      selector: row => row.valid_from.slice(0,10),
       sortable: true,
     },
     {
       name: "Valid Till",
-      selector: row => row.valid_till,
+      selector: row => row.valid_till.slice(0,10),
       sortable: true,
     },
     {
@@ -312,6 +312,8 @@ const Discounts = () => {
           <DataTable
             columns={columns}
             data={filteredData}
+            paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
+            paginationPerPage="100"
             fixedHeader
             pagination
             selectableRows
