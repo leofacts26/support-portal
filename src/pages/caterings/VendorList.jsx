@@ -4,27 +4,29 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCateringVendors, setVendorListId } from '../../features/catering/cateringSlice';
+import * as XLSX from "xlsx";
 import useExportData from '../../hooks/useExportData';
+import toast from 'react-hot-toast';
+import Table from 'react-bootstrap/Table';
+import { tableCustomStyles } from '../../components/tableCustomStyles';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { Link } from 'react-router-dom';
-import { cater_vendor_type } from '../../constants';
-import { tableCustomStyles } from '../../components/tableCustomStyles';
+import { cater_vendor_type, tiffin_vendor_type } from '../../constants';
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css';
+import { format, parse, isValid, compareAsc } from 'date-fns';
 
 
 const VendorList = () => {
   const dispatch = useDispatch();
-  const { cateringVendors } = useSelector((state) => state.catering);
+  const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const { exportToExcel } = useExportData();
+  const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
-  // State to store search values for each column
-  const [searchValues, setSearchValues] = useState({
+   // State to store search values for each column
+   const [searchValues, setSearchValues] = useState({
     company_id: "",
     vendor_service_name: "",
     phone_number: "",
@@ -37,6 +39,9 @@ const VendorList = () => {
     final_status: "",
   });
 
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -47,11 +52,11 @@ const VendorList = () => {
 
   useEffect(() => {
     if (cateringVendors) {
-      const formattedData = cateringVendors.map((catering) => ({
+      const formattedData = cateringVendors.map((catering, index) => ({
         id: catering.id,
-        company_id: catering?.company_id || 'N/A',
+        company_id: catering?.company_id,
         vendor_service_name: catering?.vendor_service_name || 'N/A',
-        phone_number: catering?.phone_number || 'N/A',
+        phone_number: catering?.phone_number || 'N?A',
         city: catering?.city || 'N/A',
         plan_type_name: catering?.plan_type_name || "N/A",
         subscription_text: catering?.subscription_text || "N/A",
@@ -65,6 +70,7 @@ const VendorList = () => {
     }
   }, [cateringVendors]);
 
+  // Function to handle date range filtering
   const handleDateFilter = () => {
     const filtered = data.filter((item) => {
       const itemDate = new Date(item.subscription_subscription_start_date_text);
@@ -81,16 +87,45 @@ const VendorList = () => {
     handleDateFilter();
   }, [startDate, endDate]);
 
-  // Handle individual column searching
   const handleSearch = (column, value) => {
     const newSearchValues = { ...searchValues, [column]: value };
     setSearchValues(newSearchValues);
 
     const newFilteredData = data.filter((row) => {
       return Object.keys(newSearchValues).every((key) => {
-        const searchValue = newSearchValues[key].toLowerCase().trim();
-        if (!searchValue) return true; // If no search value for this column, skip filtering
-        return row[key]?.toString().toLowerCase().includes(searchValue);
+        const searchValue = newSearchValues[key].trim();
+
+        // If no search value for this column, skip filtering
+        if (!searchValue) return true;
+
+        // Handle date filtering manually for start_date and end_date
+        if (key === "start_date" || key === "end_date") {
+          const rowDateString = row.subscription_date || ''; // Use actual date field from your data, handle if it's undefined or null
+          const rowDate = parse(rowDateString, 'MM/dd/yyyy', new Date()); // Parse the row date in MM/DD/YYYY format
+
+          // Ensure the row date is valid
+          if (!isValid(rowDate)) return false;
+
+          // Parse the search input as a date in MM/DD/YYYY format
+          const searchDate = parse(searchValue, 'MM/dd/yyyy', new Date());
+
+          // Ensure the search input date is valid
+          if (!isValid(searchDate)) return false;
+
+          // For start_date, only include rows with dates after or equal to the start_date
+          if (key === "start_date") {
+            return compareAsc(rowDate, searchDate) >= 0; // Compare rowDate with searchDate
+          }
+
+          // For end_date, only include rows with dates before or equal to the end_date
+          if (key === "end_date") {
+            return compareAsc(rowDate, searchDate) <= 0; // Compare rowDate with searchDate
+          }
+        }
+
+        // Handle normal string filtering for non-date columns
+        const rowValue = (row[key] || '').toString().toLowerCase(); // Ensure row[key] is always a string
+        return rowValue.includes(searchValue.toLowerCase());
       });
     });
 
@@ -102,10 +137,9 @@ const VendorList = () => {
     dispatch(setVendorListId(row?.id));
   };
 
-
   const columns = [
     {
-      name: "Company ID",
+      name: "company id",
       selector: row => row.company_id,
       sortable: true,
     },
@@ -179,17 +213,41 @@ const VendorList = () => {
       },
       sortable: true,
     },
-
-
     {
       name: "Start Date",
-      selector: row => row.subscription_subscription_start_date_text,
+      selector: row => {
+        const startDate = new Date(row.subscription_subscription_start_date_text);
+        return isValid(startDate) ? format(startDate, 'dd/MMM/yyyy') : 'N/A';
+      },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const dateA = new Date(rowA.subscription_subscription_start_date_text);
+        const dateB = new Date(rowB.subscription_subscription_start_date_text);
+
+        // Handle invalid dates by sorting them to the end
+        if (!isValid(dateA)) return 1;
+        if (!isValid(dateB)) return -1;
+
+        return dateA - dateB; // For ascending order
+      }
     },
     {
       name: "End Date",
-      selector: row => row.subscription_subscription_end_date_text,
+      selector: row => {
+        const endDate = new Date(row.subscription_subscription_end_date_text);
+        return isValid(endDate) ? format(endDate, 'dd/MMM/yyyy') : 'N/A';
+      },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const dateA = new Date(rowA.subscription_subscription_end_date_text);
+        const dateB = new Date(rowB.subscription_subscription_end_date_text);
+
+        // Handle invalid dates by sorting them to the end
+        if (!isValid(dateA)) return 1;
+        if (!isValid(dateB)) return -1;
+
+        return dateA - dateB; // For ascending order
+      }
     },
     {
       name: "Status Description",
@@ -233,49 +291,60 @@ const VendorList = () => {
     {
       name: "Details",
       cell: (row) => (
-        <Link
-          onClick={() => onHandleCateringDetails(row)}
-          to={`/vendor-list/${row.id}?company_id=${row.company_id}`} // Use backticks for template strings
-          className='text-primary cursor-pointer'
-        >
-          View
-        </Link>
+        <>
+          {row?.company_id ? (
+            <Link
+              onClick={() => onHandleCateringDetails(row)}
+              to={`/tiffin-list/${row.id}?company_id=${row.company_id}`}
+              className='text-primary cursor-pointer'
+            >
+              View
+            </Link>
+          ) : (
+            <span>N/A</span>
+          )}
+        </>
       ),
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
-    }
+    },
   ];
-
-
 
 
   const formatDataForExport = () => {
     return filteredData.map((row) => {
+      // Create a new formatted row object
       const formattedRow = {};
+
+      // Loop through each column and get the value using the selector function
       columns.forEach((col) => {
         formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
       });
+
       return formattedRow;
     });
   };
 
+
   return (
     <>
       <div className="container-fluid my-5">
+
         <div className="row mb-4  me-2">
           <div className="d-flex justify-content-between align-items-center">
             <h1 className="header-title">
-              Total Registered Caterers - {cateringVendors?.length}
+              Total Registered Caterer - {cateringVendors?.length}
             </h1>
-            <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
-              Export
-            </Button>
           </div>
         </div>
         <hr />
 
-        <div className="row d-flex justify-content-between mb-4">
+
+        {/* Date filter */}
+        {/* <div className="row d-flex justify-content-between mb-4"> */}
+
+        {/* <div className="row d-flex justify-content-between mb-4">
           <div className="col-lg-6">
             <div className=" d-flex justify-content-between">
               <div>
@@ -308,17 +377,30 @@ const VendorList = () => {
               </div>
             </div>
           </div>
+
+          <div className="col-lg-6">
+            <div className="d-flex justify-content-end">
+              <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
+                Export
+              </Button>
+            </div>
+          </div>
+
         </div>
 
-        <hr />
+        <hr /> */}
+
+
+
+        {/* </div> */}
 
         <div className="card">
           {/* <GlobalSearch handleSearch={handleSearch} /> */}
 
-          {/* Add a single row for column-based searches */}
-          <div className="table-search-row mb-0">
+            {/* Add a single row for column-based searches */}
+            <div className="table-search-row mb-0">
             <div className="row p-3">
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.company_id}
@@ -327,7 +409,7 @@ const VendorList = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.vendor_service_name}
@@ -336,7 +418,7 @@ const VendorList = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.phone_number}
@@ -345,7 +427,7 @@ const VendorList = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.city}
@@ -354,7 +436,7 @@ const VendorList = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.plan_type_name}
@@ -363,7 +445,7 @@ const VendorList = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.subscription_text}
@@ -372,25 +454,27 @@ const VendorList = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+
+              {/* <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.start_date}
                   onChange={(e) => handleSearch("start_date", e.target.value)}
-                  placeholder="Start Date"
+                  placeholder="Start Date (MM/DD/YYYY)"
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.end_date}
                   onChange={(e) => handleSearch("end_date", e.target.value)}
-                  placeholder="End Date"
+                  placeholder="End Date (MM/DD/YYYY)"
                   className="form-control"
                 />
-              </div>
-              <div className="col-lg-2 mb-2">
+              </div> */}
+
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.final_status_description}
@@ -399,7 +483,7 @@ const VendorList = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-2 mb-2">
+              <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.final_status}
@@ -409,7 +493,41 @@ const VendorList = () => {
                 />
               </div>
             </div>
+
+            <div className="mb-3 ps-3 d-flex justify-content-start">
+              <div className='me-4'>
+                {/* <label className='me-2'>Start Date</label> */}
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={50}
+                  placeholderText="Select start date"
+                  dateFormat="dd/MM/yyyy"
+                  className="form-control"
+                  popperClassName="higher-zindex"
+                />
+              </div>
+              <div className="">
+                {/* <label className='me-2'>End Date</label> */}
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={50}
+                  placeholderText="Select end date"
+                  dateFormat="dd/MM/yyyy"
+                  className="form-control"
+                  popperClassName="higher-zindex"
+                />
+              </div>
+            </div>
+
           </div>
+
+
 
           <DataTable
             columns={columns}
@@ -423,7 +541,17 @@ const VendorList = () => {
           />
         </div>
       </div>
+
       <br />
+
+      <Modal centered show={show} onHide={handleClose} size="xl">
+        <Modal.Header closeButton>
+          <Modal.Title>Vendor Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {/* Vendor details table goes here */}
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
