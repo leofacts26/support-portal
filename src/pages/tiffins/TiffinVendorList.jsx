@@ -25,8 +25,8 @@ const TiffinVendorList = () => {
   const { exportToExcel } = useExportData();
   const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
 
-   // State to store search values for each column
-   const [searchValues, setSearchValues] = useState({
+  // State to store search values for each column
+  const [searchValues, setSearchValues] = useState({
     company_id: "",
     vendor_service_name: "",
     phone_number: "",
@@ -336,6 +336,9 @@ const TiffinVendorList = () => {
             <h1 className="header-title">
               Total Registered Tiffins - {cateringVendors?.length}
             </h1>
+            <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
+              Export
+            </Button>
           </div>
         </div>
         <hr />
@@ -397,8 +400,8 @@ const TiffinVendorList = () => {
         <div className="card">
           {/* <GlobalSearch handleSearch={handleSearch} /> */}
 
-            {/* Add a single row for column-based searches */}
-            <div className="table-search-row mb-0">
+          {/* Add a single row for column-based searches */}
+          <div className="table-search-row mb-0">
             <div className="row p-3">
               <div className="col-lg-3 mb-2">
                 <input

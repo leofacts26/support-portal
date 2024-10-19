@@ -336,6 +336,9 @@ const VendorList = () => {
             <h1 className="header-title">
               Total Registered Caterer - {cateringVendors?.length}
             </h1>
+            <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
+                Export
+              </Button>
           </div>
         </div>
         <hr />
