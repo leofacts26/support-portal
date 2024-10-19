@@ -193,7 +193,7 @@ const UserNotification = () => {
               >
                 <option value="">Select Receiver ID</option>
                 {userNotificationList?.map((item) => (
-                  <option value={item.receiver_id} key={item.receiver_id}>
+                  <option value={item.id} key={item.id}>
                     {item.phone_number}
                   </option>
                 ))}
