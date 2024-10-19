@@ -125,10 +125,10 @@ const Dashboard = () => {
 
 
         <div className="row">
-          <div className="col-lg-6">
+          <div className="col-lg-12">
             <DashboardAreaCountChart />
           </div>
-          <div className="col-lg-6">
+          <div className="col-lg-12">
             <DashboardCityCount />
           </div>
         </div>

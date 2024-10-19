@@ -45,11 +45,12 @@ const VendorNotification = () => {
   useEffect(() => {
     if (vendorNotificationList) {
       const formattedData = vendorNotificationList?.map((broadcast, index) => ({
-        vendorID: broadcast?.id,
+        vendorID: broadcast?.vendor_id,
         title: broadcast?.title,
         message: broadcast?.message,
         created_at: broadcast?.created_at,
         type: broadcast?.type,
+        vendor_service_name: broadcast?.vendor_service_name,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -69,6 +70,7 @@ const VendorNotification = () => {
         String(row?.title).toLowerCase().includes(searchValue) ||
         String(row?.message).toLowerCase().includes(searchValue) ||
         String(row?.type).toLowerCase().includes(searchValue) ||
+        String(row?.vendor_service_name).toLowerCase().includes(searchValue) ||
         String(row?.created_at).toLowerCase().includes(searchValue)
       );
     });
@@ -79,6 +81,11 @@ const VendorNotification = () => {
     {
       name: "vendor ID",
       selector: row => row.vendorID,
+      sortable: true,
+    },
+    {
+      name: "vendor Service Name",
+      selector: row => row.vendor_service_name,
       sortable: true,
     },
     {
@@ -140,7 +147,7 @@ const VendorNotification = () => {
   // Prepare options from vendorNotificationList
   const receiverOptions = vendorNotificationList?.map((item) => ({
     value: item.receiver_id,
-    label: item.id,
+    label: item.receiver_id,
   }));
 
 

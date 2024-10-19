@@ -15,13 +15,27 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const VendorList = () => {
   const dispatch = useDispatch();
-  const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering);
+  const { cateringVendors } = useSelector((state) => state.catering);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const { exportToExcel } = useExportData();
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  // State to store search values for each column
+  const [searchValues, setSearchValues] = useState({
+    company_id: "",
+    vendor_service_name: "",
+    phone_number: "",
+    city: "",
+    plan_type_name: "",
+    subscription_text: "",
+    start_date: "",
+    end_date: "",
+    final_status_description: "",
+    final_status: "",
+  });
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -39,10 +53,10 @@ const VendorList = () => {
         vendor_service_name: catering?.vendor_service_name || 'N/A',
         phone_number: catering?.phone_number || 'N/A',
         city: catering?.city || 'N/A',
-        subscription_type_name: catering?.subscription_type_name || "N/A",
-        subscription: catering?.subscription || "N/A",
-        created_at: new Date(catering?.created_at).toLocaleDateString(),
-        subscription_start_date: new Date(catering?.subscription_start_date), // Add this field
+        plan_type_name: catering?.plan_type_name || "N/A",
+        subscription_text: catering?.subscription_text || "N/A",
+        subscription_subscription_start_date_text: new Date(catering?.subscription_subscription_start_date_text).toLocaleDateString(),
+        subscription_subscription_end_date_text: new Date(catering?.subscription_subscription_end_date_text).toLocaleDateString(),
         final_status_description: catering?.final_status_description || 'N/A',
         final_status: catering?.final_status || 'N/A',
       }));
@@ -51,11 +65,9 @@ const VendorList = () => {
     }
   }, [cateringVendors]);
 
-
-
   const handleDateFilter = () => {
     const filtered = data.filter((item) => {
-      const itemDate = new Date(item.subscription_start_date);
+      const itemDate = new Date(item.subscription_subscription_start_date_text);
       return (
         (!startDate || itemDate >= startDate) &&
         (!endDate || itemDate <= endDate)
@@ -64,29 +76,22 @@ const VendorList = () => {
     setFilteredData(filtered);
   };
 
-
   // Apply date filter whenever the date range is updated
   useEffect(() => {
     handleDateFilter();
   }, [startDate, endDate]);
 
-  const handleSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase().trim();
-    if (!searchValue) {
-      setFilteredData(data);
-      return;
-    }
-
-    // Split the input value into multiple keywords based on commas or spaces
-    const searchKeywords = searchValue.split(/[, ]+/).filter(Boolean);
+  // Handle individual column searching
+  const handleSearch = (column, value) => {
+    const newSearchValues = { ...searchValues, [column]: value };
+    setSearchValues(newSearchValues);
 
     const newFilteredData = data.filter((row) => {
-      // Check if any of the keywords match the values in the row
-      return searchKeywords.some((keyword) =>
-        Object.values(row).some(value =>
-          value.toString().toLowerCase().includes(keyword)
-        )
-      );
+      return Object.keys(newSearchValues).every((key) => {
+        const searchValue = newSearchValues[key].toLowerCase().trim();
+        if (!searchValue) return true; // If no search value for this column, skip filtering
+        return row[key]?.toString().toLowerCase().includes(searchValue);
+      });
     });
 
     setFilteredData(newFilteredData);
@@ -96,6 +101,7 @@ const VendorList = () => {
     handleShow();
     dispatch(setVendorListId(row?.id));
   };
+
 
   const columns = [
     {
@@ -122,8 +128,35 @@ const VendorList = () => {
       name: "Plan Type",
       cell: (row) => {
         let badgeClass = "badge mt-n1";
+        const planType = row.plan_type_name ? row.plan_type_name.toLowerCase() : "";
 
-        switch (row.subscription_type_name.toLowerCase()) {
+        switch (planType) {
+          case "monthly":
+            badgeClass += " text-bg-monthly-bage";
+            break;
+          case "yearly":
+            badgeClass += " text-bg-yearly-bage";
+            break;
+          default:
+            badgeClass += " text-bg-default-bage";
+            break;
+        }
+
+        return (
+          <span className={badgeClass}>
+            {row.plan_type_name || "Unknown Plan"}
+          </span>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: "Subscription",
+      cell: (row) => {
+        let badgeClass = "badge mt-n1";
+        const subscriptionType = row.subscription_text ? row.subscription_text.toLowerCase() : "";
+
+        switch (subscriptionType) {
           case "popular":
             badgeClass += " text-bg-popular-bage";
             break;
@@ -139,21 +172,23 @@ const VendorList = () => {
         }
 
         return (
-          <span className={badgeClass}>
-            {row.subscription_type_name}
+          <span className={badgeClass} style={{ width: '100px' }}>
+            {row.subscription_text || "Unknown Subscription"}
           </span>
         );
       },
       sortable: true,
     },
+
+
     {
-      name: "Subscription",
-      selector: row => row.subscription,
+      name: "Start Date",
+      selector: row => row.subscription_subscription_start_date_text,
       sortable: true,
     },
     {
-      name: "Start Date",
-      selector: row => row.created_at,
+      name: "End Date",
+      selector: row => row.subscription_subscription_end_date_text,
       sortable: true,
     },
     {
@@ -195,13 +230,12 @@ const VendorList = () => {
         return (order[statusA] || 0) - (order[statusB] || 0);
       },
     },
-
     {
       name: "Details",
       cell: (row) => (
         <Link
           onClick={() => onHandleCateringDetails(row)}
-          to={`/vendor-list/${row.id}?company_id=${row.company_id}`}
+          to={`/vendor-list/${row.id}?company_id=${row.company_id}`} // Use backticks for template strings
           className='text-primary cursor-pointer'
         >
           View
@@ -210,29 +244,25 @@ const VendorList = () => {
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
-    },
+    }
   ];
+
+
 
 
   const formatDataForExport = () => {
     return filteredData.map((row) => {
-      // Create a new formatted row object
       const formattedRow = {};
-
-      // Loop through each column and get the value using the selector function
       columns.forEach((col) => {
         formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
       });
-
       return formattedRow;
     });
   };
 
-
   return (
     <>
       <div className="container-fluid my-5">
-
         <div className="row mb-4  me-2">
           <div className="d-flex justify-content-between align-items-center">
             <h1 className="header-title">
@@ -283,7 +313,104 @@ const VendorList = () => {
         <hr />
 
         <div className="card">
-          <GlobalSearch handleSearch={handleSearch} />
+          {/* <GlobalSearch handleSearch={handleSearch} /> */}
+
+          {/* Add a single row for column-based searches */}
+          <div className="table-search-row mb-0">
+            <div className="row p-3">
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.company_id}
+                  onChange={(e) => handleSearch("company_id", e.target.value)}
+                  placeholder="Company ID"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.vendor_service_name}
+                  onChange={(e) => handleSearch("vendor_service_name", e.target.value)}
+                  placeholder="Business Name"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.phone_number}
+                  onChange={(e) => handleSearch("phone_number", e.target.value)}
+                  placeholder="Phone"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.city}
+                  onChange={(e) => handleSearch("city", e.target.value)}
+                  placeholder="City"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.plan_type_name}
+                  onChange={(e) => handleSearch("plan_type_name", e.target.value)}
+                  placeholder="Plan Type"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.subscription_text}
+                  onChange={(e) => handleSearch("subscription_text", e.target.value)}
+                  placeholder="Subscription"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.start_date}
+                  onChange={(e) => handleSearch("start_date", e.target.value)}
+                  placeholder="Start Date"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.end_date}
+                  onChange={(e) => handleSearch("end_date", e.target.value)}
+                  placeholder="End Date"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.final_status_description}
+                  onChange={(e) => handleSearch("final_status_description", e.target.value)}
+                  placeholder="Status Description"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-2 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.final_status}
+                  onChange={(e) => handleSearch("final_status", e.target.value)}
+                  placeholder="Is Active"
+                  className="form-control"
+                />
+              </div>
+            </div>
+          </div>
+
           <DataTable
             columns={columns}
             data={filteredData}
@@ -296,12 +423,9 @@ const VendorList = () => {
           />
         </div>
       </div>
-
       <br />
-
-
     </>
-  )
-}
+  );
+};
 
-export default VendorList
+export default VendorList;

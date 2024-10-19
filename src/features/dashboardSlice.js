@@ -37,7 +37,7 @@ export const fetchAdminDashboardCityCount = createAsyncThunk(
     async (user, thunkAPI) => {
         try {
             const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-            const response = await api.get(`${BASE_URL}/admin-dashboard-city-count?current_page=1&limit=10000`, {
+            const response = await api.get(`${BASE_URL}/admin-dashboard-city-vendor-count?current_page=1&limit=1000`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
