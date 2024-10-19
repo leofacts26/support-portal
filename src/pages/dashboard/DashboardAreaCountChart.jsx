@@ -44,6 +44,23 @@ const DashboardAreaCountChart = () => {
   };
 
 
+  const getBadgeClass = (type, count) => {
+    let badgeClass = "badge ";
+    switch (type) {
+      case "tiffin":
+        badgeClass += count > 0 ? "text-bg-normal-bage" : "text-bg-normal-bage";
+        break;
+      case "caterer":
+        badgeClass += count > 0 ? "text-bg-default-bage" : "text-bg-default-bage";
+        break;
+      default:
+        badgeClass += "text-bg-popular-bage";
+        break;
+    }
+    return badgeClass;
+  };
+  
+
   const columns = [
     {
       name: "City",
@@ -56,13 +73,21 @@ const DashboardAreaCountChart = () => {
       sortable: true,
     },
     {
-      name: "Vendor Count",
-      selector: row => row.vendor_count,
+      name: "Caterer Count",
+      cell: (row) => (
+        <span className={getBadgeClass("caterer", row.vendor_count)}>
+          {row.vendor_count}
+        </span>
+      ),
       sortable: true,
     },
     {
       name: "Tiffin Count",
-      selector: row => row.tiffin_count,
+      cell: (row) => (
+        <span className={getBadgeClass("tiffin", row.tiffin_count)}>
+          {row.tiffin_count}
+        </span>
+      ),
       sortable: true,
     },
   ];
