@@ -43,10 +43,12 @@ const UserNotification = () => {
     if (userNotificationList) {
       const formattedData = userNotificationList?.map((broadcast, index) => ({
         vendor_type: broadcast?.vendor_type,
+        phone_number: broadcast?.phone_number,
+        username: broadcast?.username,
         title: broadcast?.title,
         message: broadcast?.message,
-        type: broadcast?.type,
         created_at: broadcast?.created_at,
+        type: broadcast?.type,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -79,6 +81,16 @@ const UserNotification = () => {
     //   sortable: true,
     // },
     {
+      name: "Phone Number",
+      selector: row => row.phone_number,
+      sortable: true,
+    },
+    {
+      name: "Username",
+      selector: row => row.username,
+      sortable: true,
+    },
+    {
       name: "title",
       selector: row => row.title,
       sortable: true,
@@ -88,11 +100,11 @@ const UserNotification = () => {
       selector: row => row.message,
       sortable: true,
     },
-    {
-      name: "type",
-      selector: row => row.type,
-      sortable: true,
-    },
+    // {
+    //   name: "type",
+    //   selector: row => row.type,
+    //   sortable: true,
+    // },
     {
       name: "created_at",
       selector: row => row.created_at.slice(0, 10),
@@ -182,7 +194,7 @@ const UserNotification = () => {
                 <option value="">Select Receiver ID</option>
                 {userNotificationList?.map((item) => (
                   <option value={item.receiver_id} key={item.receiver_id}>
-                    {item.receiver_id}
+                    {item.phone_number}
                   </option>
                 ))}
               </select>
