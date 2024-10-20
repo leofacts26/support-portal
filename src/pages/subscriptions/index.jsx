@@ -178,16 +178,40 @@ const Subscription = () => {
       name: 'Vendor Name',
       selector: (row) => row.vendor_service_name,
       sortable: true,
+      width: '150px'
     },
     {
       name: 'Vendor Type',
-      selector: (row) => row.vendor_type,
+      cell: (row) => {
+        let badgeClass = "badge mt-n1"; // Common badge class
+        const vendorType = row.vendor_type ? row.vendor_type.toLowerCase() : ""; // Ensure vendor type is lowercase
+
+        // Switch case to assign different background classes
+        switch (vendorType) {
+          case 'caterer':
+            badgeClass += " text-bg-default-bage";
+            break;
+          case 'tiffin':
+            badgeClass += " text-bg-normal-bage";
+            break;
+          default:
+            badgeClass += " text-bg-popular-bage";
+            break;
+        }
+
+        return (
+          <span className={badgeClass}>
+            {row.vendor_type || "Unknown Vendor"}
+          </span>
+        );
+      },
       sortable: true,
     },
     {
       name: 'Subscription Pattern',
       selector: (row) => row.subscription_pattern,
       sortable: true,
+       width: '200px'
     },
     {
       name: 'Sub Amount',
@@ -206,14 +230,34 @@ const Subscription = () => {
     },
     {
       name: 'Status',
-      selector: (row) => row.status,
+      cell: (row) => {
+        let badgeClass = "badge mt-n1"; // Common badge class
+        const status = row.status ? row.status.toLowerCase() : ""; // Ensure status is lowercase
+
+        // Switch case to assign different background classes based on status
+        switch (status) {
+          case 'active':
+            badgeClass += " text-bg-branded-bage";
+            break;
+          case 'queued':
+            badgeClass += " text-bg-normal-bage";
+            break;
+          case 'cancelled':
+            badgeClass += " text-bg-default-bage";
+            break;
+          default:
+            badgeClass += " text-bg-popular-bage"; // Default class for unknown statuses
+            break;
+        }
+
+        return (
+          <span className={badgeClass}>
+            {row.status || "Unknown Status"}
+          </span>
+        );
+      },
       sortable: true,
     },
-    // {
-    //   name: 'Payment Status',
-    //   selector: (row) => row.payment_status,
-    //   sortable: true,
-    // },
     {
       name: "Start Date",
       selector: row => {
@@ -230,7 +274,8 @@ const Subscription = () => {
         if (!isValid(dateB)) return -1;
 
         return dateA - dateB; // For ascending order
-      }
+      },
+      width: '150px'
     },
     {
       name: "End Date",
@@ -248,7 +293,8 @@ const Subscription = () => {
         if (!isValid(dateB)) return -1;
 
         return dateA - dateB; // For ascending order
-      }
+      },
+      width: '150px'
     },
     {
       name: "View",
