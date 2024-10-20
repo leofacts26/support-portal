@@ -1,37 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
+import { cancelSubscription, fetchSubscriptionData } from '../../features/subscriptionSlice';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
-import { FaEdit } from "react-icons/fa";
-import { cancelSubscription, fetchSubscriptionData } from '../../features/subscriptionSlice';
-import { MdDelete } from "react-icons/md";
+import { format, parse, isValid, compareAsc } from 'date-fns';
+import DatePicker from 'react-datepicker'; // Import DatePicker
+import 'react-datepicker/dist/react-datepicker.css';
 import { Modal, Button } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';  // Step 1: Import react-datepicker
-import 'react-datepicker/dist/react-datepicker.css';  // Step 1: Import datepicker CSS
 import useExportData from '../../hooks/useExportData';
+import { MdDelete } from "react-icons/md";
 
-const Subscriptions = () => {
 
-  const dispatch = useDispatch()
-  const { subscriptionList, isLoading } = useSelector((state) => state.subscription)
+const Subscription = () => {
+  const dispatch = useDispatch();
+  const { subscriptionList, isLoading } = useSelector((state) => state.subscription);
+  const { exportToExcel } = useExportData();
+
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [showSubscribeModal, setShowSubscribeModal] = useState(false);
-  const [SubscribeModalData, setShowSubscribeModalData] = useState(null);
-  const { exportToExcel } = useExportData();
-
-  console.log(SubscribeModalData, "SubscribeModalDatas");
-
-
-  // State for date filters
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const [showModal, setShowModal] = useState(false);
+  const [showSubscribeModal, setShowSubscribeModal] = useState(false);
+  const [SubscribeModalData, setShowSubscribeModalData] = useState(null);
 
   const handleSubscribeShow = () => setShowSubscribeModal(true);
   const handleSubscribeClose = () => {
@@ -39,72 +37,22 @@ const Subscriptions = () => {
     setShowSubscribeModalData(null)
   };
 
-  useEffect(() => {
-    dispatch(fetchSubscriptionData());
-  }, [dispatch]);
 
-  useEffect(() => {
-    if (subscriptionList) {
-      const formattedData = subscriptionList?.map((subscription) => ({
-        company_id: subscription?.company_id,
-        vendor_service_name: subscription?.vendor_service_name,
-        vendor_type: subscription?.vendor_id,
-        subscription_pattern: subscription?.subscription_pattern,
-        sub_amount: subscription?.sub_amount,
-        discount_amount: subscription?.discount_amount,
-        final_amount: subscription?.final_amount,
-        status: subscription?.status,
-        created_at: new Date(subscription?.start_date),
+  // State to store search values for each column
+  const [searchValues, setSearchValues] = useState({
+    company_id: "",
+    vendor_service_name: "",
+    vendor_type: "",
+    subscription_pattern: "",
+    sub_amount: "",
+    discount_amount: "",
+    final_amount: "",
+    status: "",
+    payment_status: "",
+    start_date_search: "",
+    end_date_search: "",
+  });
 
-        // extra details 
-        razorpay_response: subscription?.razorpay_response,
-        razorpay_order_id: subscription?.razorpay_order_id,
-        razorpay_final_amount: subscription?.razorpay_final_amount,
-        payment_status: subscription?.payment_status,
-        payment_id: subscription?.payment_id,
-        id: subscription?.id,
-        end_date: subscription?.end_date,
-        discount_amount: subscription?.discount_amount,
-        carried_forward_days: subscription?.carried_forward_days,
-
-      }));
-      setData(formattedData);
-      setFilteredData(formattedData);
-    }
-  }, [subscriptionList]);
-
-  const handleSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase().trim();
-    if (!searchValue) {
-      setFilteredData(data);
-      return;
-    }
-
-    const searchKeywords = searchValue.split(/[, ]+/).filter(Boolean);
-
-    const newFilteredData = data.filter((row) => {
-      return searchKeywords.some((keyword) =>
-        Object.values(row).some(value =>
-          value !== null && value.toString().toLowerCase().includes(keyword)
-        )
-      );
-    });
-
-    setFilteredData(newFilteredData);
-  };
-
-  // Handle date range filtering
-  useEffect(() => {
-    if (startDate && endDate) {
-      const filteredByDate = data.filter((row) => {
-        const createdDate = row.created_at;  // Date object of subscription created_at
-        return createdDate >= startDate && createdDate <= endDate;
-      });
-      setFilteredData(filteredByDate);
-    } else {
-      setFilteredData(data);
-    }
-  }, [startDate, endDate, data]);
 
   const onHandleCancelSubscription = async (row) => {
     const { razorpay_subscription_id, vendor_id, status } = row;
@@ -118,56 +66,189 @@ const Subscriptions = () => {
     }
   }
 
+  // Fetch subscription data on component mount
+  useEffect(() => {
+    dispatch(fetchSubscriptionData());
+  }, [dispatch]);
+
+  // Format subscription data
+  useEffect(() => {
+    if (subscriptionList) {
+      const formattedData = subscriptionList.map((subscription) => ({
+        company_id: subscription?.company_id,
+        vendor_service_name: subscription?.vendor_service_name,
+        vendor_type: subscription?.vendor_id,
+        subscription_pattern: subscription?.subscription_pattern,
+        sub_amount: subscription?.sub_amount,
+        discount_amount: subscription?.discount_amount,
+        final_amount: subscription?.final_amount,
+        status: subscription?.status,
+        start_date: new Date(subscription?.start_date).toLocaleDateString(),
+        end_date: new Date(subscription?.end_date).toLocaleDateString(),
+        payment_status: subscription?.payment_status,
+        razorpay_response: subscription?.razorpay_response,
+        // payment_id: subscription?.payment_id,
+        // id: subscription?.id
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+    }
+  }, [subscriptionList]);
+
+
+  // Function to handle date range filtering
+  const handleDateFilter = () => {
+    const filtered = data.filter((item) => {
+      const itemDate = new Date(item.start_date);
+      return (
+        (!startDate || itemDate >= startDate) &&
+        (!endDate || itemDate <= endDate)
+      );
+    });
+    setFilteredData(filtered);
+  };
+
+  // Apply date filter whenever the date range is updated
+  useEffect(() => {
+    handleDateFilter();
+  }, [startDate, endDate]);
+
+
+
+  const handleSearch = (column, value) => {
+    const newSearchValues = { ...searchValues, [column]: value };
+    setSearchValues(newSearchValues);
+
+    const newFilteredData = data.filter((row) => {
+      return Object.keys(newSearchValues).every((key) => {
+        const searchValue = newSearchValues[key].trim();
+
+        // If no search value for this column, skip filtering
+        if (!searchValue) return true;
+
+        // Handle date filtering manually for start_date_search and end_date_search
+        if (key === "start_date_search" || key === "end_date_search") {
+          const rowDateString = row.subscription_date || ''; // Use actual date field from your data, handle if it's undefined or null
+          const rowDate = parse(rowDateString, 'MM/dd/yyyy', new Date()); // Parse the row date in MM/DD/YYYY format
+
+          // Ensure the row date is valid
+          if (!isValid(rowDate)) return false;
+
+          // Parse the search input as a date in MM/DD/YYYY format
+          const searchDate = parse(searchValue, 'MM/dd/yyyy', new Date());
+
+          // Ensure the search input date is valid
+          if (!isValid(searchDate)) return false;
+
+          // For start_date_search, only include rows with dates after or equal to the start_date_search
+          if (key === "start_date_search") {
+            return compareAsc(rowDate, searchDate) >= 0; // Compare rowDate with searchDate
+          }
+
+          // For end_date_search, only include rows with dates before or equal to the end_date_search
+          if (key === "end_date_search") {
+            return compareAsc(rowDate, searchDate) <= 0; // Compare rowDate with searchDate
+          }
+        }
+
+        // Handle normal string filtering for non-date columns
+        const rowValue = (row[key] || '').toString().toLowerCase(); // Ensure row[key] is always a string
+        return rowValue.includes(searchValue.toLowerCase());
+      });
+    });
+
+    setFilteredData(newFilteredData);
+  };
+
+
   const onHandleSubscriptionModal = (row) => {
     setSelectedRow(row);
     handleShow();
   }
 
+
+  // Columns for the DataTable
   const columns = [
     {
-      name: "Company ID",
-      selector: row => row.company_id,
+      name: 'Company ID',
+      selector: (row) => row.company_id,
       sortable: true,
     },
     {
-      name: "Vendor Name",
-      selector: row => row.vendor_service_name,
+      name: 'Vendor Name',
+      selector: (row) => row.vendor_service_name,
       sortable: true,
     },
     {
-      name: "Vendor Type",
-      selector: row => row.vendor_type,
+      name: 'Vendor Type',
+      selector: (row) => row.vendor_type,
       sortable: true,
     },
     {
-      name: "Subscription Pattern",
-      selector: row => row.subscription_pattern,
+      name: 'Subscription Pattern',
+      selector: (row) => row.subscription_pattern,
       sortable: true,
     },
     {
-      name: "Sub Amount",
-      selector: row => row.sub_amount,
+      name: 'Sub Amount',
+      selector: (row) => row.sub_amount,
       sortable: true,
     },
     {
-      name: "Discount Amount",
-      selector: row => row.discount_amount,
+      name: 'Discount Amount',
+      selector: (row) => row.discount_amount,
       sortable: true,
     },
     {
-      name: "Final Amount",
-      selector: row => row.final_amount,
+      name: 'Final Amount',
+      selector: (row) => row.final_amount,
       sortable: true,
     },
     {
-      name: "Status",
-      selector: row => row.status,
+      name: 'Status',
+      selector: (row) => row.status,
       sortable: true,
     },
+    // {
+    //   name: 'Payment Status',
+    //   selector: (row) => row.payment_status,
+    //   sortable: true,
+    // },
     {
-      name: "Created At",  // Displaying created_at date
-      selector: row => row.created_at.toLocaleDateString(),  // Convert date object to readable format
+      name: "Start Date",
+      selector: row => {
+        const startDate = new Date(row.start_date);
+        return isValid(startDate) ? format(startDate, 'dd/MMM/yyyy') : 'N/A';
+      },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const dateA = new Date(rowA.start_date);
+        const dateB = new Date(rowB.start_date);
+
+        // Handle invalid dates by sorting them to the end
+        if (!isValid(dateA)) return 1;
+        if (!isValid(dateB)) return -1;
+
+        return dateA - dateB; // For ascending order
+      }
+    },
+    {
+      name: "End Date",
+      selector: row => {
+        const endDate = new Date(row.end_date);
+        return isValid(endDate) ? format(endDate, 'dd/MMM/yyyy') : 'N/A';
+      },
+      sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const dateA = new Date(rowA.end_date);
+        const dateB = new Date(rowB.end_date);
+
+        // Handle invalid dates by sorting them to the end
+        if (!isValid(dateA)) return 1;
+        if (!isValid(dateB)) return -1;
+
+        return dateA - dateB; // For ascending order
+      }
     },
     {
       name: "View",
@@ -206,7 +287,6 @@ const Subscriptions = () => {
   ];
 
 
-
   const formatDataForExport = () => {
     return filteredData.map((row) => {
       // Create a new formatted row object
@@ -221,53 +301,138 @@ const Subscriptions = () => {
     });
   };
 
+
+
   return (
     <>
       <div className="container-fluid my-5">
         <div className="row mb-4 me-2">
           <div className="d-flex justify-content-between align-items-center">
             <h1 className="header-title">
-              Total Vendor Subscription List - {subscriptionList?.length}
+              Total Subscriptions - {subscriptionList?.length}
             </h1>
-
-            <div className="col-lg-6">
-              <div className="d-flex justify-content-end">
-                <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
-                  Export
-                </Button>
-              </div>
-            </div>
+            <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
+              Export
+            </Button>
           </div>
         </div>
         <hr />
 
         <div className="card">
-          <GlobalSearch handleSearch={handleSearch} />
-          {/* Date Filter Component */}
-          <div className="d-flex my-3">
-            <div className="me-3">
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                showYearDropdown
-                scrollableYearDropdown
-                yearDropdownItemNumber={50}
-                placeholderText="Start Date"
-                isClearable
-                className="form-control"
-                popperClassName="higher-zindex"
-              />
+          {/* <GlobalSearch handleSearch={handleSearch} /> */}
+
+          {/* Add a single row for column-based searches */}
+          <div className="table-search-row mb-0">
+            <div className="row p-3">
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.company_id}
+                  onChange={(e) => handleSearch("company_id", e.target.value)}
+                  placeholder="Company ID"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.vendor_service_name}
+                  onChange={(e) => handleSearch("vendor_service_name", e.target.value)}
+                  placeholder="Vendor Name"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.vendor_type}
+                  onChange={(e) => handleSearch("vendor_type", e.target.value)}
+                  placeholder="Vendor Type"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.subscription_pattern}
+                  onChange={(e) => handleSearch("subscription_pattern", e.target.value)}
+                  placeholder="Subscription Pattern"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.sub_amount}
+                  onChange={(e) => handleSearch("sub_amount", e.target.value)}
+                  placeholder="Sub Amount"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.discount_amount}
+                  onChange={(e) => handleSearch("discount_amount", e.target.value)}
+                  placeholder="Discount Amount"
+                  className="form-control"
+                />
+              </div>
+
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.final_amount}
+                  onChange={(e) => handleSearch("final_amount", e.target.value)}
+                  placeholder="Final Amount"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
+                  value={searchValues.status}
+                  onChange={(e) => handleSearch("status", e.target.value)}
+                  placeholder="Status"
+                  className="form-control"
+                />
+              </div>
             </div>
-            <div>
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                placeholderText="End Date"
-                isClearable
-                className="form-control"
-              />
+
+            <div className="mb-3 ps-3 d-flex justify-content-start">
+              <div className='me-4'>
+                {/* <label className='me-2'>Start Date</label> */}
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={50}
+                  placeholderText="Select start date"
+                  dateFormat="dd/MM/yyyy"
+                  className="form-control"
+                  popperClassName="higher-zindex"
+                />
+              </div>
+              <div className="">
+                {/* <label className='me-2'>End Date</label> */}
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={50}
+                  placeholderText="Select end date"
+                  dateFormat="dd/MM/yyyy"
+                  className="form-control"
+                  popperClassName="higher-zindex"
+                />
+              </div>
             </div>
+
           </div>
+
+
 
           <DataTable
             columns={columns}
@@ -278,6 +443,7 @@ const Subscriptions = () => {
             pagination
             selectableRows
             customStyles={tableCustomStyles}
+            progressPending={isLoading} // Show loader if data is still loading
           />
         </div>
       </div>
@@ -343,8 +509,9 @@ const Subscriptions = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
-  )
-}
 
-export default Subscriptions;
+    </>
+  );
+};
+
+export default Subscription;
