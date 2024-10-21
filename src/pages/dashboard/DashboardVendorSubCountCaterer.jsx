@@ -39,15 +39,42 @@ const DashboardVendorSubCountCaterer = () => {
         setFilteredData(newFilteredData);
     };
 
+
+    // Helper function for badge classes
+    const getBadgeClass = (type, count) => {
+        let badgeClass = "badge ";
+        switch (type) {
+            case "Normal":
+                badgeClass += count > 0 ? "text-bg-normal-bage" : "text-bg-normal-bage";
+                break;
+            case "popular":
+                badgeClass += count > 0 ? "text-bg-default-bage" : "text-bg-default-bage";
+                break;
+            default:
+                badgeClass += "text-bg-popular-bage";
+                break;
+        }
+        return badgeClass;
+    };
+
+
     const columns = [
         {
             name: "Subscription Type",
-            selector: row => row.subscription_type_name,
+            cell: (row) => {
+                // Apply the badge class based on subscription_type_name and vendor_count
+                const badgeClass = getBadgeClass(row.subscription_type_name, row.vendor_count);
+                return (
+                    <span className={badgeClass}>
+                        {row.subscription_type_name || "Unknown Type"}
+                    </span>
+                );
+            },
             sortable: true,
         },
         {
             name: "Vendor Count",
-            selector: row => row.vendor_count,
+            selector: (row) => row.vendor_count,
             sortable: true,
         },
     ];
