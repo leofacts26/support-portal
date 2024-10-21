@@ -65,7 +65,7 @@ const DashboardCityCount = () => {
       sortable: true,
     },
     {
-      name: "Vendor Count",
+      name: "Caterer Count",
       cell: (row) => (
         <span className={getBadgeClass("caterer", row.vendor_count)}>
           {row.vendor_count}
