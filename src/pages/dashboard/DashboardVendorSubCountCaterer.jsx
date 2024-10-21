@@ -48,7 +48,7 @@ const DashboardVendorSubCountCaterer = () => {
                 badgeClass += count > 0 ? "text-bg-normal-bage" : "text-bg-normal-bage";
                 break;
             case "popular":
-                badgeClass += count > 0 ? "text-bg-default-bage" : "text-bg-default-bage";
+                badgeClass += count > 0 ? "text-bg-popular-bage" : "text-bg-popular-bage";
                 break;
             default:
                 badgeClass += "text-bg-popular-bage";

@@ -45,14 +45,14 @@ const DashboardVendorSubCountTiffin = () => {
      const getBadgeClass = (type, count) => {
         let badgeClass = "badge ";
         switch (type) {
-            case "Normal":
+            case "normal":
                 badgeClass += count > 0 ? "text-bg-normal-bage" : "text-bg-normal-bage";
                 break;
             case "popular":
-                badgeClass += count > 0 ? "text-bg-default-bage" : "text-bg-default-bage";
+                badgeClass += count > 0 ? "text-bg-popular-bage" : "text-bg-popular-bage";
                 break;
             case "recomended":
-                badgeClass += count > 0 ? "text-bg-branded-bage" : "text-bg-branded-bage";
+                badgeClass += count > 0 ? "text-bg-default-bage" : "text-bg-default-bage";
                 break;
             default:
                 badgeClass += "text-bg-popular-bage";
