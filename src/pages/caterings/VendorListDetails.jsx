@@ -60,7 +60,7 @@ const VendorListDetails = () => {
   const companyId = queryParams.get('company_id');
 
   const dispatch = useDispatch()
-  const { cateringVendors, cateringVendorsDetail,  isLoading } = useSelector((state) => state.catering)
+  const { cateringVendors, cateringVendorsDetail, isLoading } = useSelector((state) => state.catering)
   const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, cuisines, occasions, branches, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
   const { cuisineList, settingsInfo } = useSelector((state) => state.catering)
 
@@ -374,18 +374,71 @@ const VendorListDetails = () => {
             </thead>
             <tbody>
               {subscriptionDetails && subscriptionDetails.length > 0 ? (
-                subscriptionDetails.map((subscription, index) => (
-                  <tr key={index}>
-                    <td>
-                      <span className={badgeClass}>
-                        {subscription?.subscription_type_display ? subscription.subscription_type_display : 'N/A'}
-                      </span>
-                    </td>
-                    <td>{cateringVendorsDetail?.plan_type ? cateringVendorsDetail.plan_type : 'N/A'}</td>
-                    <td>{subscription?.subscriptionStartDate ? new Date(subscription.subscriptionStartDate).toLocaleDateString() : 'N/A'}</td>
-                    <td>{subscription?.subscriptionExpiryDate ? new Date(subscription.subscriptionExpiryDate).toLocaleDateString() : 'N/A'}</td>
-                  </tr>
-                ))
+                subscriptionDetails.map((subscription, index) => {
+                  const subscriptionType = subscription?.subscription_type_display
+                    ? subscription.subscription_type_display.toLowerCase() // Convert to lowercase for consistency
+                    : "";
+
+                  // Determine the appropriate badge class based on subscription type
+                  let badgeClass = "badge mt-n1";
+                  switch (subscriptionType) {
+                    case "popular":
+                      badgeClass += " text-bg-popular-bage";
+                      break;
+                    case "normal":
+                      badgeClass += " text-bg-normal-bage";
+                      break;
+                    case "branded":
+                      badgeClass += " text-bg-branded-bage";
+                      break;
+                    default:
+                      badgeClass += " text-bg-default-bage";
+                      break;
+                  }
+
+                  // Plan Type Handling
+                  const planType = subscription?.subscription_pattern ? subscription?.subscription_pattern.toLowerCase() : "";
+                  let planBadgeClass = "badge mt-n1";
+                  switch (planType) {
+                    case "subscription-monthly":
+                      planBadgeClass += " monthly-tag";
+                      break;
+                    case "one_time_monthly":
+                      planBadgeClass += " monthly-tag";
+                      break;
+                    case "one_time_yearly":
+                      planBadgeClass += " annually-tag";
+                      break;
+                    default:
+                      planBadgeClass += " text-bg-default-bage";
+                      break;
+                  }
+
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <span className={badgeClass}>
+                          {subscription?.subscription_type_display ? subscription.subscription_type_display : "N/A"}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={planBadgeClass}>
+                          {subscription?.subscription_pattern ? subscription.subscription_pattern : "N/A"}
+                        </span>
+                      </td>
+                      <td>
+                        {subscription?.subscriptionStartDate
+                          ? new Date(subscription.subscriptionStartDate).toLocaleDateString()
+                          : "N/A"}
+                      </td>
+                      <td>
+                        {subscription?.subscriptionExpiryDate
+                          ? new Date(subscription.subscriptionExpiryDate).toLocaleDateString()
+                          : "N/A"}
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
                   <td colSpan="4">No Subscription Details Available</td>

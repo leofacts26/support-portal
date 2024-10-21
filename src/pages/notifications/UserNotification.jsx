@@ -6,6 +6,7 @@ import { createUserNotification, fetchBroadcastNotificationData, fetchUserNotifi
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalSearch from '../../components/common/GlobalSearch';
 import { tableCustomStyles } from '../../components/tableCustomStyles';
+import Select from 'react-select';
 
 
 
@@ -123,6 +124,14 @@ const UserNotification = () => {
     // },
   ];
 
+
+  // Prepare options from vendorNotificationList
+  const receiverOptions = userNotificationList?.map((item) => ({
+    value: item.id,
+    label: item.phone_number,
+  }));
+
+
   const onHandleSubmit = async (e) => {
     e.preventDefault();
     const { title, message, receiverId } = values;
@@ -155,7 +164,7 @@ const UserNotification = () => {
         <hr />
 
 
-     
+
 
         <div className="card">
           {/* Search */}
@@ -184,20 +193,16 @@ const UserNotification = () => {
           <Modal.Body>
 
             <div>
-              <label htmlFor="type" className="form-label">Receiver ID</label>
-              <select
-                className="form-select"
-                name="receiverId"
-                value={values.receiverId}
-                onChange={handleChange}
-              >
-                <option value="">Select Receiver ID</option>
-                {userNotificationList?.map((item) => (
-                  <option value={item.id} key={item.id}>
-                    {item.phone_number}
-                  </option>
-                ))}
-              </select>
+              <label htmlFor="receiverId" className="form-label">User Phonenumber</label>
+              <Select
+                options={receiverOptions}
+                onChange={(selectedOption) =>
+                  handleChange({ target: { name: 'receiverId', value: selectedOption ? selectedOption.value : '' } })
+                }
+                placeholder="User Phonenumber"
+                isClearable
+                isSearchable
+              />
             </div>
 
 

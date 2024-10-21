@@ -51,6 +51,7 @@ const VendorNotification = () => {
         created_at: broadcast?.created_at,
         type: broadcast?.type,
         vendor_service_name: broadcast?.vendor_service_name,
+        company_id: broadcast?.company_id,
       }));
       setData(formattedData);
       setFilteredData(formattedData);
@@ -70,6 +71,7 @@ const VendorNotification = () => {
         String(row?.title).toLowerCase().includes(searchValue) ||
         String(row?.message).toLowerCase().includes(searchValue) ||
         String(row?.type).toLowerCase().includes(searchValue) ||
+        String(row?.company_id).toLowerCase().includes(searchValue) ||
         String(row?.vendor_service_name).toLowerCase().includes(searchValue) ||
         String(row?.created_at).toLowerCase().includes(searchValue)
       );
@@ -81,6 +83,11 @@ const VendorNotification = () => {
     {
       name: "vendor ID",
       selector: row => row.vendorID,
+      sortable: true,
+    },
+    {
+      name: "Company ID",
+      selector: row => row.company_id,
       sortable: true,
     },
     {
@@ -144,11 +151,13 @@ const VendorNotification = () => {
     // handleClose()
   }
 
-  // Prepare options from vendorNotificationList
-  const receiverOptions = vendorNotificationList?.map((item) => ({
-    value: item.receiver_id,
-    label: item.receiver_id,
-  }));
+  const receiverOptions = vendorNotificationList
+    ?.filter((item) => item && item.receiver_id && item.company_id) 
+    .map((item) => ({
+      value: item.receiver_id, 
+      label: item.company_id,  
+    }));
+
 
 
   return (

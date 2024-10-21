@@ -58,7 +58,7 @@ const VendorList = () => {
         vendor_service_name: catering?.vendor_service_name || 'N/A',
         phone_number: catering?.phone_number || 'N?A',
         city: catering?.city || 'N/A',
-        plan_type_name: catering?.plan_type_name || "N/A",
+        plan_type_name: catering?.subscription_pattern_text || "N/A",
         subscription_text: catering?.subscription_text || "N/A",
         subscription_subscription_start_date_text: new Date(catering?.subscription_subscription_start_date_text).toLocaleDateString(),
         subscription_subscription_end_date_text: new Date(catering?.subscription_subscription_end_date_text).toLocaleDateString(),
@@ -163,19 +163,22 @@ const VendorList = () => {
       cell: (row) => {
         let badgeClass = "badge mt-n1";
         const planType = row.plan_type_name ? row.plan_type_name.toLowerCase() : "";
-
+    
         switch (planType) {
-          case "monthly":
-            badgeClass += " text-bg-monthly-bage";
+          case "subscription-monthly":
+            badgeClass += " monthly-tag";
             break;
-          case "yearly":
-            badgeClass += " text-bg-yearly-bage";
+          case "one_time_monthly":
+            badgeClass += " monthly-tag";
+            break;
+          case "one_time_yearly":
+            badgeClass += " annually-tag";
             break;
           default:
             badgeClass += " text-bg-default-bage";
             break;
         }
-
+    
         return (
           <span className={badgeClass}>
             {row.plan_type_name || "Unknown Plan"}
@@ -183,13 +186,20 @@ const VendorList = () => {
         );
       },
       sortable: true,
-    },
+      sortFunction: (a, b) => {
+        const textA = a.plan_type_name && a.plan_type_name.toLowerCase() !== "na" ? a.plan_type_name : ""; 
+        const textB = b.plan_type_name && b.plan_type_name.toLowerCase() !== "na" ? b.plan_type_name : "";
+    
+        // Case-insensitive comparison
+        return textA.toLowerCase().localeCompare(textB.toLowerCase());
+      },
+    },    
     {
       name: "Subscription",
       cell: (row) => {
         let badgeClass = "badge mt-n1";
         const subscriptionType = row.subscription_text ? row.subscription_text.toLowerCase() : "";
-
+    
         switch (subscriptionType) {
           case "popular":
             badgeClass += " text-bg-popular-bage";
@@ -204,7 +214,7 @@ const VendorList = () => {
             badgeClass += " text-bg-default-bage";
             break;
         }
-
+    
         return (
           <span className={badgeClass} style={{ width: '100px' }}>
             {row.subscription_text || "Unknown Subscription"}
@@ -212,7 +222,14 @@ const VendorList = () => {
         );
       },
       sortable: true,
-    },
+      sortFunction: (a, b) => {
+        const textA = a.subscription_text && a.subscription_text.toLowerCase() !== "na" ? a.subscription_text : ""; 
+        const textB = b.subscription_text && b.subscription_text.toLowerCase() !== "na" ? b.subscription_text : "";
+    
+        // Case-insensitive comparison
+        return textA.toLowerCase().localeCompare(textB.toLowerCase());
+      },
+    },    
     {
       name: "Start Date",
       selector: row => {
@@ -295,7 +312,7 @@ const VendorList = () => {
           {row?.company_id ? (
             <Link
               onClick={() => onHandleCateringDetails(row)}
-              to={`/tiffin-list/${row.id}?company_id=${row.company_id}`}
+              to={`/vendor-list/${row.id}?company_id=${row.company_id}`}
               className='text-primary cursor-pointer'
             >
               View

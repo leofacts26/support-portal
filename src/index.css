@@ -29,44 +29,56 @@ input:focus {
   font-weight: 400;
 }
 
-.heading{
+.heading {
   font-size: 1.4em;
   text-transform: capitalize;
 }
 
-.bg-dark-select{
+.bg-dark-select {
   background-color: #000 !important;
 }
 
-.vd-detail-headings{
-   margin-bottom: 5px;
-   font-size: 18px;
-   color: #656464;
+.vd-detail-headings {
+  margin-bottom: 5px;
+  font-size: 18px;
+  color: #656464;
 }
 
-.vd-ft{
+.vd-ft {
   display: flex;
 }
 
 .cuisine-item {
-  margin-right: 0.5rem; 
+  margin-right: 0.5rem;
   margin-top: 10px;
 }
 
 .higher-zindex {
-  z-index: 1050 !important; /* Set a higher z-index */
+  z-index: 1050 !important;
+  /* Set a higher z-index */
 }
 
 
 .text-bg-normal-bage {
   background-color: #d9822b !important;
 }
+
 .text-bg-popular-bage {
+  background-color: #459412 !important;}
+
+.text-bg-branded-bage {
   background-color: #8e11a5 !important;
 }
-.text-bg-branded-bage {
-  background-color: #459412 !important;
-}
+
 .text-bg-default-bage {
   background-color: #94121f !important;
+}
+
+
+.annually-tag {
+  background-color: #2c7be5 !important;
+}
+
+.monthly-tag {
+  background-color: darkgreen !important;
 }
