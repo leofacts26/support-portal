@@ -61,14 +61,14 @@ const DashboardVendorSubCountCaterer = () => {
             <div className="card">
                 {/* Search Input */}
                 <GlobalSearch handleSearch={handleSearch} />
-            <DataTable
-                columns={columns}
-                data={filteredData}
-                paginationRowsPerPageOptions={[50, 100, 300]}
-                paginationPerPage="50"
-                fixedHeader
-                pagination
-            />
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    paginationRowsPerPageOptions={[50, 100, 300]}
+                    paginationPerPage="50"
+                    fixedHeader
+                    pagination
+                />
             </div>
         </div>
     );

@@ -42,7 +42,7 @@ const Subscription = () => {
   const [searchValues, setSearchValues] = useState({
     company_id: "",
     vendor_service_name: "",
-    vendor_type: "",
+    vendor_id: "",
     subscription_pattern: "",
     sub_amount: "",
     discount_amount: "",
@@ -77,7 +77,7 @@ const Subscription = () => {
       const formattedData = subscriptionList.map((subscription) => ({
         company_id: subscription?.company_id,
         vendor_service_name: subscription?.vendor_service_name,
-        vendor_type: subscription?.vendor_id,
+        vendor_id: subscription?.vendor_id,
         subscription_pattern: subscription?.subscription_pattern,
         sub_amount: subscription?.sub_amount,
         discount_amount: subscription?.discount_amount,
@@ -184,7 +184,7 @@ const Subscription = () => {
       name: 'Vendor Type',
       cell: (row) => {
         let badgeClass = "badge mt-n1"; // Common badge class
-        const vendorType = row.vendor_type ? row.vendor_type.toLowerCase() : ""; // Ensure vendor type is lowercase
+        const vendorType = row.vendor_id ? row.vendor_id.toLowerCase() : ""; // Use vendor_id for comparison
 
         // Switch case to assign different background classes
         switch (vendorType) {
@@ -201,17 +201,24 @@ const Subscription = () => {
 
         return (
           <span className={badgeClass}>
-            {row.vendor_type || "Unknown Vendor"}
+            {row.vendor_id || "Unknown Vendor"}
           </span>
         );
       },
       sortable: true,
+      sortFunction: (a, b) => {
+        const typeA = a.vendor_id || ""; // Handle null or undefined values
+        const typeB = b.vendor_id || "";
+
+        // Sort based on vendor_type_name, ignoring case
+        return typeA.toLowerCase().localeCompare(typeB.toLowerCase());
+      },
     },
     {
       name: 'Subscription Pattern',
       selector: (row) => row.subscription_pattern,
       sortable: true,
-       width: '200px'
+      width: '200px'
     },
     {
       name: 'Sub Amount',
@@ -233,7 +240,7 @@ const Subscription = () => {
       cell: (row) => {
         let badgeClass = "badge mt-n1"; // Common badge class
         const status = row.status ? row.status.toLowerCase() : ""; // Ensure status is lowercase
-
+    
         // Switch case to assign different background classes based on status
         switch (status) {
           case 'active':
@@ -249,7 +256,7 @@ const Subscription = () => {
             badgeClass += " text-bg-popular-bage"; // Default class for unknown statuses
             break;
         }
-
+    
         return (
           <span className={badgeClass}>
             {row.status || "Unknown Status"}
@@ -257,7 +264,14 @@ const Subscription = () => {
         );
       },
       sortable: true,
-    },
+      sortFunction: (a, b) => {
+        const statusA = a.status ? a.status.toLowerCase() : ""; // Handle null or undefined values
+        const statusB = b.status ? b.status.toLowerCase() : "";
+    
+        // Sort based on status, ignoring case
+        return statusA.localeCompare(statusB);
+      },
+    },    
     {
       name: "Start Date",
       selector: row => {
@@ -340,8 +354,13 @@ const Subscription = () => {
 
       // Loop through each column and get the value using the selector function
       columns.forEach((col) => {
-        formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
+        if (col.name !== "View" && col.name !== "Cancel") {
+          formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
+        }
       });
+
+      formattedRow['Vendor Type'] = row.vendor_id ? row.vendor_id : "Unknown Vendor Type"; // Add vendor type
+      formattedRow['Status'] = row.status ? row.status : "Unknown Status"; // Add status
 
       return formattedRow;
     });
@@ -391,8 +410,8 @@ const Subscription = () => {
               <div className="col-lg-3 mb-2">
                 <input
                   type="text"
-                  value={searchValues.vendor_type}
-                  onChange={(e) => handleSearch("vendor_type", e.target.value)}
+                  value={searchValues.vendor_id}
+                  onChange={(e) => handleSearch("vendor_id", e.target.value)}
                   placeholder="Vendor Type"
                   className="form-control"
                 />
@@ -505,7 +524,7 @@ const Subscription = () => {
               <h4 className="text-center">Subscription ID: {SubscribeModalData?.id}</h4>
               <p><strong>Company ID:</strong> {SubscribeModalData?.company_id}</p>
               <p><strong>Vendor Service Name:</strong> {SubscribeModalData?.vendor_service_name}</p>
-              <p><strong>Vendor Type:</strong> {SubscribeModalData?.vendor_type}</p>
+              <p><strong>Vendor Type:</strong> {SubscribeModalData?.vendor_id}</p>
               <p><strong>Subscription Pattern:</strong> {SubscribeModalData?.subscription_pattern}</p>
               <p><strong>Start Date:</strong> {new Date(SubscribeModalData?.created_at).toLocaleDateString()}</p>
               <p><strong>End Date:</strong> {new Date(SubscribeModalData?.end_date).toLocaleDateString()}</p>

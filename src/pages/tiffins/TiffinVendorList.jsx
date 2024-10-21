@@ -336,8 +336,14 @@ const TiffinVendorList = () => {
 
       // Loop through each column and get the value using the selector function
       columns.forEach((col) => {
-        formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
+        if (col.name !== "Details") {
+          formattedRow[col.name] = col.selector ? col.selector(row) : row[col.name];
+        }
       });
+
+      formattedRow['Plan Type'] = row.plan_type_name ? row.plan_type_name : "Unknown Vendor Type"; // Add vendor type
+      formattedRow['Subscription'] = row.subscription_text ? row.subscription_text : "Unknown Status"; // Add status
+      formattedRow['Is Active'] = row.final_status ? row.final_status : "Unknown Status"; // Add status
 
       return formattedRow;
     });

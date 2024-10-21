@@ -7,6 +7,7 @@ import GlobalSearch from '../../components/common/GlobalSearch';
 import { fetchAdminDashboardAreaCount } from '../../features/dashboardSlice';
 
 
+
 const DashboardAreaCountChart = () => {
   const dispatch = useDispatch();
   const { dashboardAreaCount } = useSelector((state) => state.dashboardSlice);

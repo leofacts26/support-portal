@@ -460,7 +460,7 @@ const VendorListDetails = () => {
               <thead>
                 <tr>
                   <th style={{ fontSize: '10px' }}>vendor_service_name</th>
-                  <th style={{ fontSize: '10px' }}>vendor_type</th>
+                  {/* <th style={{ fontSize: '10px' }}>vendor_type</th> */}
                   <th style={{ fontSize: '10px' }}>business_email</th>
                   <th style={{ fontSize: '10px' }}>business_phone_number</th>
                   <th style={{ fontSize: '10px' }}>phone_number</th>
@@ -470,7 +470,7 @@ const VendorListDetails = () => {
               <tbody>
                 <tr>
                   <td>{cateringVendorsDetail?.vendor_service_name ? cateringVendorsDetail?.vendor_service_name : 'N/A'}</td>
-                  <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td>
+                  {/* <td>{cateringVendorsDetail?.vendor_type ? cateringVendorsDetail?.vendor_type : 'N/A'}</td> */}
                   <td>{cateringVendorsDetail?.business_email ? cateringVendorsDetail?.business_email : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.business_phone_number ? cateringVendorsDetail?.business_phone_number : 'N/A'}</td>
                   <td>{cateringVendorsDetail?.phone_number ? cateringVendorsDetail?.phone_number : 'N/A'}</td>
