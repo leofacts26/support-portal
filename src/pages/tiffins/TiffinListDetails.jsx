@@ -376,9 +376,9 @@ const TiffinListDetails = () => {
             <tr>
               {/* Pan Card */}
               <td>
-                <p>{cateringVendorsDetail?.pan_number}</p>
-                {settingsInfo?.["vendor-encp"]?.[0]?.image_name?.[0]?.large ? (
-                  <a href={settingsInfo["vendor-encp"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                <p>{cateringVendorsDetail?.pan_number || 'N/A'}</p>
+                {settingsInfo?.gallery_images?.["vendor-encp"]?.[0]?.image_name?.[0]?.large ? (
+                  <a href={settingsInfo.gallery_images["vendor-encp"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                     View Pan Card
                   </a>
                 ) : "N/A"}
@@ -386,9 +386,9 @@ const TiffinListDetails = () => {
 
               {/* Aadhar Card Front */}
               <td>
-                <p>{cateringVendorsDetail?.aadhar_card_number}</p>
-                {settingsInfo?.["vendor-enca"]?.[0]?.image_name?.[0]?.large ? (
-                  <a href={settingsInfo["vendor-enca"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                <p>{cateringVendorsDetail?.aadhar_card_number || 'N/A'}</p>
+                {settingsInfo?.gallery_images?.["vendor-enca"]?.[0]?.image_name?.[0]?.large ? (
+                  <a href={settingsInfo.gallery_images["vendor-enca"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                     View Aadhar (Front)
                   </a>
                 ) : "N/A"}
@@ -396,29 +396,30 @@ const TiffinListDetails = () => {
 
               {/* Aadhar Card Back */}
               <td>
-                {settingsInfo?.["vendor-enca-back"]?.[0]?.image_name?.[0]?.large ? (
-                  <a href={settingsInfo["vendor-enca-back"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                {settingsInfo?.gallery_images?.["vendor-enca-back"]?.[0]?.image_name?.[0]?.large ? (
+                  <a href={settingsInfo.gallery_images["vendor-enca-back"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
                     View Aadhar (Back)
                   </a>
                 ) : "N/A"}
               </td>
 
-              {/* Fssai Licence */}
+              {/* FSSAI License */}
               <td>
-                <p>{cateringVendorsDetail?.fssai_number}</p>
-                {settingsInfo?.["vendor-encf"]?.[0]?.image_name?.[0]?.large ? (
-                  <a href={settingsInfo["vendor-encf"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
-                    View Fssai Licence
+                <p>{cateringVendorsDetail?.fssai_number || 'N/A'}</p>
+                {settingsInfo?.gallery_images?.["vendor-encf"]?.[0]?.image_name?.[0]?.large ? (
+                  <a href={settingsInfo.gallery_images["vendor-encf"][0].image_name[0].large} target="_blank" rel="noopener noreferrer">
+                    View FSSAI License
                   </a>
                 ) : "N/A"}
               </td>
 
               {/* GST Certificate */}
               <td>
-                {settingsInfo?.gstin_number ? settingsInfo.gstin_number : 'N/A'}
+                <p>{cateringVendorsDetail?.gstin_number || 'N/A'}</p>
               </td>
             </tr>
           </tbody>
+
         </Table>
       </div>
       <hr />
