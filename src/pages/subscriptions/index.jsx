@@ -244,6 +244,9 @@ const Subscription = () => {
         // Switch case to assign different background classes based on status
         switch (status) {
           case 'active':
+            badgeClass += " text-bg-popular-bage";
+            break;
+          case 'pending':
             badgeClass += " text-bg-branded-bage";
             break;
           case 'queued':

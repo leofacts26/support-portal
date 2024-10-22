@@ -278,7 +278,7 @@ const VendorList = () => {
 
         switch (row.final_status.toLowerCase()) {
           case "yes":
-            badgeClass += " text-bg-branded-bage";
+            badgeClass += " text-bg-popular-bage";
             break;
           case "no":
             badgeClass += " text-bg-default-bage";

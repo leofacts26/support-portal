@@ -324,7 +324,8 @@ const TiffinListDetails = () => {
             <tr>
               <th style={{ fontSize: '10px' }}>Working Since</th>
               <th style={{ fontSize: '10px' }}>Total Staffs</th>
-              <th style={{ fontSize: '10px' }}>Work Hours</th>
+              <th style={{ fontSize: '10px' }}>Work Hours (Start)</th>
+              <th style={{ fontSize: '10px' }}>Work Hours (End)</th>
               <th style={{ fontSize: '10px' }}>Location Link</th>
               <th style={{ fontSize: '10px' }}>Other Branches</th>
             </tr>
@@ -333,7 +334,8 @@ const TiffinListDetails = () => {
             <tr>
               <td>{cateringVendorsDetail?.working_since ? cateringVendorsDetail?.working_since : 'N/A'}</td>
               <td>{cateringVendorsDetail?.total_staffs_approx ? cateringVendorsDetail?.total_staffs_approx : 'N/A'}</td>
-              <td>{cateringVendorsDetail?.working_days_hours ? cateringVendorsDetail?.working_days_hours : 'N/A'}</td>
+              <td>{cateringVendorsDetail?.start_day ? cateringVendorsDetail?.start_day + ' ' + cateringVendorsDetail?.start_time : 'N/A'}</td>
+              <td>{cateringVendorsDetail?.end_day ? cateringVendorsDetail?.end_day + ' ' + cateringVendorsDetail?.end_time : 'N/A'}</td>
               <td>
                 {cateringVendorsDetail?.latitude && cateringVendorsDetail?.longitude ? (
                   <a
