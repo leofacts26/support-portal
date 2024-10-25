@@ -367,61 +367,10 @@ const TiffinVendorList = () => {
         <hr />
 
 
-        {/* Date filter */}
-        {/* <div className="row d-flex justify-content-between mb-4"> */}
-
-        {/* <div className="row d-flex justify-content-between mb-4">
-          <div className="col-lg-6">
-            <div className=" d-flex justify-content-between">
-              <div>
-                <label className='me-2'>Start Date</label>
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  showYearDropdown
-                  scrollableYearDropdown
-                  yearDropdownItemNumber={50}
-                  placeholderText="Select start date"
-                  dateFormat="dd/MM/yyyy"
-                  className="form-control"
-                  popperClassName="higher-zindex"
-                />
-              </div>
-              <div className="">
-                <label className='me-2'>End Date</label>
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  showYearDropdown
-                  scrollableYearDropdown
-                  yearDropdownItemNumber={50}
-                  placeholderText="Select end date"
-                  dateFormat="dd/MM/yyyy"
-                  className="form-control"
-                  popperClassName="higher-zindex"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-6">
-            <div className="d-flex justify-content-end">
-              <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
-                Export
-              </Button>
-            </div>
-          </div>
-
-        </div>
-
-        <hr /> */}
-
-
-
         {/* </div> */}
 
         <div className="card">
-          {/* <GlobalSearch handleSearch={handleSearch} /> */}
+           <GlobalSearch handleSearch={handleSearch} /> 
 
           {/* Add a single row for column-based searches */}
           <div className="table-search-row mb-0">

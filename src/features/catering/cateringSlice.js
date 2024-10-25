@@ -11,7 +11,25 @@ const initialState = {
     cateringFoodTypes: [],
     cuisineList: [],
     settingsInfo: [],
+    vandorExportList: []
 }
+
+export const fetchCateringVendorsExport = createAsyncThunk(
+    'catering/fetchCateringVendorsExport',
+    async (type, thunkAPI) => {
+        const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+        try {
+            const response = await api.get(`${BASE_URL}/admin-list-vendors-export?vendor_type=${type}&current_page=1&limit=100000`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
 
 export const fetchCateringVendors = createAsyncThunk(
     'catering/fetchCateringVendors',
@@ -263,6 +281,18 @@ export const cateringSlice = createSlice({
                 state.settingsInfo = payload;
             })
             .addCase(fetchGetVendorSettingsInfo.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                // toast.error(datavalidationerror(payload));
+            })
+            // fetchCateringVendorsExport 
+            .addCase(fetchCateringVendorsExport.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchCateringVendorsExport.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.vandorExportList = payload;
+            })
+            .addCase(fetchCateringVendorsExport.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 // toast.error(datavalidationerror(payload));
             })

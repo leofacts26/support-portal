@@ -47,6 +47,8 @@ import Social from "./pages/homepage/Social";
 import SingleVendorDiscounts from "./pages/discounts/SingleVendorDiscounts";
 import ListBenifits from "./pages/subscriptions/ListBenifits";
 import ListBenifitsTiffin from "./pages/subscriptions/ListBenifitsTiffin";
+import VendorListExport from "./pages/caterings/VendorListExport";
+import TiffinListExport from "./pages/tiffins/TiffinListExport";
 
 function App() {
   return (
@@ -65,6 +67,7 @@ function App() {
 
           {/* Caterings */}
           <Route path="/vendor-list" element={<VendorList />} />
+          <Route path="/vendor-list-export" element={<VendorListExport />} />
           <Route path="/vendor-list/:id" element={<VendorListDetails />} />
           <Route path="/cuisines" element={<Cuisines />} />
           <Route path="/occasions" element={<Occasions />} />
@@ -74,6 +77,7 @@ function App() {
 
           {/* Tiffins */}
           <Route path="/tiffin-vendor-list" element={<TiffinVendorList />} />
+          <Route path="/tiffin-list-export" element={<TiffinListExport />} />
           <Route path="/tiffin-list/:id" element={<TiffinListDetails />} />
           <Route path="/tiffin-cuisines" element={<TiffinCuisines />} />
           <Route path="/meal-time" element={<MealTime />} />
