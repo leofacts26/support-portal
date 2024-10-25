@@ -3,20 +3,16 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCateringDeletedVendors, fetchCateringVendors, setVendorListId, updateCateringDeletedVendorsStatus } from '../../features/catering/cateringSlice';
 import * as XLSX from "xlsx";
-import useExportData from '../../hooks/useExportData';
 import toast from 'react-hot-toast';
 import Table from 'react-bootstrap/Table';
-import { tableCustomStyles } from '../../components/tableCustomStyles';
-import GlobalSearch from '../../components/common/GlobalSearch';
-import { Link } from 'react-router-dom';
-import { cater_vendor_type, tiffin_vendor_type } from '../../constants';
+import { Form, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css';
 import { format, parse, isValid, compareAsc } from 'date-fns';
-import TiffinDeletedVendor from '../../components/TiffinDeletedVendor';
-
+import useExportData from '../hooks/useExportData';
+import { fetchCateringDeletedVendors, fetchCateringVendors, setVendorListId, updateCateringDeletedVendorsStatus } from '../features/catering/cateringSlice';
+import { tableCustomStyles } from './tableCustomStyles';
 
 
 
@@ -26,16 +22,14 @@ const initialState = {
 }
 
 
-
-const TiffinVendorList = () => {
+const CateringVendorDeletedList = () => {
   const dispatch = useDispatch();
-  const { cateringVendors, isLoading } = useSelector((state) => state.catering);
+  const { vandorDeleteList, isLoading } = useSelector((state) => state.catering);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const { exportToExcel } = useExportData();
   const [values, setValues] = useState(initialState)
   const [editId, setEditId] = useState(null)
-
 
   // State to store search values for each column
   const [searchValues, setSearchValues] = useState({
@@ -62,12 +56,15 @@ const TiffinVendorList = () => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    dispatch(fetchCateringVendors(tiffin_vendor_type));
+    dispatch(fetchCateringDeletedVendors('Caterer'));
   }, [dispatch]);
 
+
+
+
   useEffect(() => {
-    if (cateringVendors) {
-      const formattedData = cateringVendors.map((catering, index) => ({
+    if (vandorDeleteList) {
+      const formattedData = vandorDeleteList.map((catering, index) => ({
         id: catering.id,
         company_id: catering?.company_id,
         vendor_service_name: catering?.vendor_service_name || 'N/A',
@@ -83,7 +80,7 @@ const TiffinVendorList = () => {
       setData(formattedData);
       setFilteredData(formattedData);
     }
-  }, [cateringVendors]);
+  }, [vandorDeleteList]);
 
   // Function to handle date range filtering
   const handleDateFilter = () => {
@@ -301,7 +298,7 @@ const TiffinVendorList = () => {
 
         switch (row.final_status.toLowerCase()) {
           case "yes":
-            badgeClass += " text-bg-branded-bage";
+            badgeClass += " text-bg-popular-bage";
             break;
           case "no":
             badgeClass += " text-bg-default-bage";
@@ -335,7 +332,7 @@ const TiffinVendorList = () => {
           {row?.company_id ? (
             <Link
               onClick={() => onHandleCateringDetails(row)}
-              to={`/tiffin-list/${row.id}?company_id=${row.company_id}`}
+              to={`/vendor-list/${row.id}?company_id=${row.company_id}`}
               className='text-primary cursor-pointer'
             >
               View
@@ -349,6 +346,7 @@ const TiffinVendorList = () => {
       allowOverflow: true,
       button: true,
     },
+
     {
       name: "Action",
       cell: (row) => (
@@ -365,6 +363,14 @@ const TiffinVendorList = () => {
       button: true,
     },
   ];
+
+
+
+  const handleEdit = (data) => {
+    setEditId(data?.id)
+    handleShow();
+  }
+
 
 
   const formatDataForExport = () => {
@@ -388,12 +394,6 @@ const TiffinVendorList = () => {
   };
 
 
-  const handleEdit = (data) => {
-    setEditId(data?.id)
-    handleShow();
-  }
-
-
   const onHandleSubmit = async (e) => {
     e.preventDefault();
     const { is_deleted_by_admin, listing_status } = values;
@@ -405,17 +405,18 @@ const TiffinVendorList = () => {
     }
 
     // console.log(data, "data");
-
+    
 
     if (editId === null) {
     } else {
       await dispatch(updateCateringDeletedVendorsStatus(data))
     }
-    await dispatch(fetchCateringVendors('Tiffin'));
-    await dispatch(fetchCateringDeletedVendors('Tiffin'));
+    await dispatch(fetchCateringVendors('Caterer'));
+    await dispatch(fetchCateringDeletedVendors('Caterer'));
     setValues(initialState)
     handleClose()
   }
+
 
 
   return (
@@ -425,7 +426,7 @@ const TiffinVendorList = () => {
         <div className="row mb-4  me-2">
           <div className="d-flex justify-content-between align-items-center">
             <h1 className="header-title">
-              Total Registered Tiffins - {cateringVendors?.length}
+              Total Inactive Caterer - {vandorDeleteList?.length}
             </h1>
             <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
               Export
@@ -435,10 +436,9 @@ const TiffinVendorList = () => {
         <hr />
 
 
-        {/* </div> */}
 
         <div className="card">
-          <GlobalSearch handleSearch={handleSearch} />
+          {/* <GlobalSearch handleSearch={handleSearch} /> */}
 
           {/* Add a single row for column-based searches */}
           <div className="table-search-row mb-0">
@@ -587,8 +587,6 @@ const TiffinVendorList = () => {
 
       <br />
 
-      <TiffinDeletedVendor />
-
       <Modal centered show={show} onHide={handleClose}>
         <form onSubmit={onHandleSubmit}>
           <Modal.Header closeButton>
@@ -650,8 +648,9 @@ const TiffinVendorList = () => {
           </Modal.Footer>
         </form>
       </Modal>
+
     </>
   );
 };
 
-export default TiffinVendorList;
+export default CateringVendorDeletedList;

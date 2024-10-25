@@ -11,7 +11,8 @@ const initialState = {
     cateringFoodTypes: [],
     cuisineList: [],
     settingsInfo: [],
-    vandorExportList: []
+    vandorExportList: [],
+    vandorDeleteList: []
 }
 
 export const fetchCateringVendorsExport = createAsyncThunk(
@@ -37,6 +38,24 @@ export const fetchCateringVendors = createAsyncThunk(
         const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
         try {
             const response = await api.get(`${BASE_URL}/admin-list-vendors?vendor_type=${type}&current_page=1&limit=100000`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
+export const fetchCateringDeletedVendors = createAsyncThunk(
+    'catering/fetchCateringDeletedVendors',
+    async (type, thunkAPI) => {
+        const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+        try {
+            const response = await api.get(`${BASE_URL}/admin-list-vendors-del?vendor_type=${type}&current_page=1&limit=100`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -191,6 +210,25 @@ export const updateToggleCuisine = createAsyncThunk(
 )
 
 
+export const updateCateringDeletedVendorsStatus = createAsyncThunk(
+    'user/updateCateringDeletedVendorsStatus',
+    async (data, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.post(`${BASE_URL}/admin-update-vendor-status`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            toast.success(successToast(response))
+            // return response?.data?.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
+
 export const cateringSlice = createSlice({
     name: 'catering',
     initialState,
@@ -211,6 +249,18 @@ export const cateringSlice = createSlice({
                 state.cateringVendors = payload;
             })
             .addCase(fetchCateringVendors.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                toast.error(datavalidationerror(payload));
+            })
+            // fetchCateringDeletedVendors 
+            .addCase(fetchCateringDeletedVendors.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchCateringDeletedVendors.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.vandorDeleteList = payload;
+            })
+            .addCase(fetchCateringDeletedVendors.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 toast.error(datavalidationerror(payload));
             })
@@ -293,6 +343,17 @@ export const cateringSlice = createSlice({
                 state.vandorExportList = payload;
             })
             .addCase(fetchCateringVendorsExport.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                // toast.error(datavalidationerror(payload));
+            })
+            // updateCateringDeletedVendorsStatus 
+            .addCase(updateCateringDeletedVendorsStatus.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateCateringDeletedVendorsStatus.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+            })
+            .addCase(updateCateringDeletedVendorsStatus.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 // toast.error(datavalidationerror(payload));
             })

@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCateringVendors, setVendorListId } from '../../features/catering/cateringSlice';
+import { fetchCateringDeletedVendors, fetchCateringVendors, setVendorListId, updateCateringDeletedVendorsStatus } from '../../features/catering/cateringSlice';
 import * as XLSX from "xlsx";
 import useExportData from '../../hooks/useExportData';
 import toast from 'react-hot-toast';
@@ -15,18 +15,26 @@ import { cater_vendor_type, tiffin_vendor_type } from '../../constants';
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css';
 import { format, parse, isValid, compareAsc } from 'date-fns';
+import CateringVendorDeletedList from '../../components/CateringDeletedVendor';
 
+
+const initialState = {
+  is_deleted_by_admin: "1",
+  listing_status: "inactive",
+}
 
 const VendorList = () => {
   const dispatch = useDispatch();
-  const { cateringVendors, cateringVendorsDetail } = useSelector((state) => state.catering);
+  const { cateringVendors, isLoading } = useSelector((state) => state.catering);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const { exportToExcel } = useExportData();
-  const { foodTypes, kitchenTypes, mealTimes, serviceTypes, servingTypes, vendorDetails } = cateringVendorsDetail;
+  const [values, setValues] = useState(initialState)
+  const [editId, setEditId] = useState(null)
 
-   // State to store search values for each column
-   const [searchValues, setSearchValues] = useState({
+
+  // State to store search values for each column
+  const [searchValues, setSearchValues] = useState({
     company_id: "",
     vendor_service_name: "",
     phone_number: "",
@@ -43,7 +51,10 @@ const VendorList = () => {
   const [endDate, setEndDate] = useState(null);
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+    setEditId(null)
+  };
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -132,6 +143,7 @@ const VendorList = () => {
     setFilteredData(newFilteredData);
   };
 
+
   const onHandleCateringDetails = (row) => {
     handleShow();
     dispatch(setVendorListId(row?.id));
@@ -163,7 +175,7 @@ const VendorList = () => {
       cell: (row) => {
         let badgeClass = "badge mt-n1";
         const planType = row.plan_type_name ? row.plan_type_name.toLowerCase() : "";
-    
+
         switch (planType) {
           case "subscription-monthly":
             badgeClass += " monthly-tag";
@@ -178,7 +190,7 @@ const VendorList = () => {
             badgeClass += " text-bg-default-bage";
             break;
         }
-    
+
         return (
           <span className={badgeClass}>
             {row.plan_type_name || "Unknown Plan"}
@@ -187,19 +199,19 @@ const VendorList = () => {
       },
       sortable: true,
       sortFunction: (a, b) => {
-        const textA = a.plan_type_name && a.plan_type_name.toLowerCase() !== "na" ? a.plan_type_name : ""; 
+        const textA = a.plan_type_name && a.plan_type_name.toLowerCase() !== "na" ? a.plan_type_name : "";
         const textB = b.plan_type_name && b.plan_type_name.toLowerCase() !== "na" ? b.plan_type_name : "";
-    
+
         // Case-insensitive comparison
         return textA.toLowerCase().localeCompare(textB.toLowerCase());
       },
-    },    
+    },
     {
       name: "Subscription",
       cell: (row) => {
         let badgeClass = "badge mt-n1";
         const subscriptionType = row.subscription_text ? row.subscription_text.toLowerCase() : "";
-    
+
         switch (subscriptionType) {
           case "popular":
             badgeClass += " text-bg-popular-bage";
@@ -214,7 +226,7 @@ const VendorList = () => {
             badgeClass += " text-bg-default-bage";
             break;
         }
-    
+
         return (
           <span className={badgeClass} style={{ width: '100px' }}>
             {row.subscription_text || "Unknown Subscription"}
@@ -223,13 +235,13 @@ const VendorList = () => {
       },
       sortable: true,
       sortFunction: (a, b) => {
-        const textA = a.subscription_text && a.subscription_text.toLowerCase() !== "na" ? a.subscription_text : ""; 
+        const textA = a.subscription_text && a.subscription_text.toLowerCase() !== "na" ? a.subscription_text : "";
         const textB = b.subscription_text && b.subscription_text.toLowerCase() !== "na" ? b.subscription_text : "";
-    
+
         // Case-insensitive comparison
         return textA.toLowerCase().localeCompare(textB.toLowerCase());
       },
-    },    
+    },
     {
       name: "Start Date",
       selector: row => {
@@ -326,6 +338,21 @@ const VendorList = () => {
       allowOverflow: true,
       button: true,
     },
+    {
+      name: "Action",
+      cell: (row) => (
+        <>
+          <button className="btn btn-danger me-1"
+            onClick={() => handleEdit(row)}
+          >
+            Delete
+          </button>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
   ];
 
 
@@ -350,6 +377,46 @@ const VendorList = () => {
   };
 
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
+
+  const handleEdit = (data) => {
+    setEditId(data?.id)
+    handleShow();
+  }
+
+
+
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+    const { is_deleted_by_admin, listing_status } = values;
+
+    const data = {
+      is_deleted_by_admin,
+      listing_status,
+      id: editId
+    }
+
+    console.log(data, "data");
+
+
+    if (editId === null) {
+    } else {
+      await dispatch(updateCateringDeletedVendorsStatus(data))
+    }
+    await dispatch(fetchCateringVendors(cater_vendor_type));
+    await dispatch(fetchCateringDeletedVendors('Caterer'));
+    setValues(initialState)
+    handleClose()
+  }
+
+
+
   return (
     <>
       <div className="container-fluid my-5">
@@ -360,8 +427,8 @@ const VendorList = () => {
               Total Registered Caterer - {cateringVendors?.length}
             </h1>
             <Button variant="primary" onClick={() => exportToExcel(formatDataForExport(), 'vendorlist')}>
-                Export
-              </Button>
+              Export
+            </Button>
           </div>
         </div>
         <hr />
@@ -423,8 +490,8 @@ const VendorList = () => {
         <div className="card">
           {/* <GlobalSearch handleSearch={handleSearch} /> */}
 
-            {/* Add a single row for column-based searches */}
-            <div className="table-search-row mb-0">
+          {/* Add a single row for column-based searches */}
+          <div className="table-search-row mb-0">
             <div className="row p-3">
               <div className="col-lg-3 mb-2">
                 <input
@@ -570,13 +637,68 @@ const VendorList = () => {
 
       <br />
 
-      <Modal centered show={show} onHide={handleClose} size="xl">
-        <Modal.Header closeButton>
-          <Modal.Title>Vendor Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* Vendor details table goes here */}
-        </Modal.Body>
+      <CateringVendorDeletedList />
+
+      <Modal centered show={show} onHide={handleClose}>
+        <form onSubmit={onHandleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title>{editId ? 'Edit Kitchen Type' : 'Create Kitchen Type'}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              {/* Input field for Edit ID */}
+              <div className="col-12 mb-3">
+                <label htmlFor="editId" className="form-label"><b>ID</b></label>
+                <input
+                  disabled
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter ID"
+                  name="editId"
+                  onChange={(e) => setEditId(e.target.value)}
+                  value={editId || ''}
+                />
+              </div>
+
+
+              {/* Select box for is_deleted_by_admin */}
+              <div className="col-12 mb-3">
+                <label htmlFor="is_deleted_by_admin" className="form-label"><b>Deleted by Admin</b></label>
+                <select
+                  className="form-select"
+                  name="is_deleted_by_admin"
+                  onChange={handleChange}
+                  value={values.is_deleted_by_admin}
+                >
+                  <option value="1">Yes</option>
+                  <option value="2">No</option>
+                </select>
+              </div>
+
+              {/* Select box for listing_status */}
+              <div className="col-12 mb-3">
+                <label htmlFor="listing_status" className="form-label"><b>Listing Status</b></label>
+                <select
+                  className="form-select"
+                  name="listing_status"
+                  onChange={handleChange}
+                  value={values.listing_status}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type="submit">
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   );
