@@ -21,7 +21,7 @@ import TiffinDeletedVendor from '../../components/TiffinDeletedVendor';
 
 
 const initialState = {
-  is_deleted_by_admin: "0",
+  is_deleted_by_admin: "1",
   listing_status: "active",
 }
 
@@ -597,7 +597,7 @@ const TiffinVendorList = () => {
           <Modal.Body>
             <div className="row">
               {/* Input field for Edit ID */}
-              <div className="col-12 mb-3">
+              {/* <div className="col-12 mb-3">
                 <label htmlFor="editId" className="form-label"><b>ID</b></label>
                 <input
                   disabled
@@ -608,11 +608,11 @@ const TiffinVendorList = () => {
                   onChange={(e) => setEditId(e.target.value)}
                   value={editId || ''}
                 />
-              </div>
+              </div> */}
 
 
               {/* Select box for is_deleted_by_admin */}
-              <div className="col-12 mb-3">
+              {/* <div className="col-12 mb-3">
                 <label htmlFor="is_deleted_by_admin" className="form-label"><b>Deleted by Admin</b></label>
                 <select
                   className="form-select"
@@ -623,7 +623,7 @@ const TiffinVendorList = () => {
                   <option value="1">Yes</option>
                   <option value="2">No</option>
                 </select>
-              </div>
+              </div> */}
 
               {/* Select box for listing_status */}
               <div className="col-12 mb-3">

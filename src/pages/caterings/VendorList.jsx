@@ -647,7 +647,7 @@ const VendorList = () => {
           <Modal.Body>
             <div className="row">
               {/* Input field for Edit ID */}
-              <div className="col-12 mb-3">
+              {/* <div className="col-12 mb-3">
                 <label htmlFor="editId" className="form-label"><b>ID</b></label>
                 <input
                   disabled
@@ -658,11 +658,11 @@ const VendorList = () => {
                   onChange={(e) => setEditId(e.target.value)}
                   value={editId || ''}
                 />
-              </div>
+              </div> */}
 
 
               {/* Select box for is_deleted_by_admin */}
-              <div className="col-12 mb-3">
+              {/* <div className="col-12 mb-3">
                 <label htmlFor="is_deleted_by_admin" className="form-label"><b>Deleted by Admin</b></label>
                 <select
                   className="form-select"
@@ -673,7 +673,7 @@ const VendorList = () => {
                   <option value="1">Yes</option>
                   <option value="2">No</option>
                 </select>
-              </div>
+              </div> */}
 
               {/* Select box for listing_status */}
               <div className="col-12 mb-3">
@@ -684,8 +684,8 @@ const VendorList = () => {
                   onChange={handleChange}
                   value={values.listing_status}
                 >
-                  <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
+                  <option value="active">Active</option>
                 </select>
               </div>
             </div>
