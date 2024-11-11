@@ -1,20 +1,56 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { api, BASE_URL } from '../../api/apiConfig';
-import { datavalidationerror, successToast } from '../../utils';
+import { api, BASE_URL } from '../api/apiConfig';
+import { datavalidationerror, successToast } from '../utils';
 import toast from 'react-hot-toast';
-import { cater_vendor_type, tiffin_vendor_type } from '../../constants';
 
 const initialState = {
   isLoading: true,
-  couponsList: [],
+  supportSharedLinksList: []
 }
 
-export const fetchCouponList = createAsyncThunk(
-  'catering/fetchCouponList',
+
+export const fetchSupportSharedLinksData = createAsyncThunk(
+  'shareLinks/fetchSupportSharedLinksData',
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.get(`${BASE_URL}/admin-list-coupons?current_page=1&limit=1000`, {
+      const response = await api.get(`${BASE_URL}/support-list-shared-links?current_page=1&limit=3000`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response, "response");
+
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const createSupportshareLinksData = createAsyncThunk(
+  'shareLinks/createSupportshareLinksData',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/support-create-shared-link`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const updateSupportshareLinksData = createAsyncThunk(
+  'shareLinks/updateSupportshareLinksData',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/support-update-shared-link`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,90 +63,56 @@ export const fetchCouponList = createAsyncThunk(
 )
 
 
-export const createCouponList = createAsyncThunk(
-  'user/createCouponList',
-  async (data, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.post(`${BASE_URL}/admin-create-coupon`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response?.data?.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
-    }
-  }
-)
 
 
-
-export const updateCouponList = createAsyncThunk(
-  'user/updateCouponList',
-  async (data, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.post(`${BASE_URL}/admin-update-coupon`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response?.data?.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.msg);
-    }
-  }
-)
-
-
-export const couponSlice = createSlice({
-  name: 'coupons',
+export const shareLinksSlice = createSlice({
+  name: 'shareLinks',
   initialState,
   reducers: {
-
+    // setIsLoading: (state, action) => {
+    //     state.isLoading = action.payload;
+    // },
   },
   extraReducers: (builder) => {
     builder
-      // fetchCouponList 
-      .addCase(fetchCouponList.pending, (state) => {
+      // fetchSupportSharedLinksData 
+      .addCase(fetchSupportSharedLinksData.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchCouponList.fulfilled, (state, { payload }) => {
+      .addCase(fetchSupportSharedLinksData.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.couponsList = payload;
+        state.supportSharedLinksList = payload;
       })
-      .addCase(fetchCouponList.rejected, (state, { payload }) => {
+      .addCase(fetchSupportSharedLinksData.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
-      // createCouponList 
-      .addCase(createCouponList.pending, (state) => {
+      // createSupportshareLinksData 
+      .addCase(createSupportshareLinksData.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createCouponList.fulfilled, (state, { payload }) => {
+      .addCase(createSupportshareLinksData.fulfilled, (state, { payload }) => {
         state.isLoading = false;
       })
-      .addCase(createCouponList.rejected, (state, { payload }) => {
+      .addCase(createSupportshareLinksData.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
-      // updateCouponList 
-      .addCase(updateCouponList.pending, (state) => {
+      // updateSupportshareLinksData 
+      .addCase(updateSupportshareLinksData.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(updateCouponList.fulfilled, (state, { payload }) => {
+      .addCase(updateSupportshareLinksData.fulfilled, (state, { payload }) => {
         state.isLoading = false;
       })
-      .addCase(updateCouponList.rejected, (state, { payload }) => {
+      .addCase(updateSupportshareLinksData.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
-
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { } = couponSlice.actions
+export const { } = shareLinksSlice.actions
 
-export default couponSlice.reducer
+export default shareLinksSlice.reducer

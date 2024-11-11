@@ -17,7 +17,7 @@ export const createUserOtp = createAsyncThunk(
     async (data, thunkAPI) => {
         try {
             const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-            const response = await api.post(`${BASE_URL}/send-admin-user-otp`, data, {
+            const response = await api.post(`${BASE_URL}/send-support-user-otp`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -34,7 +34,7 @@ export const verifyAdminOtp = createAsyncThunk(
     async (data, thunkAPI) => {
         try {
             const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-            const response = await api.post(`${BASE_URL}/verify-admin-user-otp`, data, {
+            const response = await api.post(`${BASE_URL}/verify-support-user-otp`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -52,7 +52,7 @@ export const resendAdminOtp = createAsyncThunk(
     async (data, thunkAPI) => {
         try {
             const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-            const response = await api.post(`${BASE_URL}/resend-admin-user-otp`, data, {
+            const response = await api.post(`${BASE_URL}/resend-support-user-otp`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
