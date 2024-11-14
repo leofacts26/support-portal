@@ -48,6 +48,26 @@ export const fetchVendorShowDetailData = createAsyncThunk(
     }
 )
 
+export const fetchVendorTiffinShowDetailData = createAsyncThunk(
+    'menu/fetchVendorTiffinShowDetailData',
+    async (id, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+            const response = await api.get(`${BASE_URL}/support-update-tiffin-package-details?company_id=${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response?.data?.data;
+        } catch (error) {
+
+
+            toast.error(datavalidationerror(error));
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+)
+
 
 
 
@@ -72,6 +92,16 @@ export const menuSlice = createSlice({
                 state.vendorDetails = payload;
             })
             .addCase(fetchVendorShowDetailData.rejected, (state, { payload }) => {
+                state.isLoading = false;
+            })
+            .addCase(fetchVendorTiffinShowDetailData.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchVendorTiffinShowDetailData.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.vendorDetails = payload;
+            })
+            .addCase(fetchVendorTiffinShowDetailData.rejected, (state, { payload }) => {
                 state.isLoading = false;
             })
             // fetchMenuData 

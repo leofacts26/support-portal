@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { fetchVendorShowDetailData } from "../features/menuSlice"
+import { fetchVendorShowDetailData, fetchVendorTiffinShowDetailData } from "../features/menuSlice"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -8,6 +8,13 @@ import Table from 'react-bootstrap/Table';
 import { Form, FormControl, Button } from 'react-bootstrap';
 import { Spinner } from 'react-bootstrap';
 import LoadingSpinner from "../components/LoadingSpinner";
+import BusinessInformation from "../components/vendor-details/BusinessInformation";
+import Occations from "../components/vendor-details/Occations";
+import { v4 as uuidv4 } from 'uuid';
+import Cuisines from "../components/vendor-details/Cuisines";
+import Packages from "../components/vendor-details/Packages";
+
+
 
 
 const VendorDetails = () => {
@@ -15,11 +22,45 @@ const VendorDetails = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { vendorDetails, isLoading } = useSelector((state) => state.menu)
-  const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, cuisines, occasions, branches, serviceTypes, servingTypes } = vendorDetails;
-  const [searchTerm, setSearchTerm] = useState('');
+  const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, occasions, cuisines, branches, serviceTypes, servingTypes } = vendorDetails;
+  const [searchTerm, setSearchTerm] = useState('748398');
+  const [editTrigger, setEditTrigger] = useState(false);
+
+  console.log(vendorDetails, "vendorDetailsvendorDetails");
 
 
-  console.log(vendorDetails, "vendorDetails");
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    setEditTrigger(prev => !prev);
+    setShow(true)
+  };
+
+
+  const [showOccation, setShowOccation] = useState(false);
+  const handleOccationClose = () => setShowOccation(false);
+  const handleOccationShow = () => {
+    setEditTrigger(prev => !prev);
+    setShowOccation(true)
+  };
+
+
+  const [showCuisines, setShowCuisines] = useState(false);
+  const handleCuisinesClose = () => setShowCuisines(false);
+  const handleCuisinesShow = () => {
+    setEditTrigger(prev => !prev);
+    setShowCuisines(true)
+  };
+
+
+
+  const [showPackages, setShowPackages] = useState(false);
+  const handlePackagesClose = () => setShowPackages(false);
+  const handlePackagesShow = () => {
+    setEditTrigger(prev => !prev);
+    setShowPackages(true)
+  };
 
 
 
@@ -28,13 +69,15 @@ const VendorDetails = () => {
     if (searchTerm.trim() !== '') {
       // Dispatch the action with the searchTerm as an argument
       dispatch(fetchVendorShowDetailData(searchTerm));
+      // if (vendorDetails?.vendor_type === "Caterer") {
+      // } else {
+      //   dispatch(fetchVendorTiffinShowDetailData(searchTerm));
+      // }
     } else {
       // Optional: handle empty search case (e.g., show a message or re-fetch with default data)
       alert("Please enter a search term");
     }
   };
-
-
 
 
 
@@ -68,7 +111,7 @@ const VendorDetails = () => {
 
     <>
       {isLoading ? <div>
-          <LoadingSpinner />
+        <LoadingSpinner />
       </div> : <div className="container-fluid my-5">
 
         <div className="mb-4 cursor-pointer">
@@ -93,12 +136,12 @@ const VendorDetails = () => {
 
 
 
-        <div className="row mx-2">
+        {/* <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Vendor Details</h3>
-            {/* <h3 className='mb-0 text-warning'>Upgrade</h3> */}
-          </div>
-          {/* <Table responsive="xl" className='m-0'>
+            <h3 className='mb-0'>Vendor Details</h3> */}
+        {/* <h3 className='mb-0 text-warning'>Upgrade</h3> */}
+        {/* </div> */}
+        {/* <Table responsive="xl" className='m-0'>
     <thead>
       <tr>
         <th style={{ fontSize: '10px' }}>Vendor ID</th>
@@ -114,8 +157,8 @@ const VendorDetails = () => {
       </tr>
     </tbody>
   </Table> */}
-        </div>
-        <hr />
+        {/* </div>
+        <hr /> */}
 
 
 
@@ -222,180 +265,26 @@ const VendorDetails = () => {
 
 
 
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Business Information</h3>
-            {/* <h3 className='mb-0 text-warning' onClick={handleBusinessProfileEditShow} style={{ cursor: 'pointer' }}>Edit</h3> */}
-          </div>
-          <Table responsive="xl" className='m-0'>
-            <>
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>vendor_service_name</th>
-                  {/* <th style={{ fontSize: '10px' }}>vendor_type</th> */}
-                  <th style={{ fontSize: '10px' }}>business_email</th>
-                  <th style={{ fontSize: '10px' }}>business_phone_number</th>
-                  <th style={{ fontSize: '10px' }}>phone_number</th>
-                  <th style={{ fontSize: '10px' }}>point_of_contact_name</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.vendor_service_name ? vendorDetails?.vendor_service_name : 'N/A'}</td>
-                  {/* <td>{vendorDetails?.vendor_type ? vendorDetails?.vendor_type : 'N/A'}</td> */}
-                  <td>{vendorDetails?.business_email ? vendorDetails?.business_email : 'N/A'}</td>
-                  <td>{vendorDetails?.business_phone_number ? vendorDetails?.business_phone_number : 'N/A'}</td>
-                  <td>{vendorDetails?.phone_number ? vendorDetails?.phone_number : 'N/A'}</td>
-                  <td>{vendorDetails?.point_of_contact_name ? vendorDetails?.point_of_contact_name : 'N/A'}</td>
-                </tr>
-              </tbody>
+        <BusinessInformation vendorDetails={vendorDetails} show={show} handleClose={handleClose} handleShow={handleShow} editTrigger={editTrigger}
+          searchTerm={searchTerm} />
+        <hr />
 
 
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>whatsapp_business_phone_number</th>
-                  {/* <th style={{ fontSize: '10px' }}>about_description</th> */}
-                  <th style={{ fontSize: '10px' }}>facebook_link</th>
-                  <th style={{ fontSize: '10px' }}>instagram_link</th>
-                  <th style={{ fontSize: '10px' }}>twitter_id</th>
-                  <th style={{ fontSize: '10px' }}>website_link</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.whatsapp_business_phone_number ? vendorDetails?.whatsapp_business_phone_number : 'N/A'}</td>
-                  {/* <td>{vendorDetails?.about_description ? vendorDetails?.about_description : 'N/A'}</td> */}
-                  <td>{vendorDetails?.facebook_link ? vendorDetails?.facebook_link : 'N/A'}</td>
-                  <td>{vendorDetails?.instagram_link ? vendorDetails?.instagram_link : 'N/A'}</td>
-                  <td>{vendorDetails?.twitter_id ? vendorDetails?.twitter_id : 'N/A'}</td>
-                  <td>{vendorDetails?.website_link ? vendorDetails?.website_link : 'N/A'}</td>
-                </tr>
-              </tbody>
-
-
-
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>street_name</th>
-                  <th style={{ fontSize: '10px' }}>state</th>
-                  <th style={{ fontSize: '10px' }}>area</th>
-                  <th style={{ fontSize: '10px' }}>latitude</th>
-                  <th style={{ fontSize: '10px' }}>longitude</th>
-                  <th style={{ fontSize: '10px' }}>pincode</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.street_name ? vendorDetails?.street_name : 'N/A'}</td>
-                  <td>{vendorDetails?.state ? vendorDetails?.state : 'N/A'}</td>
-                  <td>{vendorDetails?.area ? vendorDetails?.area : 'N/A'}</td>
-                  <td>{vendorDetails?.latitude ? vendorDetails?.latitude : 'N/A'}</td>
-                  <td>{vendorDetails?.longitude ? vendorDetails?.longitude : 'N/A'}</td>
-                  <td>{vendorDetails?.pincode ? vendorDetails?.pincode : 'N/A'}</td>
-                </tr>
-              </tbody>
-
-
-
-
-
-              <thead>
-                <tr>
-                  <th style={{ fontSize: '10px' }}>city</th>
-                  <th style={{ fontSize: '10px' }}>country</th>
-                  <th style={{ fontSize: '10px' }}>formatted_address</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
-                  <td>{vendorDetails?.country ? vendorDetails?.country : 'N/A'}</td>
-                  <td>{vendorDetails?.formatted_address ? vendorDetails?.formatted_address : 'N/A'}</td>
-                </tr>
-              </tbody>
-            </>
-          </Table>
-        </div>
+        <Packages uid={uuidv4()} handlePackagesClose={handlePackagesClose} handlePackagesShow={handlePackagesShow} showPackages={showPackages}
+          foodTypesList={foodTypes} kitchenTypesList={kitchenTypes} mealTimesList={mealTimes} serviceTypesList={serviceTypes} servingTypesList={servingTypes} vendorDetails={vendorDetails} searchTerm={searchTerm} />
         <hr />
 
 
 
+        {occasions?.filter((item) => item.selected === '1')?.length > 0 && <Occations occasions={occasions} editTrigger={editTrigger} showOccation={showOccation} handleOccationClose={handleOccationClose}
+          handleOccationShow={handleOccationShow} uid={uuidv4()} searchTerm={searchTerm} />}
 
 
 
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className='mb-0'>Culinary Details</h3>
-          </div>
-          <Table responsive="xl" className='m-0'>
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>Food Type</th>
-                <th style={{ fontSize: '10px' }}>serviceTypes</th>
-                <th style={{ fontSize: '10px' }}>servingTypes</th>
-                <th style={{ fontSize: '10px' }}>maximum_capacity</th>
-                <th style={{ fontSize: '10px' }}>minimum_capacity</th>
-                <th style={{ fontSize: '10px' }}>start_price</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  {foodTypes?.length > 0 ? foodTypes?.map(item => item.food_type_name)?.join(', ') : 'N/A'}
-                </td>
-                <td>
-                  {serviceTypes?.length > 0 ? serviceTypes?.map(item => item.service_type_name)?.join(', ') : 'N/A'}
-                </td>
-                <td>
-                  {servingTypes?.length > 0 ? servingTypes?.map(item => item.serving_type_name)?.join(', ') : 'N/A'}
-                </td>
-                <td>{vendorDetails?.maximum_capacity ? vendorDetails?.maximum_capacity : 'N/A'}</td>
-                <td>{vendorDetails?.minimum_capacity ? vendorDetails?.minimum_capacity : 'N/A'}</td>
-                <td>{vendorDetails?.start_price ? vendorDetails?.start_price : 'N/A'}</td>
-              </tr>
-            </tbody>
-          </Table>
-
-          <div className="row mt-4">
-            <div className="text-secondary d-flex justify-content-between">
-              <h4 className='mb-0'> Occastions You Cater</h4>
-            </div>
-            <div className='mt-3'>
-              {occasions && occasions.length > 0
-                ? occasions
-                  .filter((item) => item.selected === '1')
-                  .map((item, index, filteredOccasions) => (
-                    <span key={item.occasion_name} className='cuisine-item'>
-                      {item.occasion_name}
-                      {index < filteredOccasions.length - 1 && ', '}
-                    </span>
-                  ))
-                : 'N/A'}
-            </div>
-
-          </div>
-
-
-          <div className="row mt-4">
-            <div className="text-secondary d-flex justify-content-between">
-              <h4 className='mb-0'>Cuisines You Cater</h4>
-            </div>
-            <div className='mt-3'>
-              {cuisines && cuisines.length > 0
-                ? cuisines
-                  .filter((item) => item.selected === '1')
-                  .map((item, index, filteredCuisines) => (
-                    <span key={item.cuisine_name} className='cuisine-item'>
-                      {item.cuisine_name}
-                      {index < filteredCuisines.length - 1 && ', '}
-                    </span>
-                  ))
-                : 'N/A'}
-            </div>
-          </div>
-        </div>
+        <Cuisines cuisines={cuisines} editTrigger={editTrigger} showCuisines={showCuisines} handleCuisinesClose={handleCuisinesClose}
+          handleCuisinesShow={handleCuisinesShow} uid={uuidv4()} searchTerm={searchTerm}
+        />
         <hr />
-
 
 
 

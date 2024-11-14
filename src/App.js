@@ -6,6 +6,7 @@ import ShareLinks from "./pages/ShareLinks";
 import SupportTickets from "./pages/SupportTickets";
 import Login from "./pages/auth/Login";
 import VendorDetails from "./pages/VendorDetails";
+import Test from "./Test";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/support-list-tickets" element={<SupportTickets />} />
           <Route path="/support-list-share-links" element={<ShareLinks />} />
           <Route path="/support-get-vendor-show-details" element={<VendorDetails />} />
+          <Route path="/test" element={<Test />} />
 
           <Route path="*" element={<NoPage />} />
         </Route>

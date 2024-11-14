@@ -84,3 +84,36 @@ input:focus {
 .monthly-tag {
   background-color: #000000 !important;
 }
+
+
+
+.job-textarea {
+  width: auto !important;
+  height: 150px;
+  border: 1px solid #D2D2D2 !important;
+  /* background: none repeat scroll 0 0 rgba(0, 0, 0, 0.07) !important; */
+  border-image: none !important;
+  border-radius: 6px 6px 6px 6px !important;
+  box-shadow: 0px 0px 11px 2px #4B44D40F inset !important;
+  color: #555555 !important;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-size: 1em !important;
+  line-height: 1.4em !important;
+  padding: 5px 8px !important;
+  transition: background-color 0.2s ease 0s !important;
+}
+
+.job-textarea:focus {
+  background: none repeat scroll 0 0 #FFFFFF !important;
+  outline-width: 0 !important;
+}
+
+.job-textarea {
+  border: 1px solid #ccc !important;
+  transition: border-color 0.3s !important;
+}
+
+.job-textarea:focus,
+.job-textarea:active {
+  border: 2px solid var(--secondary) !important;
+}
