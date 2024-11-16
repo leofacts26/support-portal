@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from "react";
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -21,6 +21,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
+import { api, BASE_URL } from '../../api/apiConfig';
+import toast from 'react-hot-toast';
+import { datavalidationerror, successToast } from '../../utils';
+import { fetchVendorShowDetailData } from '../../features/menuSlice';
 
 
 
@@ -61,10 +65,11 @@ const formatPhoneNumber = (phoneNumber) => {
 
 
 const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, editTrigger, searchTerm }) => {
+  
+  const { token } = useSelector((state) => state.authSlice);
+  const dispatch = useDispatch()
+  
   const [values, setValues] = useState(vendorDetails)
-
-
-
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [startTime, setStartTime] = useState(null);
@@ -74,7 +79,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
   const [manualLocation, setManualLocation] = useState("")
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-
+  const [loading, setLoading] = useState(false)
 
   // validation schema 
   const schema = Yup.object().shape({
@@ -88,90 +93,17 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
   useEffect(() => {
     if (vendorDetails) {
       console.log(vendorDetails, "vendorDetailsvendorDetails");
-      
+
       setStartDate(vendorDetails?.start_day);
       setEndDate(vendorDetails?.end_day);
       setStartTime(vendorDetails.start_time ? dayjs(vendorDetails.start_time, 'HH:mm:ss') : null);
       setEndTime(vendorDetails.end_time ? dayjs(vendorDetails.end_time, 'HH:mm:ss') : null);
     }
   }, [vendorDetails, editTrigger]);
-  
 
 
 
-  const handleSubmit = async (values, resetForm) => {
-    console.log(values, "values 123");
 
-    const {
-      vendor_service_name,
-      vendor_type,
-      street_name,
-      point_of_contact_name,
-      total_staffs_approx,
-      pin_code,
-      about_description,
-      working_since,
-      business_email,
-      business_phone_number,
-      landline_number,
-      whatsapp_business_phone_number,
-      website_link,
-      twitter_id,
-      instagram_link,
-      facebook_link,
-      country,
-      state,
-      city,
-      pincode,
-      place_id,
-      latitude,
-      longitude,
-      area,
-      formatted_address,
-    } = values;
-
-    const newData = {
-      vendor_service_name,
-      vendor_type,
-      street_name,
-      point_of_contact_name,
-      total_staffs_approx,
-      pin_code,
-      about_description,
-      working_since,
-      business_email,
-      business_phone_number,
-      landline_number,
-      whatsapp_business_phone_number,
-      website_link,
-      twitter_id,
-      instagram_link,
-      facebook_link,
-      country,
-      state,
-      city,
-      pincode,
-      place_id,
-      latitude,
-      longitude,
-      area,
-      formatted_address,
-    }
-
-    const formattedStartTime = startTime ? dayjs(startTime).format('hh:mm:ss A') : '';
-    const formattedEndTime = endTime ? dayjs(endTime).format('hh:mm:ss A') : '';
-
-    const data = {
-      ...newData,
-      working_hours_start: formattedStartTime || startTime,
-      working_hours_end: formattedEndTime || endTime,
-      working_days_start: startDate,
-      working_days_end: endDate,
-      company_id: searchTerm
-    }
-
-    console.log(data, "dataddd");
-  }
 
 
 
@@ -256,6 +188,101 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
     setLocationPlaceId(item?.place_id)
   }
   // loc end 
+
+
+  const handleSubmit = async (values, resetForm) => {
+    console.log(values, "values 123");
+    setLoading(true)
+    const {
+      vendor_service_name,
+      vendor_type,
+      street_name,
+      point_of_contact_name,
+      total_staffs_approx,
+      pin_code,
+      about_description,
+      working_since,
+      business_email,
+      business_phone_number,
+      landline_number,
+      whatsapp_business_phone_number,
+      website_link,
+      twitter_id,
+      instagram_link,
+      facebook_link,
+      country,
+      state,
+      city,
+      pincode,
+      place_id,
+      latitude,
+      longitude,
+      area,
+      formatted_address,
+    } = values;
+
+    const newData = {
+      vendor_service_name,
+      vendor_type,
+      street_name,
+      point_of_contact_name,
+      total_staffs_approx,
+      pin_code,
+      about_description,
+      working_since,
+      business_email,
+      business_phone_number,
+      landline_number,
+      whatsapp_business_phone_number,
+      website_link,
+      twitter_id,
+      instagram_link,
+      facebook_link,
+      country,
+      state,
+      city,
+      pincode,
+      place_id,
+      latitude,
+      longitude,
+      area,
+      formatted_address,
+    }
+
+    const formattedStartTime = startTime ? dayjs(startTime).format('hh:mm:ss A') : '';
+    const formattedEndTime = endTime ? dayjs(endTime).format('hh:mm:ss A') : '';
+
+    const data = {
+      ...newData,
+      working_hours_start: formattedStartTime || startTime,
+      working_hours_end: formattedEndTime || endTime,
+      working_days_start: startDate,
+      working_days_end: endDate,
+      company_id: searchTerm
+    }
+
+    console.log(data, "dataddd");
+
+    try {
+      const response = await api.post(`${BASE_URL}/support-update-vendor-business-profile-detailed`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      toast.success(successToast(response))
+      dispatch(fetchVendorShowDetailData(searchTerm));
+    } catch (error) {
+      console.log(error);
+      toast.error(datavalidationerror(error))
+    } finally {
+      setLoading(false)
+      handleClose()
+    }
+  }
+
+
+
+
 
 
 
@@ -352,6 +379,25 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
         </Table>
       </div>
 
+      <div className="row mx-2">
+          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+            <h3 className="mb-0">About</h3>
+          </div>
+          <Table responsive="xl" className="m-0">
+            <thead>
+              <tr>
+                <th style={{ fontSize: '10px' }}>About Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {/* about_description */}
+                <td>{vendorDetails?.about_description ? vendorDetails?.about_description : 'N/A'}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+        <hr />
 
 
 
@@ -875,7 +921,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
 
                   <Stack direction="row" justifyContent="center" className="mt-4">
                     <Button type="submit" variant="contained" className="inquiries-red-btn" >
-                      Update  </Button>
+                    {loading ? 'Loading...' : 'Update'}  </Button>
                   </Stack>
 
                 </form>

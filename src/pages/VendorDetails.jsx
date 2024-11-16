@@ -331,26 +331,7 @@ const VendorDetails = () => {
 
 
 
-        <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className="mb-0">About</h3>
-          </div>
-          <Table responsive="xl" className="m-0">
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>About Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {/* about_description */}
-                <td>{vendorDetails?.about_description ? vendorDetails?.about_description : 'N/A'}</td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-        <hr />
-
+      
 
 
 

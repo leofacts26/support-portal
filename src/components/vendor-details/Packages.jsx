@@ -136,23 +136,46 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
     const updatedkitchenTypes = kitchenTypes.map(kitchen => ({ id: +kitchen.id, selected: +kitchen.selected }));
 
 
-    const data = {
+    const cateringData = {
       foodTypes: JSON.stringify(updatedFoodTypes),
       serviceTypes: JSON.stringify(updatedServiceTypes),
       servingTypes: JSON.stringify(updatedServingTypes),
-
-      // mealTimes: JSON.stringify(updatedMealTypes), 
-      // kitchenTypes: JSON.stringify(updatedkitchenTypes), 
-
       minimumCapacity: minimum_capacity,
       maximumCapacity: maximum_capacity,
       startPrice: start_price,
       company_id: searchTerm
     };
 
+    const tiffinData = {
+      foodTypes: JSON.stringify(updatedFoodTypes),
+      serviceTypes: JSON.stringify(updatedServiceTypes),
+      mealTimes: JSON.stringify(updatedMealTypes),
+      kitchenTypes: JSON.stringify(updatedkitchenTypes),
+      startPrice: start_price,
+      minimumCapacity: minimum_capacity,
+      maximumCapacity: maximum_capacity,
+      company_id: searchTerm
+    }
+
+    // Normalize vendor_type
+    const vendorType = vendorDetails.vendor_type?.trim().toLowerCase();
+
+    let data, url;
+    if (vendorType === "caterer") {
+      data = cateringData;
+      url = "support-update-vendor-business-package-details";
+    } else if (vendorType === "tiffin") {
+      data = tiffinData;
+      url = "support-update-tiffin-package-details";
+    } else {
+      toast.error("Invalid vendor type. Please check the input.");
+      return;
+    }
+
 
     try {
-      const response = await api.post(`${BASE_URL}/support-update-vendor-business-package-details`, data, {
+      console.log("Sending data:", data);
+      const response = await api.post(`${BASE_URL}/${url}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         }
@@ -166,8 +189,6 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
       setLoading(false)
       handlePackagesClose()
     }
-
-
   }
 
 
@@ -209,8 +230,8 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
 
 
               {vendorDetails?.vendor_type === "Tiffin" && <td> {serviceTypes?.length > 0 ? serviceTypes?.map(item => item.service_type_name)?.join(', ') : 'N/A'} </td>}
-              {vendorDetails?.vendor_type === "Tiffin" && <td>{mealTypes?.length > 0 ? mealTypes?.map(item => item.meal_time_name)?.join(', ') : 'N/A'}</td>}
-              {vendorDetails?.vendor_type === "Tiffin" && <td> {kitchenTypes?.length > 0 ? kitchenTypes?.map(item => item.kitchen_type_name)?.join(', ') : 'N/A'} </td>}
+              {vendorDetails?.vendor_type === "Tiffin" && <td>{mealTypes?.length > 0 ? mealTypes?.filter((item) => item.selected === "1").map(item => item.meal_time_name)?.join(', ') : 'N/A'}</td>}
+              {vendorDetails?.vendor_type === "Tiffin" && <td> {kitchenTypes?.length > 0 ? kitchenTypes?.filter((item) => item.selected === "1").map(item => item.kitchen_type_name)?.join(', ') : 'N/A'} </td>}
 
 
 
@@ -243,27 +264,27 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
             <form onSubmit={onHandleSubmit}>
               <div className='card-box-shadow px-5 pt-2 pb-4 mb-4'>
                 <Grid container spacing={2} className='mt-0'>
-                  <Grid item xs={12} lg={6}>
-                    <h3 className='package-capacity mt-0'>Choose your food type Below</h3>
-                    <p className='max-min-capacity-para text-center mb-3'>If you provide both Veg and Non-Veg, please check both checkboxes.</p>
+                  {
+                    foodTypes.length > 0 && <Grid item xs={12} lg={6}>
+                      <h3 className='package-capacity mt-0'>Choose your food type Below</h3>
+                      <p className='max-min-capacity-para text-center mb-3'>If you provide both Veg and Non-Veg, please check both checkboxes.</p>
 
-                    {foodTypes.map((food, index) => (
-                      <Stack key={food.id} direction="row" alignItems="center" justifyContent="center" spacing={2} className={food.selected ? 'mb-5 green-switch' : 'mb-5'}>
-                        <h4 className={food.food_type_name === 'Veg' ? 'package-vn-title-veg' : 'package-vn-title-nonveg'}>{food.food_type_name}</h4>
+                      {foodTypes?.map((food, index) => (
+                        <Stack key={food.id} direction="row" alignItems="center" justifyContent="center" spacing={2} className={food.selected ? 'mb-5 green-switch' : 'mb-5'}>
+                          <h4 className={food.food_type_name === 'Veg' ? 'package-vn-title-veg' : 'package-vn-title-nonveg'}>{food.food_type_name}</h4>
 
-                        <Switch
-                          size="small"
-                          checked={food.selected === 1}
-                          onChange={() => handleFoodSwitchToggle(index)}
-                        />
-                      </Stack>
-                    ))}
-                  </Grid>
-
+                          <Switch
+                            size="small"
+                            checked={food.selected === 1}
+                            onChange={() => handleFoodSwitchToggle(index)}
+                          />
+                        </Stack>
+                      ))}
+                    </Grid>
+                  }
 
                   <Grid item xs={12} lg={6}>
                     <Stack direction="row" justifyContent="center" flexDirection="column">
-                      <h3 className='package-capacity mt-0'>Starting Price / Plate</h3>
                       <p className='max-min-capacity-para-green text-center mt-2 mb-2'>Enter Starting price / Plate</p>
                       <CssTextFieldSmall
                         value={start_price}
@@ -303,7 +324,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                 />
 
                 <Grid container spacing={2} className='mt-2'>
-                  <Grid item xs={12} lg={6}>
+                  {serviceTypes?.length > 0 && <Grid item xs={12} lg={6}>
                     <h3 className='package-capacity mt-3'>Choose your Service type Below</h3>
                     <p className='max-min-capacity-para text-center'>If you provide both table and buffet service, please check both</p>
                     {serviceTypes?.slice(0, 2).map((service, index) => {
@@ -322,13 +343,13 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                     }
 
                     )}
-                  </Grid>
+                  </Grid>}
 
-                  {vendorDetails?.vendor_type === "Tiffin" && <Grid item xs={12} lg={6}>
-                    <h3 className='package-capacity mt-3'>Choose your Meal Time Below</h3>
+
+                  {vendorDetails?.vendor_type === "Tiffin" && mealTypes.length > 0 && <Grid item xs={12} lg={6}>
                     <p className='max-min-capacity-para text-center'>Please Select your Meal Time below</p>
                     {
-                      mealTypes.map((mealtype, index) => {
+                      mealTypes?.map((mealtype, index) => {
                         return (
                           <Stack direction="row" justifyContent="center" alignItems="center" spacing="2" className='mt-3' key={index}>
                             <p className='px-3 package-icon-title'>{mealtype?.meal_time_name}</p>
@@ -361,16 +382,16 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
 
 
 
-                <Divider
+                {/* <Divider
                   className='mt-4'
                   variant="middle"
                   style={{
                     backgroundColor: '#c33332',
                     margin: '0px'
                   }}
-                />
+                /> */}
 
-                <Stack direction="row" justifyContent="center" className="mt-4">
+                {kitchenTypes?.length > 0 && <Stack direction="row" justifyContent="center" className="mt-4">
                   <div>
                     <h3 className='package-capacity mt-3'>Choose your Kitchen Type Below</h3>
                     <p className='max-min-capacity-para text-center'>Please Select Only One Kitchen Type below</p>
@@ -386,17 +407,17 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                       )
                     }
                   </div>
-                </Stack>
+                </Stack>}
 
 
-                <Divider
+                {/* <Divider
                   className='mt-4'
                   variant="middle"
                   style={{
                     backgroundColor: '#c33332',
                     margin: '0px'
                   }}
-                />
+                /> */}
 
 
                 {
