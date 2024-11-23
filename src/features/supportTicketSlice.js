@@ -5,7 +5,10 @@ import toast from 'react-hot-toast';
 
 const initialState = {
   isLoading: true,
-  supportTicketList: []
+  ticketStatus: true,
+  supportTicketList: [],
+  vendorSupportList: [],
+  searchTerm: '748398'
 }
 
 
@@ -55,6 +58,24 @@ export const updateSupportTicketData = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      toast.success(response.data.message)
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const fetchVendorListtData = createAsyncThunk(
+  'supportTickets/fetchVendorListtData',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.get(`${BASE_URL}/support-list-vendors`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -64,18 +85,17 @@ export const updateSupportTicketData = createAsyncThunk(
 
 
 
-
 export const supportTicketSlice = createSlice({
   name: 'supportTickets',
   initialState,
   reducers: {
-    // setIsLoading: (state, action) => {
-    //     state.isLoading = action.payload;
-    // },
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-    // fetchSupportTicketData 
+      // fetchSupportTicketData 
       .addCase(fetchSupportTicketData.pending, (state) => {
         state.isLoading = true;
       })
@@ -100,12 +120,24 @@ export const supportTicketSlice = createSlice({
       })
       // updateSupportTicketData 
       .addCase(updateSupportTicketData.pending, (state) => {
-        state.isLoading = true;
+        state.ticketStatus = true;
       })
       .addCase(updateSupportTicketData.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
+        state.ticketStatus = false;
       })
       .addCase(updateSupportTicketData.rejected, (state, { payload }) => {
+        state.ticketStatus = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // fetchVendorListtData 
+      .addCase(fetchVendorListtData.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchVendorListtData.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.vendorSupportList = payload;
+      })
+      .addCase(fetchVendorListtData.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
@@ -113,6 +145,6 @@ export const supportTicketSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { } = supportTicketSlice.actions
+export const { setSearchTerm } = supportTicketSlice.actions
 
 export default supportTicketSlice.reducer

@@ -3,16 +3,18 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSupportTicketData, fetchSupportTicketData, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
+import { createSupportTicketData, fetchSupportTicketData, fetchVendorListtData, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
 import GlobalSearch from '../components/common/GlobalSearch';
 import { tableCustomStyles } from '../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { format, parse, isValid, compareAsc } from 'date-fns';
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css';
-
-
-
+import Select from 'react-select';
+import { Table } from "react-bootstrap";
+import VendorDetails from './VendorDetails';
+import { fetchVendorShowDetailData } from '../features/menuSlice';
+import { Form } from "react-bootstrap";
 
 const initialState = {
   ticketId: '',
@@ -25,15 +27,22 @@ const initialState = {
 }
 
 
+
 const SupportTickets = () => {
   const dispatch = useDispatch();
-  const { supportTicketList, isLoading } = useSelector((state) => state.supportTickets);
+  const { supportTicketList, vendorSupportList, isLoading, ticketStatus } = useSelector((state) => state.supportTickets);
 
+  // console.log(vendorSupportList, "vendorSupportList vendorSupportList");
+
+  const { searchTerm } = useSelector((state) => state.supportTickets)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [show, setShow] = useState(false);
   const [editId, setEditId] = useState(null);
   const [values, setValues] = useState(initialState);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [status, setStatus] = useState('');
+
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -42,6 +51,7 @@ const SupportTickets = () => {
   const [searchValues, setSearchValues] = useState({
     id: "",
     ticket_id: "",
+    company_id: "",
     user_type: "",
     raised_on: "",
     issue: "",
@@ -64,6 +74,24 @@ const SupportTickets = () => {
     dispatch(fetchSupportTicketData());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(fetchVendorListtData());
+  }, [dispatch]);
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value })
+  }
+
+
+  // Prepare options from vendorNotificationList
+  const receiverOptions = vendorSupportList?.map((item) => ({
+    value: item.id,
+    label: item.vendor_service_name,
+  }));
+
+
 
   // Format subscription data
   useEffect(() => {
@@ -71,6 +99,7 @@ const SupportTickets = () => {
       const formattedData = supportTicketList.map((subscription) => ({
         id: subscription?.id,
         ticket_id: subscription?.ticket_id,
+        company_id: subscription?.company_id,
         user_type: subscription?.user_type,
         raised_on: new Date(subscription?.raised_on).toLocaleDateString(),
         // raised_on: subscription?.raised_on,
@@ -160,57 +189,55 @@ const SupportTickets = () => {
 
 
   const handleEdit = (ticket) => {
-    setEditId(ticket.id);
-    setValues({
-      ticketId: ticket.ticket_id || '',
-      raisedBy: ticket.raised_by || '',
-      userType: ticket.user_type || '',
-      issue: ticket.issue || '',
-      comments: ticket.comments || '',
-      agentId: ticket.agent_id || '',
-      status: ticket.status || '',
-    });
+    if (ticket?.company_id) {
+      dispatch(fetchVendorShowDetailData(ticket?.company_id));
+    }
+    setSelectedTicket(ticket);
     handleShow();
   };
 
 
-  const handleStatusToggle = async (ticket) => {
-    const updatedTicket = { ...ticket, status: ticket.status === 'Active' ? 'Inactive' : 'Active' };
-    // await dispatch(updateSupportTicketStatus(updatedTicket));
-    dispatch(fetchSupportTicketData());
-  };
+  // const handleStatusToggle = async (ticket) => {
+  //   const updatedTicket = { ...ticket, status: ticket.status === 'Active' ? 'Inactive' : 'Active' };
+  //   // await dispatch(updateSupportTicketStatus(updatedTicket));
+  //   dispatch(fetchSupportTicketData());
+  // };
 
 
-  const onHandleSubmit = async (e) => {
-    e.preventDefault();
-    const { ticketId, raisedBy, userType, issue, comments, agentId, status } = values;
-    const data = {
-      ticketId, raisedBy, userType, issue, comments, agentId, status,
-    }
+  // const onHandleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const { raisedBy, issue, comments } = values;
+  //   const internalType = 'internal';
+  //   const status = 'Open';
+  //   // const userType = 'Caterer';
+  //   const data = {
+  //     raisedBy, issue, comments, status, internalType
+  //   }
 
-    if (editId === null) {
-      await dispatch(createSupportTicketData(data))
-    } else {
-      await dispatch(updateSupportTicketData(data))
-    }
-    await dispatch(fetchSupportTicketData());
-    setValues(initialState)
-    handleClose()
-  }
+  //   if (editId === null) {
+  //     await dispatch(createSupportTicketData(data))
+  //   } else {
+  //     await dispatch(updateSupportTicketData(data))
+  //   }
+  //   await dispatch(fetchSupportTicketData());
+  //   setValues(initialState)
+  //   handleClose()
+  // }
 
 
 
   const columns = [
     // { name: 'ID', selector: (row) => row.id, sortable: true },
     { name: 'Ticket ID', selector: (row) => row.ticket_id, sortable: true, width: '150px' },
+    { name: 'Company ID', selector: (row) => row.company_id, sortable: true, width: '150px' },
     { name: 'Vendor Service Name', selector: (row) => row.vendor_service_name, sortable: true, width: '250px' },
     // { name: 'Raised By', selector: (row) => row.raised_by, sortable: true },
     { name: 'User Type', selector: (row) => row.user_type, sortable: true },
     { name: 'Raised On', selector: (row) => new Date(row.raised_on).toLocaleDateString(), sortable: true, width: '150px' },
     { name: 'Issue', selector: (row) => row.issue, sortable: true },
-    { name: 'Comments', selector: (row) => row.comments, sortable: true },
+    // { name: 'Comments', selector: (row) => row.comments, sortable: true },
     // { name: 'Agent ID', selector: (row) => row.agent_id, sortable: true },
-    { name: 'Agent Name', selector: (row) => row.agent_name, sortable: true },
+    { name: 'Agent Name', selector: (row) => row.agent_name, sortable: true, width: '150px' },
     { name: 'Status', selector: (row) => row.status, sortable: true, },
     // { name: 'Internal Type', selector: (row) => row.internal_type, sortable: true, width: '150px' },
     // {
@@ -255,7 +282,7 @@ const SupportTickets = () => {
       name: 'Action',
       cell: (row) => (
         <Button variant="success" onClick={() => handleEdit(row)}>
-          <FaEdit />
+          View
         </Button>
       ),
       ignoreRowClick: true,
@@ -265,6 +292,18 @@ const SupportTickets = () => {
   ];
 
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log("Selected Status:", status);
+    const ticketId = selectedTicket.ticket_id;
+    const data = {
+      status,
+      ticketId
+    }
+    await dispatch(updateSupportTicketData(data));
+    await dispatch(fetchSupportTicketData());
+    setStatus('')
+  };
 
 
   return (
@@ -321,6 +360,15 @@ const SupportTickets = () => {
               <div className="col-lg-3 mb-2">
                 <input
                   type="text"
+                  value={searchValues.company_id}
+                  onChange={(e) => handleSearch("company_id", e.target.value)}
+                  placeholder="Vendor Company ID"
+                  className="form-control"
+                />
+              </div>
+              <div className="col-lg-3 mb-2">
+                <input
+                  type="text"
                   value={searchValues.vendor_service_name}
                   onChange={(e) => handleSearch("vendor_service_name", e.target.value)}
                   placeholder="Vendor Service Name"
@@ -336,7 +384,7 @@ const SupportTickets = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-3 mb-2">
+              <div className="col-lg-3 mb-2 ">
                 <input
                   type="text"
                   value={searchValues.raised_on}
@@ -441,106 +489,120 @@ const SupportTickets = () => {
 
 
 
-      <Modal centered show={show} onHide={handleClose}>
-        <form onSubmit={onHandleSubmit}>
-          <Modal.Header closeButton>
-            <Modal.Title>{editId ? 'Edit Support Ticket' : 'Create Support Ticket'}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="form-group">
-              <label htmlFor="ticketId">Ticket ID</label>
-              <input
-                type="text"
-                className="form-control"
-                name="ticketId"
-                value={values.ticketId}
-                onChange={(e) => setValues({ ...values, ticketId: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="raisedBy">Raised By</label>
-              <input
-                type="text"
-                className="form-control"
-                name="raisedBy"
-                value={values.raisedBy}
-                onChange={(e) => setValues({ ...values, raisedBy: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="userType">User Type</label>
-              <select
-                id="userType"
-                className="form-control"
-                name="userType"
-                value={values.userType}
-                onChange={(e) => setValues({ ...values, userType: e.target.value })}
-                required
-              >
-                <option value="">Select User Type</option> {/* Placeholder option */}
-                <option value="Caterer">Caterer</option>
-                <option value="Tiffin">Tiffin</option>
-                {/* <option value="Customer">Customer</option>
-                <option value="Admin">Admin</option> */}
-              </select>
-            </div>
+      <Modal centered size="xl" show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Support Ticket Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : selectedTicket ? (
+            <>
 
-            <div className="form-group">
-              <label htmlFor="issue">Issue</label>
-              <input
-                type="text"
-                className="form-control"
-                name="issue"
-                value={values.issue}
-                onChange={(e) => setValues({ ...values, issue: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="comments">Comments</label>
-              <textarea
-                className="form-control"
-                name="comments"
-                rows="3"
-                value={values.comments}
-                onChange={(e) => setValues({ ...values, comments: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="agentId">Agent ID</label>
-              <input
-                type="text"
-                className="form-control"
-                name="agentId"
-                value={values.agentId}
-                onChange={(e) => setValues({ ...values, agentId: e.target.value })}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="status">Status</label>
-              <select
-                className="form-control"
-                name="status"
-                value={values.status}
-                onChange={(e) => setValues({ ...values, status: e.target.value })}
-                required
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" type="submit">
-              {isLoading ? 'Loading...' : 'Save Changes'}
-            </Button>
-          </Modal.Footer>
-        </form>
+              <div className="my-4">
+                <Form onSubmit={handleSubmit}>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Form.Group controlId="statusSelect" className='w-25'>
+                      <Form.Control
+                        as="select"
+                        name='status'
+                        value={supportTicketList?.status}
+                        onChange={(e) => setStatus(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Status
+                        </option>
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option>
+                      </Form.Control>
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit" className='ms-2'>
+                      Submit
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+
+              <div style={{ overflowX: 'auto', maxHeight: '500px' }}>
+                <Table responsive="xl" className="m-0" bordered>
+                  <tbody>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Ticket ID</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.ticket_id || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Raised By</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.raised_by || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>User Type</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.user_type || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Raised On</th>
+                      <td style={{ fontSize: '16px' }}>
+                        {new Date(selectedTicket.raised_on).toLocaleString() || 'N/A'}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Issue</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.issue || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Comments</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.comments || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Agent Name</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.agent_name || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Status</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.status || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Assigned Date</th>
+                      <td style={{ fontSize: '16px' }}>
+                        {new Date(selectedTicket.agent_assigned_date_time).toLocaleString() || 'N/A'}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Vendor Service Name</th>
+                      <td style={{ fontSize: '16px' }}>
+                        {selectedTicket.vendor_service_name || 'N/A'}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Company ID</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.company_id || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Created By</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.created_by_name || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <th style={{ fontSize: '16px', fontWeight: 'bold' }}>Assigned By</th>
+                      <td style={{ fontSize: '16px' }}>{selectedTicket.agent_assigned_by_name || 'N/A'}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </div>
+
+              <VendorDetails searchBox={false} />
+            </>
+          ) : (
+            <p>No ticket selected.</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>Close</Button>
+        </Modal.Footer>
       </Modal>
+
+
+
+
     </>
 
 

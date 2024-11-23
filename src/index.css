@@ -117,3 +117,17 @@ input:focus {
 .job-textarea:active {
   border: 2px solid var(--secondary) !important;
 }
+
+
+.modal-body img {
+  max-width: 100%;
+  max-height: 80vh;
+  margin: 0 auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.modal-footer .btn-primary {
+  display: flex;
+  align-items: center;
+}

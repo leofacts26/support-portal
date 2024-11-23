@@ -13,20 +13,21 @@ import Occations from "../components/vendor-details/Occations";
 import { v4 as uuidv4 } from 'uuid';
 import Cuisines from "../components/vendor-details/Cuisines";
 import Packages from "../components/vendor-details/Packages";
+import { setSearchTerm } from "../features/supportTicketSlice";
 
 
 
 
-const VendorDetails = () => {
+const VendorDetails = ({ searchBox }) => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { vendorDetails, isLoading } = useSelector((state) => state.menu)
+  const { searchTerm } = useSelector((state) => state.supportTickets)
   const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, occasions, cuisines, branches, serviceTypes, servingTypes } = vendorDetails;
-  const [searchTerm, setSearchTerm] = useState('748398');
   const [editTrigger, setEditTrigger] = useState(false);
 
-  console.log(vendorDetails, "vendorDetailsvendorDetails");
+  // console.log(vendorDetails, "vendorDetailsvendorDetails");
 
 
 
@@ -94,7 +95,7 @@ const VendorDetails = () => {
             className="me-2 w-25"
             aria-label="Search"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => dispatch(setSearchTerm(e.target.value))}
           />
           <Button variant="outline-success" type="submit">Search</Button>
         </Form>
@@ -114,23 +115,29 @@ const VendorDetails = () => {
         <LoadingSpinner />
       </div> : <div className="container-fluid my-5">
 
-        <div className="mb-4 cursor-pointer">
-          <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
-            <IoMdArrowRoundBack /> Back
-          </button>
-        </div>
+        {
+          searchBox ? <>
+            <div className="mb-4 cursor-pointer">
+              <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
+                <IoMdArrowRoundBack /> Back
+              </button>
+            </div>
 
-        <Form className="d-flex my-4" onSubmit={handleSubmit}>
-          <FormControl
-            type="search"
-            placeholder="Company ID: 748398"
-            className="me-2 w-25"
-            aria-label="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Button variant="outline-success" type="submit">Search</Button>
-        </Form>
+            <Form className="d-flex my-4" onSubmit={handleSubmit}>
+              <FormControl
+                type="search"
+                placeholder="Company ID: 748398"
+                className="me-2 w-25"
+                aria-label="Search"
+                value={searchTerm}
+                onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+              />
+              <Button variant="outline-success" type="submit">Search</Button>
+            </Form>
+          </> : <span></span>
+        }
+
+
 
 
 
@@ -261,33 +268,9 @@ const VendorDetails = () => {
         </div>
         <hr />
 
-
-
-
-
         <BusinessInformation vendorDetails={vendorDetails} show={show} handleClose={handleClose} handleShow={handleShow} editTrigger={editTrigger}
           searchTerm={searchTerm} />
         <hr />
-
-
-        <Packages uid={uuidv4()} handlePackagesClose={handlePackagesClose} handlePackagesShow={handlePackagesShow} showPackages={showPackages}
-          foodTypesList={foodTypes} kitchenTypesList={kitchenTypes} mealTimesList={mealTimes} serviceTypesList={serviceTypes} servingTypesList={servingTypes} vendorDetails={vendorDetails} searchTerm={searchTerm} />
-        <hr />
-
-
-
-        {occasions?.filter((item) => item.selected === '1')?.length > 0 && <Occations occasions={occasions} editTrigger={editTrigger} showOccation={showOccation} handleOccationClose={handleOccationClose}
-          handleOccationShow={handleOccationShow} uid={uuidv4()} searchTerm={searchTerm} />}
-
-
-
-        <Cuisines cuisines={cuisines} editTrigger={editTrigger} showCuisines={showCuisines} handleCuisinesClose={handleCuisinesClose}
-          handleCuisinesShow={handleCuisinesShow} uid={uuidv4()} searchTerm={searchTerm}
-        />
-        <hr />
-
-
-
 
         <div className="row mx-2">
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
@@ -328,10 +311,27 @@ const VendorDetails = () => {
         </div>
         <hr />
 
+        <Packages uid={uuidv4()} handlePackagesClose={handlePackagesClose} handlePackagesShow={handlePackagesShow} showPackages={showPackages}
+          foodTypesList={foodTypes} kitchenTypesList={kitchenTypes} mealTimesList={mealTimes} serviceTypesList={serviceTypes} servingTypesList={servingTypes} vendorDetails={vendorDetails} searchTerm={searchTerm} />
+        <hr />
+
+        {occasions?.filter((item) => item.selected === '1')?.length > 0 && <Occations occasions={occasions} editTrigger={editTrigger} showOccation={showOccation} handleOccationClose={handleOccationClose}
+          handleOccationShow={handleOccationShow} uid={uuidv4()} searchTerm={searchTerm} />}
+
+        <Cuisines cuisines={cuisines} editTrigger={editTrigger} showCuisines={showCuisines} handleCuisinesClose={handleCuisinesClose}
+          handleCuisinesShow={handleCuisinesShow} uid={uuidv4()} searchTerm={searchTerm}
+        />
+        <hr />
 
 
 
-      
+
+
+
+
+
+
+
 
 
 

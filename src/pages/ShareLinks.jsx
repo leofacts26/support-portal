@@ -103,7 +103,7 @@ const ShareLinks = () => {
 
   const columns = [
     // { name: 'ID', selector: (row) => row.id, sortable: true },
-    { name: 'Shared By', selector: (row) => row.shared_by, sortable: true, },
+    { name: 'Shared By', selector: (row) => row.shared_by_name, sortable: true, width: '200px' },
     { name: 'Shared Via', selector: (row) => row.shared_via, sortable: true, },
     {
       name: 'Phone',
@@ -178,7 +178,7 @@ const ShareLinks = () => {
             <Modal.Title>{editId ? 'Edit Support Ticket' : 'Create Support Ticket'}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="sharedBy">Shared By</label>
               <input
                 type="number"
@@ -188,8 +188,8 @@ const ShareLinks = () => {
                 onChange={(e) => setValues({ ...values, shared_by: e.target.value })}
                 required
               />
-            </div>
-            <div className="form-group">
+            </div> */}
+            {/* <div className="form-group">
               <label htmlFor="sharedBy">Shared Via</label>
               <input
                 type="number"
@@ -199,9 +199,9 @@ const ShareLinks = () => {
                 onChange={(e) => setValues({ ...values, shared_via: e.target.value })}
                 required
               />
-            </div>
+            </div> */}
             <div className="form-group">
-              <label htmlFor="phoneEmail">Phone/Email</label>
+              <label htmlFor="phoneEmail">Phone</label>
               <input
                 type="text"
                 className="form-control"

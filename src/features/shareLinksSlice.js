@@ -19,8 +19,6 @@ export const fetchSupportSharedLinksData = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response, "response");
-
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -38,6 +36,7 @@ export const createSupportshareLinksData = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      toast.success(response.data.message)
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -55,6 +54,7 @@ export const updateSupportshareLinksData = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      toast.success(response.data.message)
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
