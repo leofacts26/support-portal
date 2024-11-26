@@ -131,3 +131,28 @@ input:focus {
   display: flex;
   align-items: center;
 }
+
+
+
+
+
+
+/* Bigger Modal Title */
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Style for the Close Button */
+.btn-close {
+  color: white; /* White cross icon */
+  border: none;
+  border-radius: 50%;
+  width: 4rem; /* Increase size */
+  height: 4rem; /* Increase size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.25rem; /* Increase icon size */
+  padding: 0;
+}

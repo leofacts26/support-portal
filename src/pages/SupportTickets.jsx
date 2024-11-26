@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSupportTicketData, fetchSupportTicketData, fetchVendorListtData, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
+import { assignSupportTicket, createSupportTicketData, fetchSupportListUsers, fetchSupportTicketData, fetchVendorListtData, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
 import GlobalSearch from '../components/common/GlobalSearch';
 import { tableCustomStyles } from '../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
@@ -30,18 +30,30 @@ const initialState = {
 
 const SupportTickets = () => {
   const dispatch = useDispatch();
-  const { supportTicketList, vendorSupportList, isLoading, ticketStatus } = useSelector((state) => state.supportTickets);
+  const { supportTicketList, vendorSupportList, isLoading, listUsers, ticketStatus } = useSelector((state) => state.supportTickets);
 
   // console.log(vendorSupportList, "vendorSupportList vendorSupportList");
+  // console.log(listUsers, "listUsers listUserslistUsers");
+
 
   const { searchTerm } = useSelector((state) => state.supportTickets)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [show, setShow] = useState(false);
   const [editId, setEditId] = useState(null);
   const [values, setValues] = useState(initialState);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [status, setStatus] = useState('');
+  const [show, setShow] = useState(false);
+  const [showCreateTicket, setShowreateTicket] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [selectedTickets, setSelectedTickets] = useState([]);
+  const [checkedRows, setCheckedRows] = useState({}); // Tracks checkbox states
+  const [selectedUser, setSelectedUser] = useState('');
+
+  console.log(selectedTickets, "selectedTickets");
+  console.log(selectedUser, "selectedUser");
+
+
 
 
   const [startDate, setStartDate] = useState(null);
@@ -63,11 +75,22 @@ const SupportTickets = () => {
   });
 
 
-  const handleClose = () => {
-    setShow(false);
+  const handleCloseCreateTicket = () => {
+    setShowreateTicket(false);
     setEditId(null);
     setValues(initialState);
   };
+  const handleShowCreateTicket = () => setShowreateTicket(true);
+
+  const handleAssignClose = () => {
+    setShowAssignModal(false)
+    setSelectedTickets([]);
+    setCheckedRows({});
+    setSelectedUser('');
+  };
+  const handleAssignShow = () => setShowAssignModal(true);
+
+  const handleClose = () => { setShow(false); };
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -76,6 +99,10 @@ const SupportTickets = () => {
 
   useEffect(() => {
     dispatch(fetchVendorListtData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchSupportListUsers());
   }, [dispatch]);
 
 
@@ -204,80 +231,65 @@ const SupportTickets = () => {
   // };
 
 
-  // const onHandleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const { raisedBy, issue, comments } = values;
-  //   const internalType = 'internal';
-  //   const status = 'Open';
-  //   // const userType = 'Caterer';
-  //   const data = {
-  //     raisedBy, issue, comments, status, internalType
-  //   }
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+    const { raisedBy, issue, comments } = values;
+    const internalType = 'internal';
+    const status = 'Open';
+    // const userType = 'Caterer';
+    const data = {
+      raisedBy, issue, comments, status, internalType
+    }
 
-  //   if (editId === null) {
-  //     await dispatch(createSupportTicketData(data))
-  //   } else {
-  //     await dispatch(updateSupportTicketData(data))
-  //   }
-  //   await dispatch(fetchSupportTicketData());
-  //   setValues(initialState)
-  //   handleClose()
-  // }
+    if (editId === null) {
+      await dispatch(createSupportTicketData(data))
+    } else {
+      await dispatch(updateSupportTicketData(data))
+    }
+    await dispatch(fetchSupportTicketData());
+    setValues(initialState)
+    handleClose()
+  }
+
+
+  const handleCheckboxChange = (e, row) => {
+    const isChecked = e.target.checked;
+
+    setCheckedRows((prev) => ({
+      ...prev,
+      [row.id]: isChecked, // Update the checked state for the row
+    }));
+
+    if (isChecked) {
+      setSelectedTickets((prev) => [...prev, { id: row.id, name: row.vendor_service_name }]);
+    } else {
+      setSelectedTickets((prev) => prev.filter((ticket) => ticket.id !== row.id));
+    }
+  };
 
 
 
   const columns = [
-    // { name: 'ID', selector: (row) => row.id, sortable: true },
+    {
+      name: '',
+      selector: (row) => (
+        <input
+          type="checkbox"
+          checked={checkedRows[row.id] || false} // Dynamically bind checked state
+          onChange={(e) => handleCheckboxChange(e, row)}
+        />
+      ),
+      width: '50px', // Adjust width for the checkbox
+      sortable: false,
+    },
     { name: 'Ticket ID', selector: (row) => row.ticket_id, sortable: true, width: '150px' },
     { name: 'Company ID', selector: (row) => row.company_id, sortable: true, width: '150px' },
     { name: 'Vendor Service Name', selector: (row) => row.vendor_service_name, sortable: true, width: '250px' },
-    // { name: 'Raised By', selector: (row) => row.raised_by, sortable: true },
     { name: 'User Type', selector: (row) => row.user_type, sortable: true },
     { name: 'Raised On', selector: (row) => new Date(row.raised_on).toLocaleDateString(), sortable: true, width: '150px' },
     { name: 'Issue', selector: (row) => row.issue, sortable: true },
-    // { name: 'Comments', selector: (row) => row.comments, sortable: true },
-    // { name: 'Agent ID', selector: (row) => row.agent_id, sortable: true },
     { name: 'Agent Name', selector: (row) => row.agent_name, sortable: true, width: '150px' },
     { name: 'Status', selector: (row) => row.status, sortable: true, },
-    // { name: 'Internal Type', selector: (row) => row.internal_type, sortable: true, width: '150px' },
-    // {
-    //   name: "Start Date",
-    //   selector: row => {
-    //     const startDate = new Date(row.start_date);
-    //     return isValid(startDate) ? format(startDate, 'dd/MMM/yyyy') : 'N/A';
-    //   },
-    //   sortable: true,
-    //   sortFunction: (rowA, rowB) => {
-    //     const dateA = new Date(rowA.start_date);
-    //     const dateB = new Date(rowB.start_date);
-
-    //     // Handle invalid dates by sorting them to the end
-    //     if (!isValid(dateA)) return 1;
-    //     if (!isValid(dateB)) return -1;
-
-    //     return dateA - dateB; // For ascending order
-    //   },
-    //   width: '150px'
-    // },
-    // {
-    //   name: "End Date",
-    //   selector: row => {
-    //     const endDate = new Date(row.end_date);
-    //     return isValid(endDate) ? format(endDate, 'dd/MMM/yyyy') : 'N/A';
-    //   },
-    //   sortable: true,
-    //   sortFunction: (rowA, rowB) => {
-    //     const dateA = new Date(rowA.end_date);
-    //     const dateB = new Date(rowB.end_date);
-
-    //     // Handle invalid dates by sorting them to the end
-    //     if (!isValid(dateA)) return 1;
-    //     if (!isValid(dateB)) return -1;
-
-    //     return dateA - dateB; // For ascending order
-    //   },
-    //   width: '150px'
-    // },
     {
       name: 'Action',
       cell: (row) => (
@@ -306,6 +318,37 @@ const SupportTickets = () => {
   };
 
 
+  const onHandleAssignSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!selectedTickets.length) {
+      alert('Please select at least one ticket.');
+      return;
+    }
+    if (!selectedUser) {
+      alert('Please select a user to assign tickets.');
+      return;
+    }
+
+    const payload = {
+      tickets: selectedTickets.map((ticket) => ({ id: ticket.id })),
+      agentId: selectedUser, // Assuming selectedUser contains the user ID
+    };
+
+    try {
+      await dispatch(assignSupportTicket(payload))
+      setSelectedTickets([]);
+      setCheckedRows({});
+      setSelectedUser('');
+      handleAssignClose();
+      dispatch(fetchSupportTicketData());
+    } catch (error) {
+      console.error('Error assigning tickets:', error);
+      alert('An error occurred while assigning tickets. Please try again.');
+    }
+  };
+
+
   return (
     <>
       <div className="container-fluid my-5">
@@ -315,9 +358,14 @@ const SupportTickets = () => {
             <h1 className="header-title">
               Support Tickets - {supportTicketList?.length}
             </h1>
-            <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
-              Create Support Ticket
-            </button>
+            <div>
+              <button className='btn btn-primary fit-content me-4' variant="primary" onClick={handleAssignShow}>
+                Assign
+              </button>
+              <button className='btn btn-primary fit-content' variant="primary" onClick={handleShowCreateTicket}>
+                Create Support Ticket
+              </button>
+            </div>
           </div>
         </div>
         <hr />
@@ -487,6 +535,146 @@ const SupportTickets = () => {
         </div>
       </div>
 
+
+
+
+      <Modal size="lg" centered show={showAssignModal} onHide={handleAssignClose}>
+        <form onSubmit={onHandleAssignSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title>Assign Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              {/* Left Column: Select User */}
+              <div className="col-md-6">
+                <div className="form-group mb-3">
+                  <label htmlFor="assignUser">Select User</label>
+                  <select
+                    id="assignUser"
+                    className="form-control"
+                    onChange={(e) => setSelectedUser(e.target.value)} // Handle selection
+                    required
+                  >
+                    <option value="">-- Select a User --</option>
+                    {listUsers.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name} ({user.username})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Right Column: Selected Tickets */}
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>Selected Tickets</label>
+                  {selectedTickets.length > 0 ? (
+                    <ul className="list-group mt-2">
+                      {selectedTickets.map((ticket, index) => (
+                        <li key={index} className="list-group-item">
+                          Vendor: {ticket.name}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted mt-2">No tickets selected.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleAssignClose}>
+              Close
+            </Button>
+            <Button variant="primary" type="submit">
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
+
+
+
+      <Modal centered show={showCreateTicket} onHide={handleCloseCreateTicket}>
+        <form onSubmit={onHandleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title>{editId ? 'Edit Support Ticket' : 'Create Support Ticket'}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+
+
+
+            <div>
+              <label htmlFor="raisedBy" className="form-label">Raised By</label>
+              <Select
+                options={receiverOptions}
+                onChange={(selectedOption) =>
+                  handleChange({ target: { name: 'raisedBy', value: selectedOption ? selectedOption.value : '' } })
+                }
+                placeholder="Raised By"
+                isClearable
+                isSearchable
+              />
+            </div>
+
+
+            <div className="form-group mt-3">
+              <label htmlFor="issue">Issue</label>
+              <input
+                type="text"
+                className="form-control"
+                name="issue"
+                value={values.issue}
+                onChange={(e) => setValues({ ...values, issue: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="comments">Comments</label>
+              <textarea
+                className="form-control"
+                name="comments"
+                rows="3"
+                value={values.comments}
+                onChange={(e) => setValues({ ...values, comments: e.target.value })}
+                required
+              />
+            </div>
+            {/* <div className="form-group">
+              <label htmlFor="agentId">Agent ID</label>
+              <input
+                type="text"
+                className="form-control"
+                name="agentId"
+                value={values.agentId}
+                onChange={(e) => setValues({ ...values, agentId: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="status">Status</label>
+              <select
+                className="form-control"
+                name="status"
+                value={values.status}
+                onChange={(e) => setValues({ ...values, status: e.target.value })}
+                required
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div> */}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseCreateTicket}>Close</Button>
+            <Button variant="primary" type="submit">
+              {isLoading ? 'Loading...' : 'Save Changes'}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
 
 
       <Modal centered size="xl" show={show} onHide={handleClose}>
