@@ -115,8 +115,8 @@ const VendorDetails = ({ searchBox }) => {
         <LoadingSpinner />
       </div> : <div className="container-fluid my-5">
 
-        {
-          searchBox ? <>
+        {/* {
+          searchBox ? <> */}
             <div className="mb-4 cursor-pointer">
               <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
                 <IoMdArrowRoundBack /> Back
@@ -134,8 +134,8 @@ const VendorDetails = ({ searchBox }) => {
               />
               <Button variant="outline-success" type="submit">Search</Button>
             </Form>
-          </> : <span></span>
-        }
+          {/* </> : <span></span>
+        } */}
 
 
 
