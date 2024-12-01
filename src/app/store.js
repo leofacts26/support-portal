@@ -3,6 +3,7 @@ import supportTicketReducer from '../features/supportTicketSlice'
 import authSliceReducer from '../features/authSlice'
 import shareLinksSliceReducer from '../features/shareLinksSlice'
 import menuReducer from '../features/menuSlice'
+import followUpReducer from '../features/followUpsSlice'
 
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     menu: menuReducer,
     supportTickets: supportTicketReducer,
     authSlice: authSliceReducer,
-    shareLinks: shareLinksSliceReducer
+    shareLinks: shareLinksSliceReducer,
+    followUps: followUpReducer
   },
 })

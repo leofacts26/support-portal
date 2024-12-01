@@ -18,7 +18,7 @@ import { setSearchTerm } from "../features/supportTicketSlice";
 
 
 
-const VendorDetails = ({ searchBox }) => {
+const VendorDetails = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -29,6 +29,12 @@ const VendorDetails = ({ searchBox }) => {
 
   // console.log(vendorDetails, "vendorDetailsvendorDetails");
 
+
+  useEffect(() => {
+    if(searchTerm){
+      dispatch(fetchVendorShowDetailData(searchTerm));
+    }
+  }, [searchTerm])
 
 
   const [show, setShow] = useState(false);
@@ -117,24 +123,24 @@ const VendorDetails = ({ searchBox }) => {
 
         {/* {
           searchBox ? <> */}
-            <div className="mb-4 cursor-pointer">
-              <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
-                <IoMdArrowRoundBack /> Back
-              </button>
-            </div>
+        <div className="mb-4 cursor-pointer">
+          <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
+            <IoMdArrowRoundBack /> Back
+          </button>
+        </div>
 
-            <Form className="d-flex my-4" onSubmit={handleSubmit}>
-              <FormControl
-                type="search"
-                placeholder="Company ID: 748398"
-                className="me-2 w-25"
-                aria-label="Search"
-                value={searchTerm}
-                onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-              />
-              <Button variant="outline-success" type="submit">Search</Button>
-            </Form>
-          {/* </> : <span></span>
+        <Form className="d-flex my-4" onSubmit={handleSubmit}>
+          <FormControl
+            type="search"
+            placeholder="Company ID: 748398"
+            className="me-2 w-25"
+            aria-label="Search"
+            value={searchTerm}
+            onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+          />
+          <Button variant="outline-success" type="submit">Search</Button>
+        </Form>
+        {/* </> : <span></span>
         } */}
 
 

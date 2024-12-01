@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { assignSupportTicket, createSupportTicketData, fetchSupportListUsers, fetchSupportTicketData, fetchVendorListtData, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
+import { assignSupportTicket, createSupportTicketData, fetchSupportListUsers, fetchSupportTicketData, fetchVendorListtData, setSearchTerm, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
 import GlobalSearch from '../components/common/GlobalSearch';
 import { tableCustomStyles } from '../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
@@ -49,6 +49,7 @@ const SupportTickets = () => {
   const [selectedTickets, setSelectedTickets] = useState([]);
   const [checkedRows, setCheckedRows] = useState({}); // Tracks checkbox states
   const [selectedUser, setSelectedUser] = useState('');
+
 
   console.log(selectedTickets, "selectedTickets");
   console.log(selectedUser, "selectedUser");
@@ -218,6 +219,7 @@ const SupportTickets = () => {
   const handleEdit = (ticket) => {
     if (ticket?.company_id) {
       dispatch(fetchVendorShowDetailData(ticket?.company_id));
+      dispatch(setSearchTerm(ticket?.company_id))
     }
     setSelectedTicket(ticket);
     handleShow();

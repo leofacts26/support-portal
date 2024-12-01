@@ -8,7 +8,7 @@ const initialState = {
   ticketStatus: true,
   supportTicketList: [],
   vendorSupportList: [],
-  searchTerm: '748398',
+  searchTerm: '',
   listUsers: []
 }
 
