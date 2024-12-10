@@ -9,6 +9,7 @@ import { tableCustomStyles } from '../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { createSupportshareLinksData, fetchSupportSharedLinksData, updateSupportshareLinksData } from '../features/shareLinksSlice';
 import moment from 'moment';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 
 const initialState = {
@@ -167,6 +168,8 @@ const ShareLinks = () => {
           pagination
           fixedHeader
           customStyles={tableCustomStyles}
+          progressPending={isLoading}
+          progressComponent={<LoadingSpinner />}
         />
       </div>
 

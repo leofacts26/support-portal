@@ -15,6 +15,7 @@ import { Table } from "react-bootstrap";
 import VendorDetails from './VendorDetails';
 import { fetchVendorShowDetailData } from '../features/menuSlice';
 import { Form } from "react-bootstrap";
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const initialState = {
   ticketId: '',
@@ -53,6 +54,7 @@ const SupportTickets = () => {
 
   console.log(selectedTickets, "selectedTickets");
   console.log(selectedUser, "selectedUser");
+  console.log(supportTicketList, "supportTicketList");
 
 
 
@@ -533,6 +535,8 @@ const SupportTickets = () => {
             pagination
             fixedHeader
             customStyles={tableCustomStyles}
+            progressPending={isLoading}
+            progressComponent={<LoadingSpinner />}
           />
         </div>
       </div>

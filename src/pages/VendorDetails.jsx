@@ -27,14 +27,27 @@ const VendorDetails = () => {
   const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, occasions, cuisines, branches, serviceTypes, servingTypes } = vendorDetails;
   const [editTrigger, setEditTrigger] = useState(false);
 
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+
+
   // console.log(vendorDetails, "vendorDetailsvendorDetails");
 
 
   useEffect(() => {
-    if(searchTerm){
-      dispatch(fetchVendorShowDetailData(searchTerm));
+    // Set up a debounce
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 1000); // Delay of 1000ms
+
+    // Cleanup function to clear timeout if searchTerm changes before delay
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      dispatch(fetchVendorShowDetailData(debouncedSearchTerm));
     }
-  }, [searchTerm])
+  }, [debouncedSearchTerm, dispatch]);
 
 
   const [show, setShow] = useState(false);

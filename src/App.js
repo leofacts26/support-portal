@@ -23,7 +23,7 @@ function App() {
           <Route path="/support-list-tickets" element={<SupportTickets />} />
           <Route path="/support-list-share-links" element={<ShareLinks />} />
           <Route path="/support-get-vendor-show-details" element={<VendorDetails />} />
-          <Route path="/followups" element={<FollowUps />} />
+          <Route path="/support-list-followups" element={<FollowUps />} />
           <Route path="/test" element={<Test />} />
 
           <Route path="*" element={<NoPage />} />

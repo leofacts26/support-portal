@@ -9,23 +9,53 @@ import { tableCustomStyles } from '../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
 import { createSupportshareLinksData, fetchSupportSharedLinksData, updateSupportshareLinksData } from '../features/shareLinksSlice';
 import moment from 'moment';
-import { assignAsignAgentVendor, fetchSupportFollowUpssList } from '../features/followUpsSlice';
-
+import { agentVendorComments, assignAsignAgentVendor, fetchSupportFollowUpssList, resetAgentVendorComments, updateAgentComment } from '../features/followUpsSlice';
+import Table from 'react-bootstrap/Table';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 
 const FollowUps = () => {
   const dispatch = useDispatch();
-  const { followUpList, isLoading } = useSelector((state) => state.followUps);
+  const { followUpList, agentVendorCommentsList, isLoading } = useSelector((state) => state.followUps);
   const { listUsers } = useSelector((state) => state.supportTickets);
   const [filteredData, setFilteredData] = useState([]);
   const [editId, setEditId] = useState(null);
   const [selectedUser, setSelectedUser] = useState('');
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectAgent, setSelectAgent] = useState("")
+  const [comment, setComment] = useState("")
+
+  const [activeAgent, setActiveAgent] = useState([])
+
+  // const activeAgent = agentVendorCommentsList[0]
+
+  console.log(agentVendorCommentsList, "agentVendorCommentsList agentVendorCommentsList");
+  console.log(activeAgent, "activeAgent activeAgent");
+
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = async () => {
+    setShow(false)
+    await setComment("")
+    await setActiveAgent([])
+    dispatch(resetAgentVendorComments());
+
+  };
+  const handleShow = async () => {
+    setShow(true);
+    if (activeAgent?.id) {
+      await dispatch(agentVendorComments(activeAgent?.id))
+    }
+  };
+
+  useEffect(() => {
+    if (agentVendorCommentsList?.length > 0) {
+      setComment(agentVendorCommentsList[0]?.comment || "");
+      setActiveAgent(agentVendorCommentsList[0])
+    }
+  }, [agentVendorCommentsList]);
 
 
   useEffect(() => {
@@ -88,6 +118,24 @@ const FollowUps = () => {
   }
 
 
+  const onHandleListComments = async (id) => {
+    await dispatch(agentVendorComments(id))
+  }
+
+  const onHandleCommentSubmit = async (id) => {
+    const data = {
+      id: id,
+      comment: comment
+    }
+    try {
+      await dispatch(updateAgentComment(data))
+      await dispatch(fetchSupportFollowUpssList());
+      await handleClose()
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const columns = [
     { name: 'Business ID', selector: (row) => row.id, sortable: true },
@@ -101,7 +149,7 @@ const FollowUps = () => {
       ),
       sortable: true,
     },
-    { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, },
+    { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '200px' },
     { name: 'Status', selector: (row) => row.listing_status, sortable: true, },
     {
       name: 'Date Time',
@@ -128,7 +176,10 @@ const FollowUps = () => {
     {
       name: 'Update Comment',
       cell: (row) => (
-        <Button variant="success" onClick={handleShow}>
+        <Button variant="success" onClick={() => {
+          handleShow();
+          onHandleListComments(row?.id)
+        }}>
           Update
         </Button>
       ),
@@ -208,20 +259,59 @@ const FollowUps = () => {
 
 
 
-      <Modal centered show={show} onHide={handleClose}>
+      <Modal size="lg" centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Update Comment</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+        <Modal.Body>
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : agentVendorCommentsList?.length > 0 ? (
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Admin User Name</th>
+                  <th>Assigned By Name</th>
+                  <th>Comment</th>
+                  <th>Update</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Active</td>
+                  <td>{activeAgent?.admin_user_name}</td>
+                  <td>{activeAgent?.assigned_by_name}</td>
+                  <td>
+                    <FloatingLabel>
+                      <Form.Control
+                        value={comment || ""}
+                        onChange={(e) => setComment(e.target.value)}
+                        name="comment"
+                        as="textarea"
+                        placeholder="Leave a comment here"
+                        style={{ height: "50px" }}
+                      />
+                    </FloatingLabel>
+                  </td>
+                  <td>
+                    <button
+                      disabled={isLoading}
+                      className="btn bg-success text-white"
+                      onClick={() => onHandleCommentSubmit(activeAgent?.id)}
+                    >
+                      Update
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          ) : (
+            <h2 className="text-center text-muted">No assigned agents found for the given vendor</h2>
+          )}
+        </Modal.Body>
       </Modal>
+
 
 
 
