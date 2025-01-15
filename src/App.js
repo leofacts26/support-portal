@@ -8,6 +8,9 @@ import Login from "./pages/auth/Login";
 import VendorDetails from "./pages/VendorDetails";
 import Test from "./Test";
 import FollowUps from "./pages/FollowUps";
+import Subscription from "./pages/Subscription";
+import SubscriptionPlan from "./pages/SubscriptionPlan";
+import SubscriptionPlanDetails from "./pages/SubscriptionPlanDetails";
 
 
 function App() {
@@ -24,6 +27,11 @@ function App() {
           <Route path="/support-list-share-links" element={<ShareLinks />} />
           <Route path="/support-get-vendor-show-details" element={<VendorDetails />} />
           <Route path="/support-list-followups" element={<FollowUps />} />
+
+          <Route path='/dashboard/subscription/:id' element={<Subscription />} />
+          <Route path='/dashboard/subscription-plan/:id' element={<SubscriptionPlan />} />
+          <Route path='/dashboard/subscription-plan-details/:vendorId/:subscriptionTypeId' element={<SubscriptionPlanDetails />} />
+
           <Route path="/test" element={<Test />} />
 
           <Route path="*" element={<NoPage />} />

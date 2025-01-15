@@ -16,6 +16,8 @@ import VendorDetails from './VendorDetails';
 import { fetchVendorShowDetailData } from '../features/menuSlice';
 import { Form } from "react-bootstrap";
 import LoadingSpinner from '../components/LoadingSpinner';
+import Subscription from './Subscription';
+
 
 const initialState = {
   ticketId: '',
@@ -28,15 +30,9 @@ const initialState = {
 }
 
 
-
 const SupportTickets = () => {
   const dispatch = useDispatch();
   const { supportTicketList, vendorSupportList, isLoading, listUsers, ticketStatus } = useSelector((state) => state.supportTickets);
-
-  // console.log(vendorSupportList, "vendorSupportList vendorSupportList");
-  // console.log(listUsers, "listUsers listUserslistUsers");
-
-
   const { searchTerm } = useSelector((state) => state.supportTickets)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -50,12 +46,6 @@ const SupportTickets = () => {
   const [selectedTickets, setSelectedTickets] = useState([]);
   const [checkedRows, setCheckedRows] = useState({}); // Tracks checkbox states
   const [selectedUser, setSelectedUser] = useState('');
-
-
-  console.log(selectedTickets, "selectedTickets");
-  console.log(selectedUser, "selectedUser");
-  console.log(supportTicketList, "supportTicketList");
-
 
 
 
@@ -784,6 +774,8 @@ const SupportTickets = () => {
               </div>
 
               <VendorDetails searchBox={false} />
+
+             
             </>
           ) : (
             <p>No ticket selected.</p>

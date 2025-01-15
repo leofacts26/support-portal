@@ -7,6 +7,37 @@
   -moz-osx-font-smoothing: grayscale;
 } */
 
+:root {
+  /* colors  */
+  --primary: #d9822b;
+  --secondary: #c33332;
+  --tertiary: #245396;
+  --alternate: #e0e3e7;
+  --primarybg: #fff;
+  --secondarybg: #fcfcfc;
+  --primarytext: #14181b;
+  --secondarytext: #57636c;
+  --accent1: #bb681f;
+  --accent2: #a81e1e;
+  --accent3: #459412;
+  --accent4: #7c1e1e;
+  --branded: #8e11a5;
+  --bgprimary: #C53A31;
+
+  /* box shadow  */
+  --card-box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  --image-box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+  /* fonts  */
+  --fontPrimary: "Readex Pro", sans-serif;
+  --fontSecondary: "Outfit", sans-serif;
+
+  /* radius */
+  --radiusOne: 8px;
+  --radiusTwo: 24px;
+}
+
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -87,6 +118,55 @@ input:focus {
 
 
 
+/* project global start */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.img-fluid {
+  width: 100%;
+  display: block;
+}
+
+.bg-gradient {
+  background-image: linear-gradient(to right, #C53A31, #D6762C);
+  height: 155px;
+  border-radius: var(--radiusOne);
+}
+
+.bg-primary {
+  background-color: var(--bgprimary);
+  height: 155px;
+  border-radius: var(--radiusOne);
+}
+
+.text-primary {
+  color: var(--secondary);
+}
+
+.mx-auto {
+  margin: 0px auto !important;
+  display: block !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-decoration-none {
+  text-decoration: none !important;
+}
+
+.text-white {
+  color: var(--alternate) !important;
+}
+
+.card-box-shadow {
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  border-radius: var(--radiusOne);
+}
+
+
 .job-textarea {
   width: auto !important;
   height: 150px;
@@ -155,4 +235,402 @@ input:focus {
   align-items: center;
   font-size: 2.25rem; /* Increase icon size */
   padding: 0;
+}
+
+
+
+
+
+
+/* Subscription page start  */
+.subscription-type {
+  font-size: 12px;
+  font-family: var(--fontPrimary);
+  font-weight: 400;
+  color: var(--secondarytext);
+}
+
+.subscription-red {
+  font-size: 16px;
+  font-family: var(--fontPrimary);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+  text-align: left;
+  color: var(--secondary);
+}
+
+.subscription-green {
+  font-size: 16px;
+  font-family: var(--fontPrimary);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+  text-align: left;
+  color: var(--accent3) !important;
+}
+
+.subscription-red {
+  font-size: 16px;
+  font-family: var(--fontPrimary);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+  text-align: left;
+  color: var(--accent2);
+}
+
+.subscribe-btn {
+  /* background-color: var(--branded) !important; */
+  border-radius: var(--radiusTwo) !important;
+  font-size: 12px !important;
+  text-transform: capitalize !important;
+  padding: 2px 16px;
+  height: 25px !important;
+}
+
+.subscription-dark {
+  font-size: 14px;
+  font-family: var(--fontPrimary);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+  text-align: left;
+  color: var(--primarytext);
+}
+
+/* Subscription page end  */
+
+/* subscription plan page start  */
+.sub-plan-title {
+  font-size: 18px;
+  font-family: var(--fontPrimary);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.sub-plan-yearly {
+  font-size: 14px;
+  font-family: var(--fontPrimary);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.sub-box-violet-title {
+  padding: 15px 0px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.normal-color {
+  background-color: #d9822b !important;
+}
+
+.popular-color {
+  background-color: #8e11a5 !important;
+}
+
+.branded-color {
+  background-color: #459412 !important;
+}
+
+.sub-box-name {
+  color: #ffffff;
+  text-align: center;
+  font-family: var(--fontPrimary);
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+.subscription-plans-shadow {
+  box-shadow: var(--card-box-shadow);
+  width: 100%;
+  border-radius: 24px;
+}
+
+.sub-plan-month {
+  font-size: 10px;
+  color: var(--secondarytext);
+  font-weight: 400;
+  font-family: var(--fontPrimary);
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.sub-price h3 {
+  color: var(--primarytext) !important;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: var(--fontPrimary);
+}
+
+.sub-plan-brand {
+  font-size: 12px;
+  color: var(--secondarytext);
+  font-weight: 400;
+  font-family: var(--fontPrimary);
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.sub-plan-para {
+  font-size: 12px;
+  color: var(--primarytext);
+  font-weight: 400;
+  font-family: var(--fontPrimary);
+  margin-bottom: 4px;
+}
+
+.sub-plan-btn {
+  /* background-color: var(--branded); */
+  border-radius: var(--radiusTwo) !important;
+  font-size: 12px !important;
+  text-transform: capitalize !important;
+}
+
+.sub-box-green-title {
+  background-color: var(--accent3);
+  padding: 15px 0px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.sub-plan-btn-green {
+  background-color: var(--accent3) !important;
+  border-radius: var(--radiusTwo) !important;
+  font-size: 12px !important;
+  text-transform: capitalize !important;
+}
+
+.sub-box-red-title {
+  background-color: var(--secondary);
+  padding: 15px 0px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.sub-plan-btn-red {
+  background-color: var(--secondary) !important;
+  border-radius: var(--radiusTwo) !important;
+  font-size: 12px !important;
+  text-transform: capitalize !important;
+}
+
+.sub-box-yellow-title {
+  background-color: var(--primary);
+  padding: 15px 0px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.sub-plan-btn-yellow {
+  background-color: var(--primary) !important;
+  border-radius: var(--radiusTwo) !important;
+  font-size: 12px !important;
+  text-transform: capitalize !important;
+}
+
+/* subscription plan page end */
+
+/* Top header start */
+.top-header-title {
+  font-size: 18px;
+  font-weight: 500;
+  font-family: var(--fontPrimary);
+  color: var(--primarytext);
+}
+
+.top-header-desc {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--fontPrimary);
+  color: var(--secondarytext);
+}
+
+/* Top header end */
+
+.ct-box-padding {
+  padding-bottom: 20px;
+}
+
+
+/* one landing start */
+.ct-heading {
+  text-align: center;
+  font-size: 18px;
+  font-family: var(--fontPrimary);
+  color: var(--primarybg);
+  text-transform: uppercase;
+  padding-top: 40px;
+}
+
+.ct-landing-box {
+  box-shadow: var(--card-box-shadow);
+  border-radius: var(--radiusOne);
+  padding: 30px;
+  background-color: var(--primarybg);
+  padding-top: 20px;
+  padding-bottom: 50px;
+  margin-bottom: 40px;
+}
+
+.landing-bg {
+  background-image: linear-gradient(to right, #c33332, #d9822b);
+  padding: 20px 0px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-para {
+  font-size: 14px;
+  font-family: var(--fontSecondary);
+  color: var(--secondarytext);
+  font-weight: 500;
+}
+
+.ct-box {
+  box-shadow: var(--card-box-shadow);
+  border-radius: var(--radiusOne);
+  margin-top: -75px;
+  background-color: var(--primarybg);
+  padding-top: 20px;
+  padding-bottom: 50px;
+  margin-bottom: 40px;
+}
+
+.ct-box-details {
+  box-shadow: var(--card-box-shadow);
+  border-radius: var(--radiusOne);
+  background-color: var(--primarybg);
+  padding-top: 20px;
+  padding-bottom: 50px;
+  margin-bottom: 40px;
+}
+
+.ct-box-title {
+  text-align: center;
+  font-size: 22px;
+  text-transform: capitalize;
+  padding-top: 15px;
+  color: var(--primarytext);
+  font-weight: 500;
+  font-family: var(--fontPrimary);
+  margin-bottom: 4px;
+}
+
+.ct-box-landing-title {
+  text-align: center;
+  font-size: 22px;
+  text-transform: capitalize;
+  padding-top: 15px;
+  color: #ffffff;
+  font-weight: 500;
+  font-family: var(--fontPrimary);
+}
+
+.ct-box-line {
+  width: 230px;
+  background-color: var(--secondary);
+  height: 2px;
+  display: block;
+  margin: 0px auto;
+}
+
+.box-negative {
+  display: flex;
+  justify-content: center;
+}
+
+.ct-box-btn-catering {
+  background-color: var(--secondary) !important;
+  font-size: 12px !important;
+  font-family: var(--fontPrimary) !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  width: 180px !important;
+  margin: 0px auto !important;
+  margin-bottom: 10px !important;
+}
+
+.ct-box-btn-tiffin {
+  background-color: var(--primary) !important;
+  font-size: 12px !important;
+  font-family: var(--fontPrimary) !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  width: 180px !important;
+  margin: 0px auto !important;
+}
+
+.ct-box-both {
+  font-size: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: var(--secondarytext);
+  font-family: var(--fontPrimary) !important;
+}
+
+.ct-box-btn-catering-tiffin {
+  background-color: var(--primarybg) !important;
+  font-size: 12px !important;
+  font-family: var(--fontPrimary) !important;
+  font-weight: 500 !important;
+  border-radius: 99px !important;
+  width: 250px !important;
+  margin: 0px auto !important;
+  color: var(--secondary) !important;
+}
+
+/* one landing  end */
+
+/* Custom styles for tabs */
+/* Base tab styles */
+.custom-tab {
+  border: 1px solid #d3d3d3;
+  border-radius: 20px;
+  padding: 4px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #757575;
+  background-color: #0a0a0a03 !important;
+  transition: all 0.3s ease-in-out;
+  max-width: 601px !important;
+  min-width: 190px !important;
+  text-align: center;
+  border-radius: 99px !important;
+}
+
+.custom-tab:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.active-tab {
+  color: black;
+  border-color: #ff6347;
+  background-color: #ffffff  !important;
+  /* box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  margin: 2px !important;
+}
+
+
+
+.due-date{
+  font-size: 10px !important;
+  color: #57636c !important;
+}
+
+.text-gray{
+  color: #57636c
+}
+
+.sub-text{
+  font-size: 14px !important;
 }

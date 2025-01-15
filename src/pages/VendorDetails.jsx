@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { fetchVendorShowDetailData, fetchVendorTiffinShowDetailData } from "../features/menuSlice"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useLocation, useParams } from "react-router-dom"
 import Table from 'react-bootstrap/Table';
@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Cuisines from "../components/vendor-details/Cuisines";
 import Packages from "../components/vendor-details/Packages";
 import { setSearchTerm } from "../features/supportTicketSlice";
+import Subscription from "./Subscription";
 
 
 
@@ -30,7 +31,7 @@ const VendorDetails = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
 
-  // console.log(vendorDetails, "vendorDetailsvendorDetails");
+  console.log(vendorDetails, "vendorDetailsvendorDetails");
 
 
   useEffect(() => {
@@ -343,16 +344,9 @@ const VendorDetails = () => {
         <hr />
 
 
+        <Link to={`/dashboard/subscription/${vendorDetails?.id}`}>View Subscription</Link>
 
-
-
-
-
-
-
-
-
-
+        {/* {vendorDetails?.id && <Subscription vendorId={vendorDetails?.id} />} */}
 
 
 
