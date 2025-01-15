@@ -63,6 +63,24 @@ export const updateSupportshareLinksData = createAsyncThunk(
 )
 
 
+export const createNewVendor = createAsyncThunk(
+  'shareLinks/createNewVendor',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/support-create-vendor-quick`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(response.data.message)
+      return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
 
 
 export const shareLinksSlice = createSlice({
@@ -106,6 +124,17 @@ export const shareLinksSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateSupportshareLinksData.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // createNewVendor 
+      .addCase(createNewVendor.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createNewVendor.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+      })
+      .addCase(createNewVendor.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })
