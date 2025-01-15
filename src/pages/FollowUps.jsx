@@ -31,8 +31,8 @@ const FollowUps = () => {
 
   // const activeAgent = agentVendorCommentsList[0]
 
-  console.log(agentVendorCommentsList, "agentVendorCommentsList agentVendorCommentsList");
-  console.log(activeAgent, "activeAgent activeAgent");
+  // console.log(agentVendorCommentsList, "agentVendorCommentsList agentVendorCommentsList");
+  // console.log(activeAgent, "activeAgent activeAgent");
 
 
   const [show, setShow] = useState(false);

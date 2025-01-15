@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createNewVendor } from "../features/shareLinksSlice";
 
 
@@ -11,12 +11,13 @@ const initialState = {
   phone_number: "",
   area: "",
   city: "",
-  pincode: "",
+  pin_code: "",
   state: "",
 }
 
 const AddVendor = () => {
 
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
 
   const [vendorData, setVendorData] = useState(initialState);
@@ -28,25 +29,22 @@ const AddVendor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(vendorData, "vendorData");
-
+    setLoading(true)
     try {
-      const response = await dispatch(createNewVendor(vendorData))
-      if (response.status === 200) {
-        // alert("Vendor added successfully!");
-        setVendorData(vendorData);
-      } else {
-        alert("Failed to add vendor.");
-      }
+      await dispatch(createNewVendor(vendorData))
+      setVendorData(initialState);
+      setLoading(false)
     } catch (error) {
       console.error("Error adding vendor:", error);
       alert("An error occurred while adding the vendor.");
+    } finally {
+      setLoading(false)
     }
   };
 
   return (
     <Container>
-      <h3 className="mt-4 mb-4">Add New Vendor</h3>
+      <h3 className="mt-4 mb-4">+ Add New Vendor</h3>
       <Form onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Col md={6}>
@@ -136,13 +134,13 @@ const AddVendor = () => {
         </Row>
         <Row className="mb-3">
           <Col md={6}>
-            <Form.Group controlId="pincode">
+            <Form.Group controlId="pin_code">
               <Form.Label>Pin Code *</Form.Label>
               <Form.Control
                 type="text"
-                name="pincode"
+                name="pin_code"
                 placeholder="Enter pin code"
-                value={vendorData.pincode}
+                value={vendorData.pin_code}
                 onChange={handleChange}
                 required
               />
@@ -162,8 +160,8 @@ const AddVendor = () => {
             </Form.Group>
           </Col>
         </Row>
-        <Button variant="primary" type="submit">
-          Save & Submit
+        <Button variant="primary" type="submit" disabled={loading}>
+          {loading ? 'Loading...' : 'Save & Submit'}
         </Button>
       </Form>
     </Container>

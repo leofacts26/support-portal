@@ -72,8 +72,8 @@ export const createNewVendor = createAsyncThunk(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      toast.success(response.data.message)
+      });      
+      toast.success(response.data.data.message)
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
