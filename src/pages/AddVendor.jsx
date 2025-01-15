@@ -33,7 +33,7 @@ const AddVendor = () => {
     try {
       const response = await dispatch(createNewVendor(vendorData))
       if (response.status === 200) {
-        alert("Vendor added successfully!");
+        // alert("Vendor added successfully!");
         setVendorData(vendorData);
       } else {
         alert("Failed to add vendor.");
