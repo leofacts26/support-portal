@@ -35,7 +35,7 @@ const YearlyPlan = () => {
         const response = await dispatch(calculateOrderTotal(newItem));
         if (response?.payload?.status === "success") {
             await dispatch(setDiscountedData(response?.payload))
-            navigate(`/dashboard/subscription-plan-details/${id}`);
+            navigate(`/dashboard/subscription-plan-details/${id}/${item?.subscriptionTypeId}`);
         }
     }
 
