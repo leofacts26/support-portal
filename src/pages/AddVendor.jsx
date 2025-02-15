@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Stack } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewVendor } from "../features/shareLinksSlice";
 
@@ -160,11 +160,13 @@ const AddVendor = () => {
             </Form.Group>
           </Col>
         </Row>
-        <Button variant="primary" type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Save & Submit'}
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? 'Loading...' : 'Save & Submit'}
+          </Button>
+        </div>
       </Form>
-    </Container>
+    </Container >
   );
 };
 

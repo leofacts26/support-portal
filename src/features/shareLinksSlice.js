@@ -72,10 +72,12 @@ export const createNewVendor = createAsyncThunk(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });      
+      });
       toast.success(response.data.data.message)
       return response?.data?.data;
     } catch (error) {
+      // console.log(error, "error");
+      toast.error(datavalidationerror(error));
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }
@@ -136,7 +138,7 @@ export const shareLinksSlice = createSlice({
       })
       .addCase(createNewVendor.rejected, (state, { payload }) => {
         state.isLoading = false;
-        toast.error(datavalidationerror(payload));
+        // toast.error(datavalidationerror(payload));
       })
   }
 })
