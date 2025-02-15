@@ -12,6 +12,19 @@ const initialState = {
 }
 
 
+export const loginUser = createAsyncThunk(
+    'user/loginUser',
+    async (data, thunkAPI) => {
+        try {
+            const response = await api.post(`${BASE_URL}/login-support-user`, data);
+            return response?.data.data;
+        } catch (error) {
+            toast.error(error.response.data.message)
+            return thunkAPI.rejectWithValue(error.response.data.message);
+        }
+    }
+)
+
 export const createUserOtp = createAsyncThunk(
     'user/createUserOtp',
     async (data, thunkAPI) => {
@@ -29,6 +42,8 @@ export const createUserOtp = createAsyncThunk(
         }
     }
 )
+
+
 export const verifyAdminOtp = createAsyncThunk(
     'user/verifyAdminOtp',
     async (data, thunkAPI) => {
@@ -87,6 +102,16 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // loginUser 
+            .addCase(loginUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(loginUser.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+            })
+            .addCase(loginUser.rejected, (state, { payload }) => {
+                state.isLoading = false;
+            })
             // createUserOtp 
             .addCase(createUserOtp.pending, (state) => {
                 state.isLoading = true;

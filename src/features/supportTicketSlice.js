@@ -23,8 +23,6 @@ export const fetchSupportTicketData = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response, "response");
-
       return response?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
