@@ -634,3 +634,36 @@ input:focus {
 .sub-text{
   font-size: 14px !important;
 }
+
+
+
+/* four enter your loc start  */
+.ct-box-btn-current-loc {
+  background-color: var(--primarybg) !important;
+  font-size: 8px !important;
+  font-family: var(--fontPrimary) !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  width: 180px !important;
+  margin: 0px auto !important;
+  color: var(--secondary) !important;
+}
+
+.ct-box-search-loc {
+  font-size: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: var(--secondarytext);
+  font-family: var(--fontPrimary) !important;
+}
+
+.ct-box-search-results {
+  font-size: 12px;
+  text-transform: capitalize;
+  color: var(--primarytext);
+  font-weight: 500;
+  font-family: var(--fontPrimary);
+}
+
+/* four end enter your loc */

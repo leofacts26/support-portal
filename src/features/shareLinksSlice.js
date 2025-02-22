@@ -76,7 +76,7 @@ export const createNewVendor = createAsyncThunk(
       toast.success(response.data.data.message)
       return response?.data?.data;
     } catch (error) {
-      // console.log(error, "error");
+      console.log(error, "error");
       toast.error(datavalidationerror(error));
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }

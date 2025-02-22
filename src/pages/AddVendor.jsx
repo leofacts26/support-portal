@@ -1,38 +1,126 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col, Stack } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewVendor } from "../features/shareLinksSlice";
+import { Box } from "@mui/material";
+import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
+import LoadingSpinner from '../components/LoadingSpinner';
 
 
 const initialState = {
   vendor_service_name: '',
-  vendor_type: "Caterer",
-  point_of_contact_name: "",
-  phone_number: "",
-  area: "",
-  city: "",
-  pin_code: "",
-  state: "",
+  vendor_type: '',
+  point_of_contact_name: '',
+  phone_number: '',
+  street_name: '',
+  country: '',
+  state: '',
+  city: '',
+  pincode: '',
+  pin_code: '',
+  latitude: '',
+  longitude: '',
+  area: '',
+  formatted_address: '',
+  street_address: '',
+  place_id: ''
 }
+
+
 
 const AddVendor = () => {
 
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
+  // const [vendorData, setVendorData] = useState(initialState);
 
-  const [vendorData, setVendorData] = useState(initialState);
+
+  // location start
+  const [values, setValues] = useState({})
+  const [locationPlaceId, setLocationPlaceId] = useState(null)
+  const [manualLocation, setManualLocation] = useState("")
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  // location end 
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setVendorData({ ...vendorData, [name]: value });
+    setValues({ ...values, [name]: value });
   };
+
+  // loc start
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading,
+  } = usePlacesService({
+    apiKey: process.env.REACT_APP_GOOGLE,
+    options: {
+      componentRestrictions: { country: 'in' }
+    }
+  });
+
+  useEffect(() => {
+    if (placePredictions.length)
+      placesService?.getDetails(
+        {
+          placeId: locationPlaceId,
+        },
+        (placeDetails) => savePlaceDetailsToState(placeDetails)
+      );
+  }, [placePredictions, locationPlaceId]);
+
+
+  const savePlaceDetailsToState = (places) => {
+    const { formatted_address, name } = places;
+    const { address_components } = places;
+
+    const country = address_components?.find(c => c?.types?.includes('country')) || {};
+    const state = address_components?.find(c => c?.types?.includes('administrative_area_level_1')) || {};
+    const city = address_components?.find(c => c?.types?.includes('locality')) || {};
+    const pincode = address_components?.find(c => c?.types?.includes('postal_code')) || {};
+    const area = address_components?.find(c => c?.types?.includes('locality')) || {};
+    const street_name = address_components?.find(c => c?.types?.includes('locality')) || {};
+
+    const { geometry: { location } } = places;
+    const { lat, lng } = location;
+
+    setValues((prevValues) => ({
+      ...prevValues,
+      street_name: street_name?.long_name || "N/A",
+      area: name || "N/A",
+      pincode: pincode?.long_name || "",
+      latitude: lat() || "N/A",
+      longitude: lng() || "N/A",
+      address: name || "N/A",
+      city: city?.long_name || "N/A",
+      state: state?.long_name || "N/A",
+      country: country?.long_name || "N/A",
+      formatted_address: manualLocation || "N/A",
+      place_id: locationPlaceId
+    }));
+  }
+
+  const selectLocation = (item) => {
+    console.log(item, "Item");
+    setSelectedLocation(item);
+    setManualLocation(item.description);
+    setLocationPlaceId(item?.place_id)
+  }
+  // loc end 
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true)
+
     try {
-      await dispatch(createNewVendor(vendorData))
-      setVendorData(initialState);
+      await dispatch(createNewVendor(values))
+      setValues(initialState);
+      setManualLocation("")
       setLoading(false)
     } catch (error) {
       console.error("Error adding vendor:", error);
@@ -54,7 +142,7 @@ const AddVendor = () => {
                 type="text"
                 name="vendor_service_name"
                 placeholder="Enter vendor service name"
-                value={vendorData.vendor_service_name}
+                value={values.vendor_service_name}
                 onChange={handleChange}
                 required
               />
@@ -66,10 +154,11 @@ const AddVendor = () => {
               <Form.Control
                 as="select"
                 name="vendor_type"
-                value={vendorData.vendor_type}
+                value={values.vendor_type}
                 onChange={handleChange}
                 required
               >
+                <option value="">Select Vendoe Type</option>
                 <option value="Caterer">Caterer</option>
                 <option value="Tiffin">Tiffin</option>
               </Form.Control>
@@ -84,7 +173,7 @@ const AddVendor = () => {
                 type="text"
                 name="point_of_contact_name"
                 placeholder="Enter point of contact name"
-                value={vendorData.point_of_contact_name}
+                value={values.point_of_contact_name}
                 onChange={handleChange}
                 required
               />
@@ -97,7 +186,7 @@ const AddVendor = () => {
                 type="text"
                 name="phone_number"
                 placeholder="Enter phone number"
-                value={vendorData.phone_number}
+                value={values.phone_number}
                 onChange={handleChange}
                 required
               />
@@ -107,17 +196,56 @@ const AddVendor = () => {
         <Row className="mb-3">
           <Col md={6}>
             <Form.Group controlId="area">
-              <Form.Label>Area *</Form.Label>
+              <Form.Label>Street Name *</Form.Label>
               <Form.Control
                 type="text"
-                name="area"
-                placeholder="Enter area"
-                value={vendorData.area}
+                name="street_name"
+                placeholder="Enter Street Name"
+                value={values.street_name}
                 onChange={handleChange}
                 required
               />
             </Form.Group>
           </Col>
+          <Col md={6}>
+            <div className="mt-0">
+              <p className="business-profile-name">Select your Area *</p>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <textarea
+                  autocomplete="false"
+                  required
+                  style={{ height: '65px' }}
+                  onChange={(evt) => {
+                    setSelectedLocation(null);
+                    setManualLocation(evt.target.value);
+                    getPlacePredictions({ input: evt.target.value });
+                    handleChange(evt); // This line ensures Formik's handleChange is called
+                  }}
+                  value={manualLocation ? manualLocation : values.formatted_address}
+                  name="formatted_address" // Make sure the name matches the field name in initialValues
+                  rows="20" id="comment_text" cols="40"
+                  className="job-textarea" autoComplete="off" role="textbox"
+                  aria-autocomplete="list" aria-haspopup="true"
+                ></textarea>
+              </Box>
+            </div>
+
+            {placePredictions?.length > 0 && !selectedLocation && (
+              <p className='ct-box-search-loc mb-1'>Search Results</p>
+            )}
+
+            {isPlacePredictionsLoading ? (
+              <LoadingSpinner />
+            ) : (
+              !selectedLocation && (
+                placePredictions?.map((item, index) => (
+                  <h2 className='ct-box-search-results cursor-pointer' key={index} onClick={() => selectLocation(item)}>{item?.description}</h2>
+                ))
+              )
+            )}
+          </Col>
+        </Row>
+        <Row className="mb-3">
           <Col md={6}>
             <Form.Group controlId="city">
               <Form.Label>City *</Form.Label>
@@ -125,14 +253,12 @@ const AddVendor = () => {
                 type="text"
                 name="city"
                 placeholder="Enter city"
-                value={vendorData.city}
+                value={values.city}
                 onChange={handleChange}
                 required
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row className="mb-3">
           <Col md={6}>
             <Form.Group controlId="pin_code">
               <Form.Label>Pin Code *</Form.Label>
@@ -140,26 +266,60 @@ const AddVendor = () => {
                 type="text"
                 name="pin_code"
                 placeholder="Enter pin code"
-                value={vendorData.pin_code}
+                value={values.pin_code}
                 onChange={handleChange}
                 required
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
-            <Form.Group controlId="state">
-              <Form.Label>State *</Form.Label>
-              <Form.Control
-                type="text"
-                name="state"
-                placeholder="Enter state"
-                value={vendorData.state}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
+
         </Row>
+
+
+        {/* <Row className="mb-3">
+          <Col md={6}>
+            <div className="mt-5">
+              <p className="business-profile-name">Select your Area</p>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <textarea
+                  autocomplete="false"
+                  required
+                  style={{ height: '65px' }}
+                  onChange={(evt) => {
+                    setSelectedLocation(null);
+                    setManualLocation(evt.target.value);
+                    getPlacePredictions({ input: evt.target.value });
+                    handleChange(evt); // This line ensures Formik's handleChange is called
+                  }}
+                  value={manualLocation ? manualLocation : values.formatted_address}
+                  name="formatted_address" // Make sure the name matches the field name in initialValues
+                  rows="20" id="comment_text" cols="40"
+                  className="job-textarea" autoComplete="off" role="textbox"
+                  aria-autocomplete="list" aria-haspopup="true"
+                ></textarea>
+              </Box>
+            </div>
+
+            {placePredictions?.length > 0 && !selectedLocation && (
+              <p className='ct-box-search-loc mb-1'>Search Results</p>
+            )}
+
+            {isPlacePredictionsLoading ? (
+              <LoadingSpinner />
+            ) : (
+              !selectedLocation && (
+                placePredictions?.map((item, index) => (
+                  <h2 className='ct-box-search-results cursor-pointer' key={index} onClick={() => selectLocation(item)}>{item?.description}</h2>
+                ))
+              )
+            )}
+          </Col>
+        </Row> */}
+
+
+
+
+
         <div style={{ display: 'flex', justifyContent: 'end' }}>
           <Button variant="primary" type="submit" disabled={loading}>
             {loading ? 'Loading...' : 'Save & Submit'}
