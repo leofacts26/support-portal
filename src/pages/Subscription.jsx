@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 
 const Subscription = () => {
   const { activeSubscriptionList, cancelSubData } = useSelector((state) => state.subscription)
-  // console.log(cancelSubData, "cancelSubData");
+  console.log(activeSubscriptionList, "activeSubscriptionList");
   const { id } = useParams();
 
   const dispatch = useDispatch();
@@ -117,7 +117,7 @@ const Subscription = () => {
                   <Stack direction="row" justifyContent="space-between" alignItems="center" className="mt-3">
                     <p className="subscription-type">Subscription Type:</p>
                     <h4 className="subscription-dark">
-                      {activeSubscriptionList?.activeSubscription?.subscription_pattern ? activeSubscriptionList?.activeSubscription?.subscription_pattern : 'N/A'}
+                      {activeSubscriptionList?.activeSubscription?.subscription_pattern_display_text ? activeSubscriptionList?.activeSubscription?.subscription_pattern_display_text : 'N/A'}
                     </h4>
                   </Stack>
 
@@ -142,7 +142,7 @@ const Subscription = () => {
                   </Stack>
 
 
-                  {/* <Link to="/dashboard/subscription-plan" className="text-decoration-none">
+                  {/* <Link to="/dashboard/subscription-plan/${id}" className="text-decoration-none">
                     <Button variant="contained" className="inquiries-btn mx-auto taxt-center" disabled={activeSubscriptionList?.activeSubscription === null}>
                       {activeSubscriptionList?.activeSubscription === null ? 'Create Subscription' : 'Cancel Subscription'}
                     </Button>
@@ -163,10 +163,10 @@ const Subscription = () => {
                         className="inquiries-btn mx-auto text-center"
                         disabled={activeSubscriptionList?.pendingSubscriptions?.length !== 0}
                       >
-                        Create Subscription
+                        Get Subscription
                       </Button>
                     </Link>
-                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern === "one_time_monthly" ? (
+                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern?.toLowerCase() === "one_time_monthly" ? (
                     <Link
                       to={`/dashboard/subscription-plan/${id}`}
                       className="text-decoration-none"
@@ -178,7 +178,7 @@ const Subscription = () => {
                         Upgrade Subscription
                       </Button>
                     </Link>
-                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern === "subscription-monthly" ? (
+                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern?.toLowerCase() === "subscription-monthly" ? (
                     <Button
                       variant="contained"
                       className="inquiries-btn mx-auto text-center"
@@ -198,7 +198,7 @@ const Subscription = () => {
 
           <div>
             {activeSubscriptionList?.queuedSubscriptions?.length > 0 && <hr className="mb-4" />}
-            {activeSubscriptionList?.queuedSubscriptions?.length > 0 && <h3 className='top-header-title mb-3'>Queud Subscriptions</h3>}
+            {activeSubscriptionList?.queuedSubscriptions?.length > 0 && <h3 className='top-header-title mb-3'>Queued Subscriptions</h3>}
             <Box sx={{ flexGrow: 1 }}>
               <Grid container spacing={2}>
                 {
@@ -231,7 +231,7 @@ const Subscription = () => {
                             <Stack direction="row" justifyContent="space-between" alignItems="center" className="mt-3">
                               <p className="subscription-type">Subscription Plan:</p>
                               <h4 className="subscription-dark">
-                                {itemData?.subscription_display_name ? itemData?.subscription_display_name : 'N/A'}
+                                {itemData?.subscription_pattern_display_text ? itemData?.subscription_pattern_display_text : 'N/A'}
                               </h4>
                             </Stack>
 
@@ -288,7 +288,7 @@ const Subscription = () => {
                             <Stack direction="row" justifyContent="space-between" alignItems="center" className="mt-3">
                               <p className="subscription-type">Subscription Plan:</p>
                               <h4 className="subscription-dark">
-                                {itemData?.subscription_display_name ? itemData?.subscription_display_name : 'N/A'}
+                                {itemData?.subscription_pattern_display_text ? itemData?.subscription_pattern_display_text : 'N/A'}
                               </h4>
                             </Stack>
 

@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const initialState = {
   isLoading: true,
   followUpList: [],
-  agentVendorCommentsList: []
+  agentVendorCommentsList: [],
 }
 
 
@@ -26,6 +26,7 @@ export const fetchSupportFollowUpssList = createAsyncThunk(
     }
   }
 )
+
 
 
 export const assignAsignAgentVendor = createAsyncThunk(
@@ -56,7 +57,7 @@ export const agentVendorComments = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success(response.data.message)
+      // toast.success(response.data.message)
       return response?.data?.data;
     } catch (error) {
       toast.error(error.response.data.message)

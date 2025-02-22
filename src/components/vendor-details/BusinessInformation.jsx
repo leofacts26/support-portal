@@ -65,10 +65,10 @@ const formatPhoneNumber = (phoneNumber) => {
 
 
 const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, editTrigger, searchTerm }) => {
-  
+
   const { token } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch()
-  
+
   const [values, setValues] = useState(vendorDetails)
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -343,36 +343,39 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
             <thead>
               <tr>
                 <th style={{ fontSize: '10px' }}>street_name</th>
-                <th style={{ fontSize: '10px' }}>state</th>
                 <th style={{ fontSize: '10px' }}>area</th>
-                <th style={{ fontSize: '10px' }}>latitude</th>
-                <th style={{ fontSize: '10px' }}>longitude</th>
+                <th style={{ fontSize: '10px' }}>city</th>
+
+                <th style={{ fontSize: '10px' }}>state</th>
+
                 <th style={{ fontSize: '10px' }}>pincode</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>{vendorDetails?.street_name ? vendorDetails?.street_name : 'N/A'}</td>
-                <td>{vendorDetails?.state ? vendorDetails?.state : 'N/A'}</td>
                 <td>{vendorDetails?.area ? vendorDetails?.area : 'N/A'}</td>
-                <td>{vendorDetails?.latitude ? vendorDetails?.latitude : 'N/A'}</td>
-                <td>{vendorDetails?.longitude ? vendorDetails?.longitude : 'N/A'}</td>
+                <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
+                <td>{vendorDetails?.state ? vendorDetails?.state : 'N/A'}</td>
                 <td>{vendorDetails?.pincode ? vendorDetails?.pincode : 'N/A'}</td>
+
               </tr>
             </tbody>
 
             <thead>
               <tr>
-                <th style={{ fontSize: '10px' }}>city</th>
                 <th style={{ fontSize: '10px' }}>country</th>
+                <th style={{ fontSize: '10px' }}>latitude</th>
+                <th style={{ fontSize: '10px' }}>longitude</th>
                 <th style={{ fontSize: '10px' }}>formatted_address</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
                 <td>{vendorDetails?.country ? vendorDetails?.country : 'N/A'}</td>
-                <td>{vendorDetails?.formatted_address ? vendorDetails?.formatted_address : 'N/A'}</td>
+                <td>{vendorDetails?.longitude ? vendorDetails?.longitude : 'N/A'}</td>
+                <td>{vendorDetails?.latitude ? vendorDetails?.latitude : 'N/A'}</td>
+                <td style={{ width: '250px' }}>{vendorDetails?.formatted_address ? vendorDetails?.formatted_address : 'N/A'}</td>
               </tr>
             </tbody>
           </>
@@ -380,24 +383,24 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
       </div>
 
       <div className="row mx-2">
-          <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-            <h3 className="mb-0">About</h3>
-          </div>
-          <Table responsive="xl" className="m-0">
-            <thead>
-              <tr>
-                <th style={{ fontSize: '10px' }}>About Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {/* about_description */}
-                <td>{vendorDetails?.about_description ? vendorDetails?.about_description : 'N/A'}</td>
-              </tr>
-            </tbody>
-          </Table>
+        <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+          <h3 className="mb-0">About</h3>
         </div>
-        <hr />
+        <Table responsive="xl" className="m-0">
+          <thead>
+            <tr>
+              <th style={{ fontSize: '10px' }}>About Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {/* about_description */}
+              <td>{vendorDetails?.about_description ? vendorDetails?.about_description : 'N/A'}</td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
+      <hr />
 
 
 
@@ -921,7 +924,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
 
                   <Stack direction="row" justifyContent="center" className="mt-4">
                     <Button type="submit" variant="contained" className="inquiries-red-btn" >
-                    {loading ? 'Loading...' : 'Update'}  </Button>
+                      {loading ? 'Loading...' : 'Update'}  </Button>
                   </Stack>
 
                 </form>

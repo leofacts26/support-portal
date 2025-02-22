@@ -19,7 +19,7 @@ import Subscription from "./Subscription";
 
 
 
-const VendorDetails = () => {
+const VendorDetails = ({ searchBox }) => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -135,27 +135,27 @@ const VendorDetails = () => {
         <LoadingSpinner />
       </div> : <div className="container-fluid my-5">
 
-        {/* {
-          searchBox ? <> */}
-        <div className="mb-4 cursor-pointer">
-          <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
-            <IoMdArrowRoundBack /> Back
-          </button>
-        </div>
+        {
+          searchBox ? <>
+            <div className="mb-4 cursor-pointer">
+              <button className="btn btn-success me-1" onClick={() => navigate(-1)}>
+                <IoMdArrowRoundBack /> Back
+              </button>
+            </div>
 
-        <Form className="d-flex my-4" onSubmit={handleSubmit}>
-          <FormControl
-            type="search"
-            placeholder="Company ID: 748398"
-            className="me-2 w-25"
-            aria-label="Search"
-            value={searchTerm}
-            onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-          />
-          <Button variant="outline-success" type="submit">Search</Button>
-        </Form>
-        {/* </> : <span></span>
-        } */}
+            <Form className="d-flex my-4" onSubmit={handleSubmit}>
+              <FormControl
+                type="search"
+                placeholder="Company ID: 748398"
+                className="me-2 w-25"
+                aria-label="Search"
+                value={searchTerm}
+                onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+              />
+              <Button variant="outline-success" type="submit">Search</Button>
+            </Form>
+          </> : <span></span>
+        }
 
 
 
@@ -192,8 +192,11 @@ const VendorDetails = () => {
 
 
         <div className="row mx-2">
+
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Subscription Details</h3>
+            <Link to={`/dashboard/subscription/${vendorDetails?.id}`} className="text-warning" style={{ cursor: 'pointer' }}>View Subscription</Link>
+            {/* <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }}>Edit</h3> */}
           </div>
 
           <Table responsive="xl" className='m-0'>
@@ -344,7 +347,7 @@ const VendorDetails = () => {
         <hr />
 
 
-        <Link to={`/dashboard/subscription/${vendorDetails?.id}`}>View Subscription</Link>
+        {/* <Link to={`/dashboard/subscription/${vendorDetails?.id}`}>View Subscription</Link> */}
 
         {/* {vendorDetails?.id && <Subscription vendorId={vendorDetails?.id} />} */}
 

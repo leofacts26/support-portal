@@ -16,6 +16,7 @@ const MonthlyPlan = () => {
     const dispatch = useDispatch();
     const { id } = useParams();
 
+    const { activeSubscriptionList } = useSelector((state) => state.subscription)
 
 
     useEffect(() => {
@@ -45,9 +46,14 @@ const MonthlyPlan = () => {
         return <LoadingAnimation center />
     }
 
+    // Safeguard against undefined or empty subscription data
+    const hasValidPlans = subscriptionData?.filter(item => item.plans?.length > 0).length > 0;
+
+
+
     return (
         <>
-            {subscriptionData?.filter(item => item.plans?.length > 0).length > 0 ? (
+            {hasValidPlans ? (
                 <Grid container spacing={2}>
                     {subscriptionData
                         .filter(item => item.plans?.length > 0) // Filter out items with empty plans
@@ -96,7 +102,7 @@ const MonthlyPlan = () => {
                                                     </h3>
                                                 </div>
                                                 <p className="sub-plan-brand mb-3 mt-3">
-                                                    List as {item?.subscriptionType} Caterer
+                                                    List as {item?.subscriptionTypeDisplayName} Caterer
                                                 </p>
                                                 <p className="sub-plan-para">Benefits:</p>
                                                 {item?.benefits &&
@@ -116,7 +122,7 @@ const MonthlyPlan = () => {
                                                     style={{ backgroundColor: `${item.subscriptionTypeDisplayColor}` }}
                                                     onClick={() => onHandleSubscribe(item)}
                                                 >
-                                                    Subscribe Now
+                                                    {activeSubscriptionList?.activeSubscription ? "Upgrade Subscription" : "Subscribe Now"}
                                                 </Button>
                                             </Link>
                                             <br />
@@ -129,6 +135,7 @@ const MonthlyPlan = () => {
             ) : (
                 <p>No subscription plans available at the moment.</p>
             )}
+
         </>
     );
 

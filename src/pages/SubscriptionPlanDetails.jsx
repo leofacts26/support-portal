@@ -27,7 +27,7 @@ const SubscriptionPlanDetails = () => {
   // console.log(subscribeData, "subscribeData");
   // console.log(discoundedData, "discoundedData");
   // console.log(recurringPayments, "recurringPayments");
-  
+
   // console.log(calculaterOrderData, "calculaterOrderDatacalculaterOrderData");
 
 
@@ -289,7 +289,7 @@ const SubscriptionPlanDetails = () => {
                         <form className="search-wrapper cf mt-3" onSubmit={onCouponCodeSubmit}>
                           <input
                             name="couponCode" value={couponCode} onChange={(e) => dispatch(setCouponCode(e.target.value))}
-                            type="text" placeholder="Enter Coupon Code" required style={{ boxShadow: 'none' }} />
+                            type="text" placeholder="Enter Coupon Code" required style={{ boxShadow: 'none', paddingLeft: '20px' }} />
                           <button type="submit">Apply</button>
                         </form>
 
@@ -321,14 +321,15 @@ const SubscriptionPlanDetails = () => {
                       <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2} className="mb-1 mt-3">
                         <p className="sub-text">Sub Amount:</p> <p className="sub-text"> {discoundedData?.subAmount ? discoundedData?.subAmount : 'N/A'} </p>
                       </Stack>
-                      <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2} className="mb-1 mt-2">
+                      {recurringPayments === false && <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2} className="mb-1 mt-2">
                         <p className="sub-text">Discount Amount:</p> <p className="sub-text"> {discoundedData?.discountAmount ? discoundedData?.discountAmount : 'N/A'}</p>
-                      </Stack>
+                      </Stack>}
+
                       <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2} className="mb-3 mt-2">
                         <p className="sub-text">Final Amount:</p>
                         <Stack direction="row" alignItems="center">
                           <CurrencyRupeeIcon className="text-success mt-1" style={{ fontSize: '14px' }} />
-                          <p className="sub-text m-0">{discoundedData?.finalAmount ? discoundedData?.finalAmount : 'N/A'}</p>
+                          <p className="sub-text">{discoundedData?.finalAmount ? discoundedData?.finalAmount : 'N/A'}</p>
                         </Stack>
                       </Stack>
 

@@ -12,6 +12,7 @@ import Subscription from "./pages/Subscription";
 import SubscriptionPlan from "./pages/SubscriptionPlan";
 import SubscriptionPlanDetails from "./pages/SubscriptionPlanDetails";
 import AddVendor from "./pages/AddVendor";
+import FollowUpsUpdateComment from "./pages/FollowUpsUpdateComment";
 
 
 function App() {
@@ -26,8 +27,9 @@ function App() {
           {/* Home Page  */}
           <Route path="/support-list-tickets" element={<SupportTickets />} />
           <Route path="/support-list-share-links" element={<ShareLinks />} />
-          <Route path="/support-get-vendor-show-details" element={<VendorDetails />} />
+          <Route path="/support-get-vendor-show-details" element={<VendorDetails searchBox={true} />} />
           <Route path="/support-list-followups" element={<FollowUps />} />
+          <Route path="/support-list-followups/:id/:companyId" element={<FollowUpsUpdateComment />} />
           <Route path="/add-vendor" element={<AddVendor />} />
 
           <Route path='/dashboard/subscription/:id' element={<Subscription />} />

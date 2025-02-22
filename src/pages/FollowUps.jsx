@@ -14,6 +14,7 @@ import Table from 'react-bootstrap/Table';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
 
 
 const FollowUps = () => {
@@ -26,8 +27,9 @@ const FollowUps = () => {
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectAgent, setSelectAgent] = useState("")
   const [comment, setComment] = useState("")
-
   const [activeAgent, setActiveAgent] = useState([])
+
+  const navigate = useNavigate()
 
   // const activeAgent = agentVendorCommentsList[0]
 
@@ -136,10 +138,14 @@ const FollowUps = () => {
     }
   }
 
+  const onUpdateComment = (id, companyId) => {
+    window.open(`/support-list-followups/${id}/${companyId}`, '_blank');
+  };
 
   const columns = [
-    { name: 'Business ID', selector: (row) => row.id, sortable: true },
+    { name: 'Business ID', selector: (row) => row.company_id, sortable: true },
     { name: 'Vendor Type', selector: (row) => row.vendor_type, sortable: true, },
+    { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '200px' },
     {
       name: 'Phone No',
       selector: (row) => (
@@ -149,7 +155,6 @@ const FollowUps = () => {
       ),
       sortable: true,
     },
-    { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '200px' },
     { name: 'Status', selector: (row) => row.listing_status, sortable: true, },
     {
       name: 'Date Time',
@@ -176,10 +181,13 @@ const FollowUps = () => {
     {
       name: 'Update Comment',
       cell: (row) => (
-        <Button variant="success" onClick={() => {
-          handleShow();
-          onHandleListComments(row?.id)
-        }}>
+        <Button variant="success"
+          // onClick={() => {
+          //   handleShow();
+          //   onHandleListComments(row?.id)
+          // }}
+          onClick={() => onUpdateComment(row?.id, row?.company_id)}
+        >
           Update
         </Button>
       ),
@@ -264,9 +272,7 @@ const FollowUps = () => {
           <Modal.Title>Update Comment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : agentVendorCommentsList?.length > 0 ? (
+          {agentVendorCommentsList?.length > 0 && (
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -300,14 +306,12 @@ const FollowUps = () => {
                       className="btn bg-success text-white"
                       onClick={() => onHandleCommentSubmit(activeAgent?.id)}
                     >
-                      Update
+                      {isLoading ? 'Loading...' : "Update"}
                     </button>
                   </td>
                 </tr>
               </tbody>
             </Table>
-          ) : (
-            <h2 className="text-center text-muted">No assigned agents found for the given vendor</h2>
           )}
         </Modal.Body>
       </Modal>
