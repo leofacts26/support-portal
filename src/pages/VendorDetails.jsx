@@ -307,7 +307,7 @@ const VendorDetails = ({ searchBox }) => {
                 <th style={{ fontSize: '10px' }}>Work Hours (Start)</th>
                 <th style={{ fontSize: '10px' }}>Work Hours (End)</th>
                 <th style={{ fontSize: '10px' }}>Location Link</th>
-                <th style={{ fontSize: '10px' }}>Other Branches</th>
+                {/* <th style={{ fontSize: '10px' }}>Other Branches</th> */}
               </tr>
             </thead>
             <tbody>
@@ -327,7 +327,7 @@ const VendorDetails = ({ searchBox }) => {
                     </a>
                   ) : 'N/A'}
                 </td>
-                <td> {vendorDetails?.branches?.length > 0 ? vendorDetails?.branches?.map(item => item.catering_service_name)?.join(', ') : 'N/A'}</td>
+                {/* <td> {vendorDetails?.branches?.length > 0 ? vendorDetails?.branches?.map(item => item.catering_service_name)?.join(', ') : 'N/A'}</td> */}
               </tr>
             </tbody>
           </Table>

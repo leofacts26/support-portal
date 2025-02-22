@@ -70,7 +70,7 @@ const FollowUpsUpdateComment = () => {
             <Card.Body>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                 <h5>User Issue Raising Testing TITLE</h5>
-                <p style={{ border: '1px solid rgb(199 188 188)', padding: '5px', borderRadius: '99px', width: '100px', textAlign: 'center' }}>
+                <p style={{ border: '1px solid rgb(199 188 188)', padding: '5px', borderRadius: '99px', width: '200px', textAlign: 'center' }}>
                   <strong>{comment.admin_user_name}</strong>
                 </p>
               </div>

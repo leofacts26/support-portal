@@ -194,7 +194,7 @@ const AddVendor = () => {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col md={6}>
+          <Col md={12}>
             <Form.Group controlId="area">
               <Form.Label>Street Name *</Form.Label>
               <Form.Control
@@ -207,8 +207,8 @@ const AddVendor = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
-            <div className="mt-0">
+          <Col md={12}>
+            <div className="mt-3">
               <p className="business-profile-name">Select your Area *</p>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <textarea
@@ -246,7 +246,7 @@ const AddVendor = () => {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col md={6}>
+          <Col md={12}>
             <Form.Group controlId="city">
               <Form.Label>City *</Form.Label>
               <Form.Control
@@ -259,8 +259,8 @@ const AddVendor = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
-            <Form.Group controlId="pin_code">
+          <Col md={12}>
+            <Form.Group controlId="pin_code" className="mt-3">
               <Form.Label>Pin Code *</Form.Label>
               <Form.Control
                 type="text"
