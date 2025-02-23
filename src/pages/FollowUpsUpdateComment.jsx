@@ -22,8 +22,9 @@ const FollowUpsUpdateComment = () => {
   const { id, companyId } = useParams();
   const [activeAgent, setActiveAgent] = useState([])
   const [comment, setComment] = useState("")
+  const [title, setTitle] = useState("")
 
-  console.log(companyId, "companyId companyId ");
+  console.log(activeAgent, "activeAgent activeAgent ");
 
 
   useEffect(() => {
@@ -37,14 +38,16 @@ const FollowUpsUpdateComment = () => {
 
   useEffect(() => {
     if (agentVendorCommentsList?.length > 0) {
-      setComment(agentVendorCommentsList[0]?.comment || "");
-      setActiveAgent(agentVendorCommentsList[0])
+      setComment(activeAgent?.title || "");
+      setComment(activeAgent?.comment || "");
+      // setActiveAgent(agentVendorCommentsList[0])
     }
-  }, [agentVendorCommentsList]);
+  }, [agentVendorCommentsList, activeAgent]);
 
   const onHandleCommentSubmit = async (unid) => {
     const data = {
       id: unid,
+      title,
       comment: comment
     }
     try {
@@ -75,7 +78,7 @@ const FollowUpsUpdateComment = () => {
                 boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
               }}
             >
-              <CardContent>
+              <CardContent onClick={() => setActiveAgent(comment)}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
                   <Typography variant="h6" >
                     User Issue Raising Testing
@@ -95,7 +98,7 @@ const FollowUpsUpdateComment = () => {
                   {comment.comment}
                 </Typography>
                 <Typography variant="caption" color="textSecondary">
-                {new Date(comment.created_at).toLocaleString()}
+                  {new Date(comment.created_at).toLocaleString()}
                 </Typography>
               </CardContent>
             </Card>
@@ -110,47 +113,53 @@ const FollowUpsUpdateComment = () => {
 
       <div className="mt-4">
         {agentVendorCommentsList?.length > 0 && (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Status</th>
-                <th>Admin User Name</th>
-                <th>Assigned By Name</th>
-                <th>Comment</th>
-                <th>Update</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Active</td>
-                <td>{activeAgent?.admin_user_name}</td>
-                <td>{activeAgent?.assigned_by_name}</td>
-                <td>
-                  <FloatingLabel>
+          <>
+            <div className="row ">
+              <div className="col-lg-8 mx-auto">
+                {/* Title Input */}
+                <div className="col-md-12 mb-3">
+                  {/* <FloatingLabel label="Title"> */}
+                  <Form.Control
+                    value={title || ""}
+                    onChange={(e) => setTitle(e.target.value)}
+                    name="Enter title"
+                    type="text"
+                    placeholder="Enter title"
+                  />
+                  {/* </FloatingLabel> */}
+                </div>
+
+                {/* Comment Input */}
+                <div className="col-md-12 mb-3">
+                  <FloatingLabel label="Comment">
                     <Form.Control
                       value={comment || ""}
                       onChange={(e) => setComment(e.target.value)}
                       name="comment"
                       as="textarea"
                       placeholder="Leave a comment here"
-                      style={{ height: "50px" }}
+                      style={{ height: "100px" }}
                     />
                   </FloatingLabel>
-                </td>
-                <td>
+                </div>
+
+                <div className="d-flex justify-content-end">
                   <button
                     disabled={isLoading}
                     className="btn bg-success text-white"
-                    onClick={() => onHandleCommentSubmit(activeAgent?.id)}
+                    onClick={() => onHandleCommentSubmit(agentVendorCommentsList[0]?.id)}
                   >
                     {isLoading ? 'Loading...' : "Update"}
                   </button>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
+                </div>
+              </div>
+            </div>
+
+
+          </>
         )}
       </div>
+
 
     </div>
   );

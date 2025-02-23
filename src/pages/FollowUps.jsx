@@ -138,8 +138,8 @@ const FollowUps = () => {
     }
 
     const payload = {
-      tickets: selectedTickets.map((ticket) => ({ id: ticket.id })),
-      agentId: selectedUser,
+      vendor_ids: selectedTickets.map((ticket) => ({ id: ticket.id })),
+      agent_user_id: selectedUser,
     };
 
     console.log(payload, "payload");
@@ -207,22 +207,11 @@ const FollowUps = () => {
       sortable: true,
       width: '250px'
     },
-    // { name: 'Agent', selector: (row) => row.shared_via, sortable: true, },
-    // {
-    //   name: 'Assign Agent',
-    //   cell: (row) => (
-    //     <Button variant="success" onClick={() => {
-    //       handleAssignShow();
-    //       setSelectAgent(row.id)
-    //     }}>
-    //       Assign
-    //     </Button>
-    //   ),
-    //   ignoreRowClick: true,
-    //   allowOverflow: true,
-    //   button: true,
-    //   width: '120px'
-    // },
+    {
+      name: 'Agents',
+      selector: (row) => row.assigned_agents?.map(agent => agent.admin_user_name).join(', '),
+      sortable: true,
+    },    
     {
       name: 'Update Comment',
       cell: (row) => (
