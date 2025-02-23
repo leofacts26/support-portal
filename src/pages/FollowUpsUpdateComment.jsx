@@ -83,6 +83,7 @@ const FollowUpsUpdateComment = () => {
                 mb: 2,
                 boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
               }}
+              style={{ border: comment?.id === activeAgent?.id ? '2px solid #6e84a3' : 'none' }}
             >
               <CardContent onClick={() => setActiveAgent(comment)} style={{ cursor: 'pointer' }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
