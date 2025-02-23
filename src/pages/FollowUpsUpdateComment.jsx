@@ -20,7 +20,7 @@ const FollowUpsUpdateComment = () => {
 
   const dispatch = useDispatch();
   const { id, companyId } = useParams();
-  const [activeAgent, setActiveAgent] = useState([])
+  const [activeAgent, setActiveAgent] = useState({})
   const [comment, setComment] = useState("")
   const [title, setTitle] = useState("")
 
@@ -43,6 +43,12 @@ const FollowUpsUpdateComment = () => {
       // setActiveAgent(agentVendorCommentsList[0])
     }
   }, [agentVendorCommentsList, activeAgent]);
+
+  useEffect(() => {
+    if (agentVendorCommentsList?.length > 0) {
+      setActiveAgent(agentVendorCommentsList[0])
+    }
+  }, [agentVendorCommentsList]);
 
   const onHandleCommentSubmit = async (unid) => {
     const data = {
@@ -78,7 +84,7 @@ const FollowUpsUpdateComment = () => {
                 boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
               }}
             >
-              <CardContent onClick={() => setActiveAgent(comment)}>
+              <CardContent onClick={() => setActiveAgent(comment)} style={{ cursor: 'pointer' }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
                   <Typography variant="h6" >
                     User Issue Raising Testing
@@ -147,7 +153,7 @@ const FollowUpsUpdateComment = () => {
                   <button
                     disabled={isLoading}
                     className="btn bg-success text-white"
-                    onClick={() => onHandleCommentSubmit(agentVendorCommentsList[0]?.id)}
+                    onClick={() => onHandleCommentSubmit(activeAgent?.id)}
                   >
                     {isLoading ? 'Loading...' : "Update"}
                   </button>
