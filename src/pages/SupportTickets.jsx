@@ -690,7 +690,7 @@ const SupportTickets = () => {
                       <Form.Control
                         as="select"
                         name='status'
-                        value={supportTicketList?.status}
+                        value={status}
                         onChange={(e) => setStatus(e.target.value)}
                       >
                         <option value="" disabled>

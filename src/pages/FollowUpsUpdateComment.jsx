@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { agentVendorComments, fetchSupportFollowUpssList, updateAgentComment } from "../features/followUpsSlice";
 import { useParams } from "react-router-dom";
-import { Card, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import LoadingAnimation from "../components/LoadingAnimation";
 import VendorDetails from "./VendorDetails";
 import { fetchVendorShowDetailData } from "../features/menuSlice";
@@ -10,7 +10,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-
+import { Card, CardContent, Typography, Box, Chip, Stack } from "@mui/material";
 
 
 const FollowUpsUpdateComment = () => {
@@ -66,21 +66,41 @@ const FollowUpsUpdateComment = () => {
         <LoadingAnimation />
       ) : (
         agentVendorCommentsList?.map((comment) => (
-          <Card key={comment.id} className="p-3 shadow-sm mb-3">
-            <Card.Body>
-              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <h5>User Issue Raising Testing TITLE</h5>
-                <p style={{ border: '1px solid rgb(199 188 188)', padding: '5px', borderRadius: '99px', width: '200px', textAlign: 'center' }}>
-                  <strong>{comment.admin_user_name}</strong>
-                </p>
-              </div>
-              <p>{comment.comment}</p>
-              <small className="text-muted">
+          <>
+            <Card
+              variant="outlined"
+              sx={{
+                borderRadius: 3,
+                mb: 2,
+                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <CardContent>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+                  <Typography variant="h6" >
+                    User Issue Raising Testing
+                  </Typography>
+                  <Chip
+                    label={comment.admin_user_name}
+                    color={"success"}
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      fontWeight: "bold",
+                      textTransform: "capitalize",
+                    }}
+                  />
+                </Stack>
+                <Typography variant="body2" color="textSecondary" mb={2}>
+                  {comment.comment}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
                 {new Date(comment.created_at).toLocaleString()}
-              </small>
-            </Card.Body>
-            <hr />
-          </Card>
+                </Typography>
+              </CardContent>
+            </Card>
+          </>
+
         ))
       )}
 

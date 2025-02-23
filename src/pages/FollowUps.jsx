@@ -17,6 +17,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
 
 
+
 const FollowUps = () => {
   const dispatch = useDispatch();
   const { followUpList, agentVendorCommentsList, isLoading } = useSelector((state) => state.followUps);
@@ -28,6 +29,14 @@ const FollowUps = () => {
   const [selectAgent, setSelectAgent] = useState("")
   const [comment, setComment] = useState("")
   const [activeAgent, setActiveAgent] = useState([])
+  const [selectedTickets, setSelectedTickets] = useState([]);
+  const [checkedRows, setCheckedRows] = useState({}); // Tracks checkbox states
+
+
+  console.log(selectedTickets, "selectedTickets");
+  console.log(checkedRows, "checkedRows");
+
+
 
   const navigate = useNavigate()
 
@@ -92,24 +101,48 @@ const FollowUps = () => {
     setShowAssignModal(false)
     setSelectedUser('');
     setSelectAgent('')
+    setSelectedTickets([]);
+    setCheckedRows({});
   };
 
   const handleAssignShow = () => setShowAssignModal(true);
 
 
+  const handleCheckboxChange = (e, row) => {
+    const isChecked = e.target.checked;
+
+    setCheckedRows((prev) => ({
+      ...prev,
+      [row.id]: isChecked, // Update the checked state for the row
+    }));
+
+    if (isChecked) {
+      setSelectedTickets((prev) => [...prev, { id: row.id, name: row.vendor_service_name }]);
+    } else {
+      setSelectedTickets((prev) => prev.filter((ticket) => ticket.id !== row.id));
+    }
+  };
+
+
+
   const onHandleAssignSubmit = async (e) => {
     e.preventDefault();
 
+    if (!selectedTickets.length) {
+      alert('Please select at least one ticket.');
+      return;
+    }
     if (!selectedUser) {
       alert('Please select a user to assign tickets.');
       return;
     }
 
     const payload = {
-      vendor_id: selectAgent,
-      agent_user_id: selectedUser,
+      tickets: selectedTickets.map((ticket) => ({ id: ticket.id })),
+      agentId: selectedUser,
     };
 
+    console.log(payload, "payload");
     try {
       await dispatch(assignAsignAgentVendor(payload))
       await dispatch(fetchSupportFollowUpssList());
@@ -143,6 +176,18 @@ const FollowUps = () => {
   };
 
   const columns = [
+    {
+      name: '',
+      selector: (row) => (
+        <input
+          type="checkbox"
+          checked={checkedRows[row.id] || false} // Dynamically bind checked state
+          onChange={(e) => handleCheckboxChange(e, row)}
+        />
+      ),
+      width: '50px', // Adjust width for the checkbox
+      sortable: false,
+    },
     { name: 'Business ID', selector: (row) => row.company_id, sortable: true },
     { name: 'Vendor Type', selector: (row) => row.vendor_type, sortable: true, },
     { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '200px' },
@@ -162,22 +207,22 @@ const FollowUps = () => {
       sortable: true,
       width: '250px'
     },
-    { name: 'Agent', selector: (row) => row.shared_via, sortable: true, },
-    {
-      name: 'Assign Agent',
-      cell: (row) => (
-        <Button variant="success" onClick={() => {
-          handleAssignShow();
-          setSelectAgent(row.id)
-        }}>
-          Assign
-        </Button>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-      width: '120px'
-    },
+    // { name: 'Agent', selector: (row) => row.shared_via, sortable: true, },
+    // {
+    //   name: 'Assign Agent',
+    //   cell: (row) => (
+    //     <Button variant="success" onClick={() => {
+    //       handleAssignShow();
+    //       setSelectAgent(row.id)
+    //     }}>
+    //       Assign
+    //     </Button>
+    //   ),
+    //   ignoreRowClick: true,
+    //   allowOverflow: true,
+    //   button: true,
+    //   width: '120px'
+    // },
     {
       name: 'Update Comment',
       cell: (row) => (
@@ -201,11 +246,22 @@ const FollowUps = () => {
   return (
     <div className="container-fluid my-5">
 
+
+
       <div className="row mb-4  me-2">
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="header-title">
             Followups - {followUpList?.length}
           </h1>
+          <div>
+            <button className='btn btn-primary fit-content me-4' variant="primary" onClick={() => {
+              handleAssignShow();
+              // setSelectAgent(row.id)
+            }}>
+              Assign
+            </button>
+
+          </div>
         </div>
       </div>
       <hr />
@@ -223,8 +279,6 @@ const FollowUps = () => {
       </div>
 
 
-
-
       <Modal size="lg" centered show={showAssignModal} onHide={handleAssignClose}>
         <form onSubmit={onHandleAssignSubmit}>
           <Modal.Header closeButton>
@@ -233,7 +287,7 @@ const FollowUps = () => {
           <Modal.Body>
             <div className="row">
               {/* Left Column: Select User */}
-              <div className="col-md-12">
+              <div className="col-md-6">
                 <div className="form-group mb-3">
                   <label htmlFor="assignUser">Select User</label>
                   <select
@@ -243,7 +297,7 @@ const FollowUps = () => {
                     required
                   >
                     <option value="">-- Select a User --</option>
-                    {listUsers?.map((user) => (
+                    {listUsers.map((user) => (
                       <option key={user.id} value={user.id}>
                         {user.name} ({user.username})
                       </option>
@@ -252,6 +306,23 @@ const FollowUps = () => {
                 </div>
               </div>
 
+              {/* Right Column: Selected Tickets */}
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>Selected Tickets</label>
+                  {selectedTickets.length > 0 ? (
+                    <ul className="list-group mt-2">
+                      {selectedTickets.map((ticket, index) => (
+                        <li key={index} className="list-group-item">
+                          Vendor: {ticket.name}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted mt-2">No tickets selected.</p>
+                  )}
+                </div>
+              </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -264,6 +335,7 @@ const FollowUps = () => {
           </Modal.Footer>
         </form>
       </Modal>
+
 
 
 
