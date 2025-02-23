@@ -360,7 +360,7 @@ const SubscriptionPlanDetails = () => {
                 <div className="">
                   <Button disabled={loading} variant="contained" className={`sub-plan-btn mx-auto taxt-center `}
                     onClick={displayRazorpay}
-                  > {loading ? 'Loading...' : 'Creare Link'} </Button>
+                  > {loading ? 'Loading...' : 'Create Link'} </Button>
                   <br />
                 </div>
               </Stack>
