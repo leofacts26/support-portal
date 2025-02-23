@@ -296,9 +296,12 @@ const VendorDetails = ({ searchBox }) => {
         <hr />
 
         <div className="row mx-2">
+
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Vintage Details</h3>
+            <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={handleShow}>Edit</h3>
           </div>
+
           <Table responsive="xl" className='m-0'>
             <thead>
               <tr>
