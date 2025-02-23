@@ -199,9 +199,9 @@ const AddVendor = () => {
               <Form.Label>Street Name *</Form.Label>
               <Form.Control
                 type="text"
-                name="street_name"
+                name="street_address"
                 placeholder="Enter Street Name"
-                value={values.street_name}
+                value={values.street_address}
                 onChange={handleChange}
                 required
               />
