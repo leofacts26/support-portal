@@ -138,7 +138,7 @@ const FollowUpsUpdateComment = () => {
 
                 {/* Comment Input */}
                 <div className="col-md-12 mb-3">
-                  <FloatingLabel label="Comment">
+                  {/* <FloatingLabel label="Comment"> */}
                     <Form.Control
                       value={comment || ""}
                       onChange={(e) => setComment(e.target.value)}
@@ -147,13 +147,14 @@ const FollowUpsUpdateComment = () => {
                       placeholder="Leave a comment here"
                       style={{ height: "100px" }}
                     />
-                  </FloatingLabel>
+                  {/* </FloatingLabel> */}
                 </div>
 
                 <div className="d-flex justify-content-end">
                   <button
+                  style={{color: '#fff'}}
                     disabled={isLoading}
-                    className="btn bg-success text-white"
+                    className="btn bg-success"
                     onClick={() => onHandleCommentSubmit(activeAgent?.id)}
                   >
                     {isLoading ? 'Loading...' : "Update"}

@@ -329,7 +329,7 @@ const SubscriptionPlanDetails = () => {
                         <p className="sub-text">Final Amount:</p>
                         <Stack direction="row" alignItems="center">
                           <CurrencyRupeeIcon className="text-success mt-1" style={{ fontSize: '14px' }} />
-                          <p className="sub-text">{discoundedData?.finalAmount ? discoundedData?.finalAmount : 'N/A'}</p>
+                          <p className="sub-text  mb-0">{discoundedData?.finalAmount ? discoundedData?.finalAmount : 'N/A'}</p>
                         </Stack>
                       </Stack>
 

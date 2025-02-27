@@ -18,11 +18,11 @@ const SubscriptionPlan = () => {
 
   return (
     <>
-      <TopHeader
+      {/* <TopHeader
         title="Business Profile"
         description="below is a business overview"
-      />
-      <Container maxWidth="lg">
+      /> */}
+      <Container maxWidth="lg" className='mt-5'>
         <div className="card-box-shadow px-5 py-4 mb-4">
           <p className="sub-plan-title text-center">SUBSCRIPTION PLANS</p>
           <p className="branches-desc text-center">

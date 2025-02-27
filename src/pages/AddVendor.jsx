@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Container, Row, Col, Stack } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Stack, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewVendor } from "../features/shareLinksSlice";
 import { Box } from "@mui/material";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingAnimation from "../components/LoadingAnimation";
+import LoaderSpinnerLoc from "../components/LoaderSpinnerLoc";
 
 
 const initialState = {
@@ -158,7 +160,7 @@ const AddVendor = () => {
                 onChange={handleChange}
                 required
               >
-                <option value="">Select Vendoe Type</option>
+                <option value="">Select Vendor Type</option>
                 <option value="Caterer">Caterer</option>
                 <option value="Tiffin">Tiffin</option>
               </Form.Control>
@@ -235,7 +237,9 @@ const AddVendor = () => {
             )}
 
             {isPlacePredictionsLoading ? (
-              <LoadingSpinner />
+              <Spinner animation="border" role="status" className="mt-2">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
             ) : (
               !selectedLocation && (
                 placePredictions?.map((item, index) => (
