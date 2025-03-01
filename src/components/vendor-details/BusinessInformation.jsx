@@ -364,7 +364,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
             <tbody>
               <tr>
                 <td>{vendorDetails?.street_name ? vendorDetails?.street_name : 'N/A'}</td>
-                <td>{vendorDetails?.area ? vendorDetails?.area : 'N/A'}</td>
+                <td>{vendorDetails?.street_address ? vendorDetails?.street_address : 'N/A'}</td>
                 <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
                 <td>{vendorDetails?.state ? vendorDetails?.state : 'N/A'}</td>
                 <td>{vendorDetails?.pincode ? vendorDetails?.pincode : 'N/A'}</td>
