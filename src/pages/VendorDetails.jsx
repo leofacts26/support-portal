@@ -19,7 +19,7 @@ import Subscription from "./Subscription";
 
 
 
-const VendorDetails = ({ searchBox }) => {
+const VendorDetails = ({ searchBox, companyId }) => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -31,7 +31,7 @@ const VendorDetails = ({ searchBox }) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
 
-  console.log(vendorDetails, "vendorDetailsvendorDetails");
+  console.log(searchTerm, "searchTermsearchTermsearchTermsearchTermsearchTerm");
 
 
   useEffect(() => {
@@ -292,7 +292,7 @@ const VendorDetails = ({ searchBox }) => {
         <hr />
 
         <BusinessInformation vendorDetails={vendorDetails} show={show} handleClose={handleClose} handleShow={handleShow} editTrigger={editTrigger}
-          searchTerm={searchTerm} />
+          searchTerm={searchTerm} BusinessInformation={BusinessInformation} companyId={companyId} />
         <hr />
 
         <div className="row mx-2">

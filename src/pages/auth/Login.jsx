@@ -179,7 +179,7 @@ const Login = () => {
 
 
   const { isLoading, token } = useSelector((state) => state.authSlice)
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -191,12 +191,12 @@ const Login = () => {
   const onHandleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!phoneNumber || !password) {
+    if (!name || !password) {
       alert("Please enter both phone number and password.");
       return;
     }
 
-    const payload = { phone_number: phoneNumber, password };
+    const payload = { username: name, password };
     const response = await dispatch(loginUser(payload));
     // console.log(response.payload.token, "response MMM");
     if (response.payload.token) {
@@ -219,14 +219,13 @@ const Login = () => {
             </p>
             <form onSubmit={onHandleSubmit}>
               <div className="form-group">
-                <label className="form-label">Enter Phone Number</label>
+                <label className="form-label">Enter Name</label>
                 <input
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  type="tel"
-                  maxLength="10"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type="text"
                   className="form-control"
-                  placeholder="Enter phone number"
+                  placeholder="Enter Name"
                 />
               </div>
 

@@ -15,7 +15,7 @@ export const fetchSupportFollowUpssList = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.get(`${BASE_URL}/support-list-vendors-followups?limit=10&current_page=1&vendor_type=Caterer`, {
+      const response = await api.get(`${BASE_URL}/support-list-vendors-followups?limit=100000000&current_page=1&vendor_type=Caterer`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

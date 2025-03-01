@@ -64,7 +64,7 @@ const formatPhoneNumber = (phoneNumber) => {
 
 
 
-const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, editTrigger, searchTerm }) => {
+const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, editTrigger, searchTerm, companyId }) => {
 
   const { token } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch()
@@ -87,6 +87,14 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
     point_of_contact_name: Yup.string().required('Contact person name is required.'),
     business_phone_number: Yup.string()
       .required('Business phone number is required')
+      .matches(/^[+]?[0-9-]+$/, 'Phone number must contain only digits, +, or -')
+      .min(10, 'Phone number must be at least 10 digits')
+      .max(15, 'Phone number must not exceed 15 digits'),
+    // whatsapp_business_phone_number: Yup.string()
+    //   .matches(/^\+?[0-9]{1,4}[-]?[0-9]{6,14}$/,
+    //     'Enter a valid phone number')
+    //   .min(10, 'Phone number must be at least 10 characters')
+    //   .max(15, 'Phone number must not exceed 15 characters')
   });
 
 
@@ -199,6 +207,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
       street_name,
       point_of_contact_name,
       total_staffs_approx,
+      street_address,
       pin_code,
       about_description,
       working_since,
@@ -227,6 +236,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
       street_name,
       point_of_contact_name,
       total_staffs_approx,
+      street_address,
       pin_code,
       about_description,
       working_since,
@@ -258,7 +268,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
       working_hours_end: formattedEndTime || endTime,
       working_days_start: startDate,
       working_days_end: endDate,
-      company_id: searchTerm
+      company_id: searchTerm || companyId
     }
 
     console.log(data, "dataddd");
@@ -270,7 +280,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
         }
       })
       toast.success(successToast(response))
-      dispatch(fetchVendorShowDetailData(searchTerm));
+      dispatch(fetchVendorShowDetailData(searchTerm || companyId));
     } catch (error) {
       console.log(error);
       toast.error(datavalidationerror(error))
@@ -400,7 +410,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
           </tbody>
         </Table>
       </div>
-      <hr />
+      {/* <hr /> */}
 
 
 
@@ -612,6 +622,33 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
                     </Grid>
                   </Grid>
 
+                  <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Grid item xs={8} >
+                      <div style={{ marginTop: '50px' }}>
+                        <p className="business-profile-name">Street Address</p>
+
+                        <CssTextField
+                          value={values.street_address}
+                          onChange={handleChange}
+                          name="street_address"
+                          variant="outlined"
+                          placeholder="E.g.. 15"
+                          className='mt-0'
+                          style={{ width: '100%' }}
+                          InputLabelProps={{
+                            style: { color: '#777777', fontSize: '10px' },
+                          }}
+                          InputProps={{
+                            style: {
+                              borderRadius: '8px',
+                              backgroundColor: '#FFFFFF',
+                            }
+                          }}
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+
 
                   <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
                     <Grid item xs={8} >
@@ -814,6 +851,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
                             }
                           }}
                         />
+                        {/* {errors.whatsapp_business_phone_number && <small className='text-danger mt-2 ms-1'>{errors.whatsapp_business_phone_number}</small>} */}
                       </div>
                     </Grid>
                   </Grid>

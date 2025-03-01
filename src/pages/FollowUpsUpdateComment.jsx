@@ -38,7 +38,7 @@ const FollowUpsUpdateComment = () => {
 
   useEffect(() => {
     if (agentVendorCommentsList?.length > 0) {
-      setComment(activeAgent?.title || "");
+      setTitle(activeAgent?.title || "");
       setComment(activeAgent?.comment || "");
       // setActiveAgent(agentVendorCommentsList[0])
     }
@@ -68,77 +68,78 @@ const FollowUpsUpdateComment = () => {
 
 
   return (
-    <div className="container-fluid my-5">
-      <h1 className="mb-4">FollowUp Updates</h1>
-      <hr />
-      {isLoading ? (
-        <LoadingAnimation />
-      ) : (
-        agentVendorCommentsList?.map((comment) => (
-          <>
-            <Card
-              variant="outlined"
-              sx={{
-                borderRadius: 3,
-                mb: 2,
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-              }}
-              style={{ border: comment?.id === activeAgent?.id ? '2px solid #6e84a3' : 'none' }}
-            >
-              <CardContent onClick={() => setActiveAgent(comment)} style={{ cursor: 'pointer' }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
-                  <Typography variant="h6" >
-                    User Issue Raising Testing
+    <>
+      <div className="container-fluid my-5">
+        <h1 className="mb-4">FollowUp Updates</h1>
+        <hr />
+        {isLoading ? (
+          <LoadingAnimation />
+        ) : (
+          agentVendorCommentsList?.map((comment) => (
+            <>
+              <Card
+                variant="outlined"
+                sx={{
+                  borderRadius: 3,
+                  mb: 2,
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                }}
+                style={{ border: comment?.id === activeAgent?.id ? '2px solid #6e84a3' : 'none' }}
+              >
+                <CardContent onClick={() => setActiveAgent(comment)} style={{ cursor: 'pointer' }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+                    <Typography variant="h6" >
+                      {comment.title}
+                    </Typography>
+                    <Chip
+                      label={comment.admin_user_name}
+                      color={"success"}
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        fontWeight: "bold",
+                        textTransform: "capitalize",
+                      }}
+                    />
+                  </Stack>
+                  <Typography variant="body2" color="textSecondary" mb={2}>
+                    {comment.comment}
                   </Typography>
-                  <Chip
-                    label={comment.admin_user_name}
-                    color={"success"}
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      fontWeight: "bold",
-                      textTransform: "capitalize",
-                    }}
-                  />
-                </Stack>
-                <Typography variant="body2" color="textSecondary" mb={2}>
-                  {comment.comment}
-                </Typography>
-                <Typography variant="caption" color="textSecondary">
-                  {new Date(comment.created_at).toLocaleString()}
-                </Typography>
-              </CardContent>
-            </Card>
-          </>
+                  <Typography variant="caption" color="textSecondary">
+                    {new Date(comment.created_at).toLocaleString()}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </>
 
-        ))
-      )}
+          ))
+        )}
 
+      </div>
+      <VendorDetails searchBox={false} companyId={companyId} />
 
-      <VendorDetails searchBox={false} />
+      <div className="container-fluid my-5">
+        <div className="mt-4">
+          {agentVendorCommentsList?.length > 0 && (
+            <>
+              <div className="row ">
+                <div className="col-lg-8 mx-auto">
+                  {/* Title Input */}
+                  <div className="col-md-12 mb-3">
+                    {/* <FloatingLabel label="Title"> */}
+                    <Form.Control
+                      value={title || ""}
+                      onChange={(e) => setTitle(e.target.value)}
+                      name="Enter title"
+                      type="text"
+                      placeholder="Enter title"
+                    />
+                    {/* </FloatingLabel> */}
+                  </div>
 
-
-      <div className="mt-4">
-        {agentVendorCommentsList?.length > 0 && (
-          <>
-            <div className="row ">
-              <div className="col-lg-8 mx-auto">
-                {/* Title Input */}
-                <div className="col-md-12 mb-3">
-                  {/* <FloatingLabel label="Title"> */}
-                  <Form.Control
-                    value={title || ""}
-                    onChange={(e) => setTitle(e.target.value)}
-                    name="Enter title"
-                    type="text"
-                    placeholder="Enter title"
-                  />
-                  {/* </FloatingLabel> */}
-                </div>
-
-                {/* Comment Input */}
-                <div className="col-md-12 mb-3">
-                  {/* <FloatingLabel label="Comment"> */}
+                  {/* Comment Input */}
+                  <div className="col-md-12 mb-3">
+                    {/* <FloatingLabel label="Comment"> */}
                     <Form.Control
                       value={comment || ""}
                       onChange={(e) => setComment(e.target.value)}
@@ -147,29 +148,29 @@ const FollowUpsUpdateComment = () => {
                       placeholder="Leave a comment here"
                       style={{ height: "100px" }}
                     />
-                  {/* </FloatingLabel> */}
-                </div>
+                    {/* </FloatingLabel> */}
+                  </div>
 
-                <div className="d-flex justify-content-end">
-                  <button
-                  style={{color: '#fff'}}
-                    disabled={isLoading}
-                    className="btn bg-success"
-                    onClick={() => onHandleCommentSubmit(activeAgent?.id)}
-                  >
-                    {isLoading ? 'Loading...' : "Update"}
-                  </button>
+                  <div className="d-flex justify-content-end">
+                    <button
+                      style={{ color: '#fff' }}
+                      disabled={isLoading}
+                      className="btn bg-success"
+                      onClick={() => onHandleCommentSubmit(activeAgent?.id)}
+                    >
+                      {isLoading ? 'Loading...' : "Update"}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
 
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
+    </>
 
-
-    </div>
   );
 };
 
