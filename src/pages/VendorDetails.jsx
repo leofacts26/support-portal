@@ -341,8 +341,10 @@ const VendorDetails = ({ searchBox, companyId }) => {
           foodTypesList={foodTypes} kitchenTypesList={kitchenTypes} mealTimesList={mealTimes} serviceTypesList={serviceTypes} servingTypesList={servingTypes} vendorDetails={vendorDetails} searchTerm={searchTerm} />
         <hr />
 
-        {occasions?.filter((item) => item.selected === '1')?.length > 0 && <Occations occasions={occasions} editTrigger={editTrigger} showOccation={showOccation} handleOccationClose={handleOccationClose}
-          handleOccationShow={handleOccationShow} uid={uuidv4()} searchTerm={searchTerm} />}
+        {
+          // occasions?.filter((item) => item.selected === '1')?.length > 0 && 
+          <Occations occasions={occasions} editTrigger={editTrigger} showOccation={showOccation} handleOccationClose={handleOccationClose}
+            handleOccationShow={handleOccationShow} uid={uuidv4()} searchTerm={searchTerm} />}
 
         <Cuisines cuisines={cuisines} editTrigger={editTrigger} showCuisines={showCuisines} handleCuisinesClose={handleCuisinesClose}
           handleCuisinesShow={handleCuisinesShow} uid={uuidv4()} searchTerm={searchTerm}

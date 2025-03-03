@@ -219,13 +219,13 @@ const Login = () => {
             </p>
             <form onSubmit={onHandleSubmit}>
               <div className="form-group">
-                <label className="form-label">Enter Name</label>
+                <label className="form-label">Enter Username</label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   type="text"
                   className="form-control"
-                  placeholder="Enter Name"
+                  placeholder="Enter Username"
                 />
               </div>
 

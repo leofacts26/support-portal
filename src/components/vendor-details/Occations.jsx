@@ -86,16 +86,18 @@ const Occations = ({ occasions, showOccation, handleOccationClose, handleOccatio
 
         <div className="row mt-4">
           <div className='mt-3'>
-            {occasions && occasions.length > 0
-              ? occasions
-                .filter((item) => item.selected === '1')
-                .map((item, index, filteredOccasions) => (
-                  <span key={item.occasion_name} className='cuisine-item'>
-                    {item.occasion_name}
-                    {index < filteredOccasions.length - 1 && ', '}
-                  </span>
-                ))
+            {occasions && occasions.length > 0 ? occasions
+              .filter((item) => item.selected === '1')
+              .map((item, index, filteredOccasions) => (
+                <span key={item.occasion_name} className='cuisine-item'>
+                  {item.occasion_name}
+                  {index < filteredOccasions.length - 1 && ', '}
+                </span>
+              ))
               : 'N/A'}
+            {!occasions.some((item) =>
+              item.selected === "1")
+             && <h2 className="text-center">No Occastions  Found</h2>}
           </div>
         </div>
 

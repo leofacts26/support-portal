@@ -190,7 +190,7 @@ const FollowUps = () => {
     },
     { name: 'Business ID', selector: (row) => row.company_id, sortable: true },
     { name: 'Vendor Type', selector: (row) => row.vendor_type, sortable: true, },
-    { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '200px' },
+    { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '300px' },
     {
       name: 'Phone No',
       selector: (row) => (
@@ -211,7 +211,7 @@ const FollowUps = () => {
       name: 'Agents',
       selector: (row) => row.assigned_agents?.map(agent => agent.admin_user_name).join(', '),
       sortable: true,
-    },    
+    },
     {
       name: 'Update Comment',
       cell: (row) => (
@@ -261,6 +261,8 @@ const FollowUps = () => {
         <DataTable
           columns={columns}
           data={filteredData}
+          paginationRowsPerPageOptions={[50, 100, 300, 500, 1000]}
+          paginationPerPage="100"
           pagination
           fixedHeader
           customStyles={tableCustomStyles}
