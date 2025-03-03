@@ -352,7 +352,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
 
             <thead>
               <tr>
-                <th style={{ fontSize: '10px' }}>street_name</th>
+                <th style={{ fontSize: '10px' }}>street Address</th>
                 <th style={{ fontSize: '10px' }}>area</th>
                 <th style={{ fontSize: '10px' }}>city</th>
 
@@ -363,8 +363,8 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
             </thead>
             <tbody>
               <tr>
-                <td>{vendorDetails?.street_name ? vendorDetails?.street_name : 'N/A'}</td>
                 <td>{vendorDetails?.street_address ? vendorDetails?.street_address : 'N/A'}</td>
+                <td>{vendorDetails?.area ? vendorDetails?.area : 'N/A'}</td>
                 <td>{vendorDetails?.city ? vendorDetails?.city : 'N/A'}</td>
                 <td>{vendorDetails?.state ? vendorDetails?.state : 'N/A'}</td>
                 <td>{vendorDetails?.pincode ? vendorDetails?.pincode : 'N/A'}</td>
@@ -377,7 +377,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
                 <th style={{ fontSize: '10px' }}>country</th>
                 <th style={{ fontSize: '10px' }}>latitude</th>
                 <th style={{ fontSize: '10px' }}>longitude</th>
-                <th style={{ fontSize: '10px' }}>formatted_address</th>
+                <th style={{ fontSize: '10px' }}>Full Address</th>
               </tr>
             </thead>
             <tbody>
@@ -385,7 +385,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
                 <td>{vendorDetails?.country ? vendorDetails?.country : 'N/A'}</td>
                 <td>{vendorDetails?.longitude ? vendorDetails?.longitude : 'N/A'}</td>
                 <td>{vendorDetails?.latitude ? vendorDetails?.latitude : 'N/A'}</td>
-                <td style={{ width: '250px' }}>{vendorDetails?.formatted_address ? vendorDetails?.formatted_address : 'N/A'}</td>
+                <td style={{ width: '300px' }}>{`${`${vendorDetails?.street_address}, ` + `${vendorDetails?.formatted_address} - ` + vendorDetails?.pincode}` }</td>
               </tr>
             </tbody>
           </>
