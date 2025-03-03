@@ -11,6 +11,7 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Card, CardContent, Typography, Box, Chip, Stack } from "@mui/material";
+import moment from "moment";
 
 
 const FollowUpsUpdateComment = () => {
@@ -106,7 +107,7 @@ const FollowUpsUpdateComment = () => {
                     {comment.comment}
                   </Typography>
                   <Typography variant="caption" color="textSecondary">
-                    {new Date(comment.created_at).toLocaleString()}
+                    {moment(comment.created_at).format("M/D/YYYY, h:mm A")}
                   </Typography>
                 </CardContent>
               </Card>
