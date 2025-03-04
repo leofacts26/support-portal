@@ -189,7 +189,6 @@ const FollowUps = () => {
       sortable: false,
     },
     { name: 'Business ID', selector: (row) => row.company_id, sortable: true },
-    { name: 'Vendor Type', selector: (row) => row.vendor_type, sortable: true, },
     { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '300px' },
     {
       name: 'Phone No',
@@ -200,7 +199,9 @@ const FollowUps = () => {
       ),
       sortable: true,
     },
-    { name: 'Status', selector: (row) => row.listing_status, sortable: true, },
+    { name: 'Vendor Type', selector: (row) => row.vendor_type, sortable: true, },
+
+    // { name: 'Status', selector: (row) => row.listing_status, sortable: true, },
     {
       name: 'Date Time',
       selector: (row) => moment(row.date_time).format('DD/MMM/YYYY h:mm a'),

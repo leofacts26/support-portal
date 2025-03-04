@@ -150,7 +150,7 @@ const ShareLinks = () => {
       <div className="row mb-4  me-2">
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="header-title">
-            Support Tickets - {supportSharedLinksList?.length}
+            Share Tickets - {supportSharedLinksList?.length}
           </h1>
           <button className='btn btn-primary fit-content' variant="primary" onClick={handleShow}>
             Create Share Link

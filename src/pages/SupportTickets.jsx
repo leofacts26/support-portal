@@ -47,7 +47,9 @@ const SupportTickets = () => {
   const [checkedRows, setCheckedRows] = useState({}); // Tracks checkbox states
   const [selectedUser, setSelectedUser] = useState('');
 
-
+  useEffect(() => {
+    setStatus(selectedTicket?.status || '');
+  }, [selectedTicket]);
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -271,19 +273,32 @@ const SupportTickets = () => {
           type="checkbox"
           checked={checkedRows[row.id] || false} // Dynamically bind checked state
           onChange={(e) => handleCheckboxChange(e, row)}
+          
         />
       ),
       width: '50px', // Adjust width for the checkbox
       sortable: false,
     },
-    { name: 'Ticket ID', selector: (row) => row.ticket_id, sortable: true, width: '150px' },
-    { name: 'Company ID', selector: (row) => row.company_id, sortable: true, width: '150px' },
+    {
+      width: '100px',
+      name: 'Ticket ID',
+      cell: (row) => (
+        <a className='text-primary cursor-pointer' onClick={() => handleEdit(row)}>
+          {row.ticket_id}
+        </a>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+    // { name: 'Ticket ID', selector: (row) => row.ticket_id, sortable: true, width: '150px' },
+    { name: 'Company ID', selector: (row) => row.company_id, sortable: true, width: '100px' },
     { name: 'Vendor Service Name', selector: (row) => row.vendor_service_name, sortable: true, width: '250px' },
-    { name: 'User Type', selector: (row) => row.user_type, sortable: true },
+    { name: 'User Type', selector: (row) => row.user_type, sortable: true, width: '100px'  },
     { name: 'Raised On', selector: (row) => new Date(row.raised_on).toLocaleDateString(), sortable: true, width: '150px' },
     { name: 'Issue', selector: (row) => row.issue, sortable: true },
     { name: 'Agent Name', selector: (row) => row.agent_name, sortable: true, width: '150px' },
-    { name: 'Status', selector: (row) => row.status, sortable: true, },
+    { name: 'Status', selector: (row) => row.status, sortable: true, width: '100px' },
     {
       name: 'Action',
       cell: (row) => (
@@ -309,6 +324,7 @@ const SupportTickets = () => {
     await dispatch(updateSupportTicketData(data));
     await dispatch(fetchSupportTicketData());
     setStatus('')
+    handleClose()
   };
 
 
@@ -426,7 +442,7 @@ const SupportTickets = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-3 mb-2 ">
+              {/* <div className="col-lg-3 mb-2 ">
                 <input
                   type="text"
                   value={searchValues.raised_on}
@@ -434,7 +450,7 @@ const SupportTickets = () => {
                   placeholder="Raised On"
                   className="form-control"
                 />
-              </div>
+              </div> */}
               <div className="col-lg-3 mb-2">
                 <input
                   type="text"
@@ -444,7 +460,7 @@ const SupportTickets = () => {
                   className="form-control"
                 />
               </div>
-              <div className="col-lg-3 mb-2">
+              {/* <div className="col-lg-3 mb-2">
                 <input
                   type="text"
                   value={searchValues.comments}
@@ -452,7 +468,7 @@ const SupportTickets = () => {
                   placeholder="comments"
                   className="form-control"
                 />
-              </div>
+              </div> */}
 
               <div className="col-lg-3 mb-2">
                 <input
@@ -473,6 +489,20 @@ const SupportTickets = () => {
                   className="form-control"
                 />
               </div>
+              <div className='col-lg-3 mb-2'>
+                {/* <label className='me-2'>Start Date</label> */}
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={50}
+                  placeholderText="Select Raised On"
+                  dateFormat="dd/MM/yyyy"
+                  className="form-control"
+                  popperClassName="higher-zindex"
+                />
+              </div>
               {/* <div className="col-lg-3 mb-2">
                 <input
                   type="text"
@@ -486,23 +516,9 @@ const SupportTickets = () => {
 
             </div>
 
-            <div className="mb-3 ps-3 d-flex justify-content-start">
-              <div className='me-4'>
-                {/* <label className='me-2'>Start Date</label> */}
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  showYearDropdown
-                  scrollableYearDropdown
-                  yearDropdownItemNumber={50}
-                  placeholderText="Select start date"
-                  dateFormat="dd/MM/yyyy"
-                  className="form-control"
-                  popperClassName="higher-zindex"
-                />
-              </div>
-              <div className="">
-                {/* <label className='me-2'>End Date</label> */}
+            {/* <div className="mb-3 ps-3 d-flex justify-content-start"> */}
+              
+              {/* <div className="">
                 <DatePicker
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
@@ -514,9 +530,9 @@ const SupportTickets = () => {
                   className="form-control"
                   popperClassName="higher-zindex"
                 />
-              </div>
+              </div> */}
 
-            </div>
+            {/* </div> */}
           </div>
 
           <DataTable
@@ -606,13 +622,13 @@ const SupportTickets = () => {
 
 
             <div>
-              <label htmlFor="raisedBy" className="form-label">Raised By</label>
+              <label htmlFor="raisedBy" className="form-label">Select Vendor</label>
               <Select
                 options={receiverOptions}
                 onChange={(selectedOption) =>
                   handleChange({ target: { name: 'raisedBy', value: selectedOption ? selectedOption.value : '' } })
                 }
-                placeholder="Raised By"
+                placeholder="Select Vendor"
                 isClearable
                 isSearchable
               />
@@ -695,10 +711,10 @@ const SupportTickets = () => {
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
                       >
-                        <option value="" disabled>
+                        {/* <option value="" disabled>
                           Select Status
-                        </option>
-                        <option value="Open">Open</option>
+                        </option> */}
+                        <option value="Open">Active</option>
                         <option value="Closed">Closed</option>
                       </Form.Control>
                     </Form.Group>
@@ -710,7 +726,7 @@ const SupportTickets = () => {
                 </Form>
               </div>
 
-              <div style={{ overflowX: 'auto', maxHeight: '500px' }}>
+              <div style={{ overflowX: 'auto', maxHeight: 'auto' }}>
                 <Table responsive="xl" className="m-0" bordered>
                   <tbody>
                     <tr>

@@ -73,11 +73,14 @@ const FollowUpsUpdateComment = () => {
       <div className="container-fluid my-5">
         <h1 className="mb-4">FollowUp Updates</h1>
         <hr />
+        <h1 className="mb-4 text-center">Add New Comments Below</h1>
         {isLoading ? (
           <LoadingAnimation />
         ) : (
+          // <h1 className="mb-4 text-center">Add New Comments Below</h1>
           agentVendorCommentsList?.map((comment) => (
             <>
+
               <Card
                 variant="outlined"
                 sx={{
@@ -107,7 +110,7 @@ const FollowUpsUpdateComment = () => {
                     {comment.comment}
                   </Typography>
                   <Typography variant="caption" color="textSecondary">
-                    {moment(comment.created_at).format("M/D/YYYY, h:mm A")}
+                    {moment(comment.updated_at).format("M/D/YYYY, h:mm A")}
                   </Typography>
                 </CardContent>
               </Card>
@@ -120,6 +123,8 @@ const FollowUpsUpdateComment = () => {
       <VendorDetails searchBox={false} companyId={companyId} />
 
       <div className="container-fluid my-5">
+        <h1 className="mb-4 text-center">Add New Comments</h1>
+
         <div className="mt-4">
           {agentVendorCommentsList?.length > 0 && (
             <>

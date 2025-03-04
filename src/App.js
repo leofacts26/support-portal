@@ -22,7 +22,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="/" element={<Layout />}>
           {/* ShareLinks  */}
-          <Route index element={<ShareLinks />} />
+          <Route index element={<AddVendor />} />
 
           {/* Home Page  */}
           <Route path="/support-list-tickets" element={<SupportTickets />} />
