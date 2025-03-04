@@ -70,7 +70,7 @@ export const fetchVendorListtData = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.get(`${BASE_URL}/support-list-vendors`, {
+      const response = await api.get(`${BASE_URL}/support-list-vendors-active`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
