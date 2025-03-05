@@ -198,7 +198,7 @@ const Login = () => {
 
     const payload = { username: name, password };
     const response = await dispatch(loginUser(payload));
-    // console.log(response.payload.token, "response MMM");
+    console.log(response, "response MMM");
     if (response.payload.token) {
       dispatch(setToken(response.payload.token));
       localStorage.setItem('token', response.payload.token);

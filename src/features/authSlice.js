@@ -17,6 +17,8 @@ export const loginUser = createAsyncThunk(
     async (data, thunkAPI) => {
         try {
             const response = await api.post(`${BASE_URL}/login-support-user`, data);
+            console.log(response, "responsew");
+            localStorage.setItem("username", response?.data?.username);
             return response?.data.data;
         } catch (error) {
             toast.error(error.response.data.message)

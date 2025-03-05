@@ -11,6 +11,7 @@ const TopNav = () => {
 
     const onHandleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('username');
         dispatch(setToken(''));
         navigate('/login');
     }
@@ -46,6 +47,10 @@ const TopNav = () => {
                                 </a>
                                 {/* Menu */}
                                 <div className="dropdown-menu dropdown-menu-end">
+                                    <div className="dropdown-item text-muted">
+                                        {localStorage.getItem("username") || "Guest"}
+                                    </div>
+                                    <div className="dropdown-divider"></div>
                                     <div className="dropdown-item" style={{ cursor: 'pointer' }} onClick={onHandleLogout}>
                                         Logout
                                     </div>
