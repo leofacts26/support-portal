@@ -204,7 +204,7 @@ const FollowUps = () => {
     // { name: 'Status', selector: (row) => row.listing_status, sortable: true, },
     {
       name: 'Date Time',
-      selector: (row) => moment(row.date_time).format('DD/MMM/YYYY h:mm a'),
+      selector: (row) => moment(row.created_at).format('DD/MMM/YYYY h:mm a'),
       sortable: true,
       width: '250px'
     },
