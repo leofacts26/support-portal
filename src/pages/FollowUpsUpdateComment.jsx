@@ -25,7 +25,7 @@ const FollowUpsUpdateComment = () => {
   const [comment, setComment] = useState("")
   const [title, setTitle] = useState("")
 
-  console.log(activeAgent, "activeAgent activeAgent ");
+  console.log(agentVendorCommentsList, "agentVendorCommentsList agentVendorCommentsList ");
 
 
   useEffect(() => {
@@ -39,17 +39,16 @@ const FollowUpsUpdateComment = () => {
 
   useEffect(() => {
     if (agentVendorCommentsList?.length > 0) {
-      setTitle(activeAgent?.title || "");
-      setComment(activeAgent?.comment || "");
-      // setActiveAgent(agentVendorCommentsList[0])
-    }
-  }, [agentVendorCommentsList, activeAgent]);
-
-  useEffect(() => {
-    if (agentVendorCommentsList?.length > 0) {
       setActiveAgent(agentVendorCommentsList[0])
     }
   }, [agentVendorCommentsList]);
+
+  useEffect(() => {
+    if (activeAgent) {
+      setTitle(activeAgent.title || "");
+      setComment(activeAgent.comment || "");
+    }
+  }, [activeAgent]);
 
   const onHandleCommentSubmit = async (unid) => {
     const data = {
@@ -72,15 +71,64 @@ const FollowUpsUpdateComment = () => {
     <>
       <div className="container-fluid my-5">
         <h1 className="mb-4">FollowUp Updates</h1>
-        <hr />
-        <h1 className="mb-4 text-center">Add New Comments Below</h1>
+        <hr className="mb-3 mt-3" />
+        <h1 className="mb-2 text-center">Add New Comments Below</h1>
         {isLoading ? (
           <LoadingAnimation />
         ) : (
-          // <h1 className="mb-4 text-center">Add New Comments Below</h1>
-          agentVendorCommentsList?.map((comment) => (
-            <>
+          <>
+            <div className="my-3">
+              <div className="mt-4">
+                {agentVendorCommentsList?.length > 0 && (
+                  <>
+                    <div className="row ">
+                      <div className="col-lg-12 mx-auto">
+                        {/* Title Input */}
+                        <div className="col-md-12 mb-3">
+                          {/* <FloatingLabel label="Title"> */}
+                          <Form.Control
+                            value={title || ""}
+                            onChange={(e) => setTitle(e.target.value)}
+                            name="Enter title"
+                            type="text"
+                            placeholder="Enter title"
+                          />
+                          {/* </FloatingLabel> */}
+                        </div>
 
+                        {/* Comment Input */}
+                        <div className="col-md-12 mb-3">
+                          {/* <FloatingLabel label="Comment"> */}
+                          <Form.Control
+                            value={comment || ""}
+                            onChange={(e) => setComment(e.target.value)}
+                            name="comment"
+                            as="textarea"
+                            placeholder="Leave a comment here"
+                            style={{ height: "100px" }}
+                          />
+                          {/* </FloatingLabel> */}
+                        </div>
+
+                        <div className="d-flex justify-content-end">
+                          <button
+                            style={{ color: '#fff' }}
+                            disabled={isLoading}
+                            className="btn bg-success"
+                            onClick={() => onHandleCommentSubmit(activeAgent?.id)}
+                          >
+                            {isLoading ? 'Loading...' : "Update"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </>
+                )}
+              </div>
+            </div>
+            {agentVendorCommentsList?.slice(1).map((comment) => (
               <Card
                 variant="outlined"
                 sx={{
@@ -88,9 +136,8 @@ const FollowUpsUpdateComment = () => {
                   mb: 2,
                   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                 }}
-                style={{ border: comment?.id === activeAgent?.id ? '2px solid #6e84a3' : 'none' }}
               >
-                <CardContent onClick={() => setActiveAgent(comment)} style={{ cursor: 'pointer' }}>
+                <CardContent>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
                     <Typography variant="h6" >
                       {comment.title}
@@ -114,67 +161,17 @@ const FollowUpsUpdateComment = () => {
                   </Typography>
                 </CardContent>
               </Card>
-            </>
 
-          ))
+            ))}
+          </>
         )}
 
       </div>
       <VendorDetails searchBox={false} companyId={companyId} />
 
-      <div className="container-fluid my-5">
-        <h1 className="mb-4 text-center">Add New Comments</h1>
-
-        <div className="mt-4">
-          {agentVendorCommentsList?.length > 0 && (
-            <>
-              <div className="row ">
-                <div className="col-lg-8 mx-auto">
-                  {/* Title Input */}
-                  <div className="col-md-12 mb-3">
-                    {/* <FloatingLabel label="Title"> */}
-                    <Form.Control
-                      value={title || ""}
-                      onChange={(e) => setTitle(e.target.value)}
-                      name="Enter title"
-                      type="text"
-                      placeholder="Enter title"
-                    />
-                    {/* </FloatingLabel> */}
-                  </div>
-
-                  {/* Comment Input */}
-                  <div className="col-md-12 mb-3">
-                    {/* <FloatingLabel label="Comment"> */}
-                    <Form.Control
-                      value={comment || ""}
-                      onChange={(e) => setComment(e.target.value)}
-                      name="comment"
-                      as="textarea"
-                      placeholder="Leave a comment here"
-                      style={{ height: "100px" }}
-                    />
-                    {/* </FloatingLabel> */}
-                  </div>
-
-                  <div className="d-flex justify-content-end">
-                    <button
-                      style={{ color: '#fff' }}
-                      disabled={isLoading}
-                      className="btn bg-success"
-                      onClick={() => onHandleCommentSubmit(activeAgent?.id)}
-                    >
-                      {isLoading ? 'Loading...' : "Update"}
-                    </button>
-                  </div>
-                </div>
-              </div>
 
 
-            </>
-          )}
-        </div>
-      </div>
+
     </>
 
   );
