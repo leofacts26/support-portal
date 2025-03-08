@@ -60,7 +60,7 @@ export const agentVendorComments = createAsyncThunk(
       // toast.success(response.data.message)
       return response?.data?.data;
     } catch (error) {
-      toast.error(error.response.data.message)
+      // toast.error(error.response.data.message)
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }

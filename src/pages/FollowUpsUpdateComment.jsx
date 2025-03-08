@@ -26,6 +26,7 @@ const FollowUpsUpdateComment = () => {
   const [title, setTitle] = useState("")
 
   console.log(agentVendorCommentsList, "agentVendorCommentsList agentVendorCommentsList ");
+  console.log(activeAgent, "activeAgent activeAgent ");
 
 
   useEffect(() => {
@@ -72,99 +73,148 @@ const FollowUpsUpdateComment = () => {
       <div className="container-fluid my-5">
         <h1 className="mb-4">FollowUp Updates</h1>
         <hr className="mb-3 mt-3" />
-        <h1 className="mb-2 text-center">Add New Comments Below</h1>
-        {isLoading ? (
-          <LoadingAnimation />
-        ) : (
-          <>
-            <div className="my-3">
-              <div className="mt-4">
-                {agentVendorCommentsList?.length > 0 && (
-                  <>
-                    <div className="row ">
-                      <div className="col-lg-12 mx-auto">
-                        {/* Title Input */}
-                        <div className="col-md-12 mb-3">
-                          {/* <FloatingLabel label="Title"> */}
-                          <Form.Control
-                            value={title || ""}
-                            onChange={(e) => setTitle(e.target.value)}
-                            name="Enter title"
-                            type="text"
-                            placeholder="Enter title"
-                          />
-                          {/* </FloatingLabel> */}
-                        </div>
 
-                        {/* Comment Input */}
-                        <div className="col-md-12 mb-3">
-                          {/* <FloatingLabel label="Comment"> */}
-                          <Form.Control
-                            value={comment || ""}
-                            onChange={(e) => setComment(e.target.value)}
-                            name="comment"
-                            as="textarea"
-                            placeholder="Leave a comment here"
-                            style={{ height: "100px" }}
-                          />
-                          {/* </FloatingLabel> */}
-                        </div>
+        {
+          agentVendorCommentsList?.length > 0 ? <div>
+            <h1 className="mb-2 text-center">Add New Comments Below</h1>
+            {isLoading ? (
+              <LoadingAnimation />
+            ) : (
+              <>
+                <div className="my-3">
+                  <div className="mt-4">
 
-                        <div className="d-flex justify-content-end">
-                          <button
-                            style={{ color: '#fff' }}
-                            disabled={isLoading}
-                            className="btn bg-success"
-                            onClick={() => onHandleCommentSubmit(activeAgent?.id)}
-                          >
-                            {isLoading ? 'Loading...' : "Update"}
-                          </button>
-                        </div>
+                    {
+                      activeAgent?.is_editable === 1 ? <div>
+                        {agentVendorCommentsList?.length > 0 && (
+                          <>
+                            <div className="row ">
+                              <div className="col-lg-12 mx-auto">
+                                {/* Title Input */}
+                                <div className="col-md-12 mb-3">
+                                  {/* <FloatingLabel label="Title"> */}
+                                  <Form.Control
+                                    value={title || ""}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    name="Enter title"
+                                    type="text"
+                                    placeholder="Enter title"
+                                  />
+                                  {/* </FloatingLabel> */}
+                                </div>
+
+                                {/* Comment Input */}
+                                <div className="col-md-12 mb-3">
+                                  {/* <FloatingLabel label="Comment"> */}
+                                  <Form.Control
+                                    value={comment || ""}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    name="comment"
+                                    as="textarea"
+                                    placeholder="Leave a comment here"
+                                    style={{ height: "100px" }}
+                                  />
+                                  {/* </FloatingLabel> */}
+                                </div>
+
+                                <div className="d-flex justify-content-end">
+                                  <button
+                                    style={{ color: '#fff' }}
+                                    disabled={isLoading}
+                                    className="btn bg-success"
+                                    onClick={() => onHandleCommentSubmit(activeAgent?.id)}
+                                  >
+                                    {isLoading ? 'Loading...' : "Update"}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+
+                          </>
+                        )}
+                      </div> : <div>
+                        <Card
+                          variant="outlined"
+                          sx={{
+                            borderRadius: 3,
+                            mb: 2,
+                            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                          }}
+                        >
+                          <CardContent>
+                            <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+                              <Typography variant="h6" >
+                                {activeAgent.title}
+                              </Typography>
+                              <Chip
+                                label={activeAgent.admin_user_name}
+                                color={"success"}
+                                variant="outlined"
+                                size="small"
+                                sx={{
+                                  fontWeight: "bold",
+                                  textTransform: "capitalize",
+                                }}
+                              />
+                            </Stack>
+                            <Typography variant="body2" color="textSecondary" mb={2}>
+                              {activeAgent.comment}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {moment(activeAgent.updated_at).format("M/D/YYYY, h:mm A")}
+                            </Typography>
+                          </CardContent>
+                        </Card>
                       </div>
-                    </div>
+                    }
 
 
-                  </>
-                )}
-              </div>
-            </div>
-            {agentVendorCommentsList?.slice(1).map((comment) => (
-              <Card
-                variant="outlined"
-                sx={{
-                  borderRadius: 3,
-                  mb: 2,
-                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <CardContent>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
-                    <Typography variant="h6" >
-                      {comment.title}
-                    </Typography>
-                    <Chip
-                      label={comment.admin_user_name}
-                      color={"success"}
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        fontWeight: "bold",
-                        textTransform: "capitalize",
-                      }}
-                    />
-                  </Stack>
-                  <Typography variant="body2" color="textSecondary" mb={2}>
-                    {comment.comment}
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    {moment(comment.updated_at).format("M/D/YYYY, h:mm A")}
-                  </Typography>
-                </CardContent>
-              </Card>
+                  </div>
+                </div>
+                {agentVendorCommentsList?.slice(1).map((comment) => (
+                  <Card
+                    variant="outlined"
+                    sx={{
+                      borderRadius: 3,
+                      mb: 2,
+                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <CardContent>
+                      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+                        <Typography variant="h6" >
+                          {comment.title}
+                        </Typography>
+                        <Chip
+                          label={comment.admin_user_name}
+                          color={"success"}
+                          variant="outlined"
+                          size="small"
+                          sx={{
+                            fontWeight: "bold",
+                            textTransform: "capitalize",
+                          }}
+                        />
+                      </Stack>
+                      <Typography variant="body2" color="textSecondary" mb={2}>
+                        {comment.comment}
+                      </Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        {moment(comment.updated_at).format("M/D/YYYY, h:mm A")}
+                      </Typography>
+                    </CardContent>
+                  </Card>
 
-            ))}
+                ))}
+              </>
+            )}
+          </div> : <>
+          <br />
+            <h1 className="mb-2 text-center">No assigned agents found for the given vendor</h1>
           </>
-        )}
+        }
+
 
       </div>
       <VendorDetails searchBox={false} companyId={companyId} />
