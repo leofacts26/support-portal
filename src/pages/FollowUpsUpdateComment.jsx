@@ -76,7 +76,7 @@ const FollowUpsUpdateComment = () => {
 
         {
           agentVendorCommentsList?.length > 0 ? <div>
-            <h1 className="mb-2 text-center">Add New Comments Below</h1>
+            <h1 className="mb-2 text-center"> Comments </h1>
             {isLoading ? (
               <LoadingAnimation />
             ) : (
@@ -145,7 +145,7 @@ const FollowUpsUpdateComment = () => {
                           <CardContent>
                             <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
                               <Typography variant="h6" >
-                                {activeAgent.title}
+                                {activeAgent.title ? activeAgent.title : 'N/A'}
                               </Typography>
                               <Chip
                                 label={activeAgent.admin_user_name}
@@ -159,11 +159,15 @@ const FollowUpsUpdateComment = () => {
                               />
                             </Stack>
                             <Typography variant="body2" color="textSecondary" mb={2}>
-                              {activeAgent.comment?.split("\n").map((line, index) => (
-                                <p key={index}>{line}</p>
-                              ))}
-
+                              {activeAgent.comment ? (
+                                activeAgent.comment.split("\n").map((line, index) => (
+                                  <p key={index}>{line}</p>
+                                ))
+                              ) : (
+                                <p>N/A</p> // Display "N/A" if there is no comment
+                              )}
                             </Typography>
+                            
                             <Typography variant="caption" color="textSecondary">
                               {moment(activeAgent.updated_at).format("M/D/YYYY, h:mm A")}
                             </Typography>
@@ -201,7 +205,9 @@ const FollowUpsUpdateComment = () => {
                         />
                       </Stack>
                       <Typography variant="body2" color="textSecondary" mb={2}>
-                        {comment.comment}
+                        <p style={{ whiteSpace: "pre-line" }}>{comment.comment}</p>
+
+
                       </Typography>
                       <Typography variant="caption" color="textSecondary">
                         {moment(comment.updated_at).format("M/D/YYYY, h:mm A")}
