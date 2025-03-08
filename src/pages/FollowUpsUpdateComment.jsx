@@ -159,7 +159,10 @@ const FollowUpsUpdateComment = () => {
                               />
                             </Stack>
                             <Typography variant="body2" color="textSecondary" mb={2}>
-                              {activeAgent.comment}
+                              {activeAgent.comment?.split("\n").map((line, index) => (
+                                <p key={index}>{line}</p>
+                              ))}
+
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
                               {moment(activeAgent.updated_at).format("M/D/YYYY, h:mm A")}
@@ -210,7 +213,7 @@ const FollowUpsUpdateComment = () => {
               </>
             )}
           </div> : <>
-          <br />
+            <br />
             <h1 className="mb-2 text-center">No assigned agents found for the given vendor</h1>
           </>
         }
