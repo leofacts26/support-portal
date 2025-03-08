@@ -192,7 +192,7 @@ const FollowUps = () => {
       name: 'Business ID',
       cell: (row) => (
         <a className='text-primary cursor-pointer' onClick={() => onUpdateComment(row?.id, row?.company_id)}>
-           {row.company_id}
+          {row.company_id}
         </a>
       ),
       ignoreRowClick: true,
@@ -209,9 +209,26 @@ const FollowUps = () => {
       ),
       sortable: true,
     },
-    { name: 'Vendor Type', selector: (row) => row.vendor_type, sortable: true, },
+    {
+      name: "Vendor Type",
+      cell: (row) => {
+        let badgeClass = "badge";
 
-    // { name: 'Status', selector: (row) => row.listing_status, sortable: true, },
+        if (row.vendor_type?.toLowerCase() === "caterer") {
+          badgeClass += " text-bg-danger-subtle";
+        } else if (row.vendor_type?.toLowerCase() === "tiffin") {
+          badgeClass += " text-bg-warning-subtle";
+        }
+
+        return (
+          <span className={badgeClass}>
+            {row.vendor_type || "Unknown"}
+          </span>
+        );
+      },
+      selector: (row) => row.vendor_type,
+      sortable: true,
+    },
     {
       name: 'Date Time',
       selector: (row) => moment(row.created_at).format('DD/MMM/YYYY h:mm a'),

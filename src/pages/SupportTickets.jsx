@@ -273,7 +273,7 @@ const SupportTickets = () => {
           type="checkbox"
           checked={checkedRows[row.id] || false} // Dynamically bind checked state
           onChange={(e) => handleCheckboxChange(e, row)}
-          
+
         />
       ),
       width: '50px', // Adjust width for the checkbox
@@ -294,11 +294,51 @@ const SupportTickets = () => {
     // { name: 'Ticket ID', selector: (row) => row.ticket_id, sortable: true, width: '150px' },
     { name: 'Company ID', selector: (row) => row.company_id, sortable: true, width: '100px' },
     { name: 'Vendor Service Name', selector: (row) => row.vendor_service_name, sortable: true, width: '250px' },
-    { name: 'User Type', selector: (row) => row.user_type, sortable: true, width: '100px'  },
+    // { name: 'User Type', selector: (row) => row.user_type, sortable: true, width: '100px' },
+    {
+      name: "User Type",
+      cell: (row) => {
+        let badgeClass = "badge";
+
+        if (row.user_type?.toLowerCase() === "caterer") {
+          badgeClass += " text-bg-danger-subtle";
+        } else if (row.user_type?.toLowerCase() === "tiffin") {
+          badgeClass += " text-bg-warning-subtle";
+        }
+
+        return (
+          <span className={badgeClass}>
+            {row.user_type || "Unknown"}
+          </span>
+        );
+      },
+      selector: (row) => row.user_type,
+      sortable: true,
+    },
     { name: 'Raised On', selector: (row) => new Date(row.raised_on).toLocaleDateString(), sortable: true, width: '150px' },
     { name: 'Issue', selector: (row) => row.issue, sortable: true },
     { name: 'Agent Name', selector: (row) => row.agent_name, sortable: true, width: '150px' },
-    { name: 'Status', selector: (row) => row.status, sortable: true, width: '100px' },
+    // { name: 'Status', selector: (row) => row.status, sortable: true, width: '100px' },
+    {
+      name: "Status",
+      cell: (row) => {
+        let badgeClass = "badge";
+
+        if (row.status?.toLowerCase() === "closed") {
+          badgeClass += " text-bg-danger-subtle";
+        } else if (row.status?.toLowerCase() === "active") {
+          badgeClass += " text-bg-success-subtle";
+        }
+
+        return (
+          <span className={badgeClass}>
+            {row.status || "Unknown"}
+          </span>
+        );
+      },
+      selector: (row) => row.status,
+      sortable: true,
+    },
     {
       name: 'Action',
       cell: (row) => (
@@ -517,8 +557,8 @@ const SupportTickets = () => {
             </div>
 
             {/* <div className="mb-3 ps-3 d-flex justify-content-start"> */}
-              
-              {/* <div className="">
+
+            {/* <div className="">
                 <DatePicker
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
@@ -793,7 +833,7 @@ const SupportTickets = () => {
 
               <VendorDetails searchBox={false} />
 
-             
+
             </>
           ) : (
             <p>No ticket selected.</p>
