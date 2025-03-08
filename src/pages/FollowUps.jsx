@@ -188,7 +188,17 @@ const FollowUps = () => {
       width: '50px', // Adjust width for the checkbox
       sortable: false,
     },
-    { name: 'Business ID', selector: (row) => row.company_id, sortable: true },
+    {
+      name: 'Business ID',
+      cell: (row) => (
+        <a className='text-primary cursor-pointer' onClick={() => onUpdateComment(row?.id, row?.company_id)}>
+           {row.company_id}
+        </a>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
     { name: 'Business Name', selector: (row) => row.vendor_service_name, sortable: true, width: '300px' },
     {
       name: 'Phone No',
