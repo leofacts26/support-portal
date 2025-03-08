@@ -257,7 +257,8 @@ const Login = () => {
         </div>
       </div> */}
 
-      <div className="d-flex align-items-center bg-auth border-top border-top-2 border-primary" style={{height: '100vh'}}>
+      <div className="d-flex align-items-center bg-auth border-top border-top-2 border-primary" 
+      style={{height: '95vh', overflow: 'hidden'}}>
         <div className="container">
           <div className="row align-items-center">
             <div className="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
