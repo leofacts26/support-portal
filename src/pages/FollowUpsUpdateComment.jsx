@@ -191,7 +191,7 @@ const FollowUpsUpdateComment = () => {
                     <CardContent>
                       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
                         <Typography variant="h6" >
-                          {comment.title}
+                          {comment.title ? comment.title : 'N/A'}
                         </Typography>
                         <Chip
                           label={comment.admin_user_name}
@@ -205,7 +205,7 @@ const FollowUpsUpdateComment = () => {
                         />
                       </Stack>
                       <Typography variant="body2" color="textSecondary" mb={2}>
-                        <p style={{ whiteSpace: "pre-line" }}>{comment.comment}</p>
+                        <p style={{ whiteSpace: "pre-line" }}>{comment.comment ? comment.comment : 'N/A'}</p>
 
 
                       </Typography>

@@ -36,7 +36,7 @@ function App() {
           <Route path='/dashboard/subscription-plan/:id' element={<SubscriptionPlan />} />
           <Route path='/dashboard/subscription-plan-details/:vendorId/:subscriptionTypeId' element={<SubscriptionPlanDetails />} />
 
-          <Route path="/test" element={<Test />} />
+          {/* <Route path="/test" element={<Test />} /> */}
 
           <Route path="*" element={<NoPage />} />
         </Route>

@@ -210,7 +210,7 @@ const Login = () => {
 
   return (
     <>
-      <div className="container-fluid">
+      {/* <div className="container-fluid">
         <div className="row justify-content-center">
           <div className="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5 align-self-center">
             <h1 className="display-4 text-center mb-3">Sign in</h1>
@@ -254,6 +254,55 @@ const Login = () => {
               }}
             />
           </div>
+        </div>
+      </div> */}
+
+      <div className="d-flex align-items-center bg-auth border-top border-top-2 border-primary" style={{height: '100vh'}}>
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+              <div className="text-center">
+                <img
+                  src="https://dashkit.goodthemes.co/assets/img/illustrations/happiness.svg"
+                  alt="..."
+                  className="img-fluid"
+                />
+              </div>
+            </div>
+            <div className="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+              <h1 className="display-4 text-center mb-3">Sign in</h1>
+              <p className="text-body-secondary text-center mb-5">
+                Free access to our dashboard.
+              </p>
+              <form onSubmit={onHandleSubmit}>
+                <div className="form-group">
+                  <label className="form-label">Enter Username</label>
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Username"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Enter Password</label>
+                  <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    className="form-control"
+                    placeholder="Enter password"
+                  />
+                </div>
+
+                <button type="submit" className="btn btn-lg w-100 btn-primary mb-3">
+                  {isLoading ? "Loading..." : "Sign in"}
+                </button>
+              </form>
+            </div>
+          </div>{" "}
         </div>
       </div>
     </>
