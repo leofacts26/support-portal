@@ -9,7 +9,8 @@ const initialState = {
   supportTicketList: [],
   vendorSupportList: [],
   searchTerm: '',
-  listUsers: []
+  listUsers: [],
+  viewAccess: ''
 }
 
 
@@ -24,6 +25,23 @@ export const fetchSupportTicketData = createAsyncThunk(
         },
       });
       return response?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+)
+
+export const supportGetViewAccess = createAsyncThunk(
+  'supportTickets/supportGetViewAccess',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+      const response = await api.post(`${BASE_URL}/support-get-view-access`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });      
+      return response?.data.access;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }
@@ -196,6 +214,18 @@ export const supportTicketSlice = createSlice({
         state.listUsers = payload;
       })
       .addCase(fetchSupportListUsers.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // supportGetViewAccess 
+      .addCase(supportGetViewAccess.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(supportGetViewAccess.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.viewAccess = payload;
+      })
+      .addCase(supportGetViewAccess.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

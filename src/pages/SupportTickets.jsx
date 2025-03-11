@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { assignSupportTicket, createSupportTicketData, fetchSupportListUsers, fetchSupportTicketData, fetchVendorListtData, setSearchTerm, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
+import { assignSupportTicket, createSupportTicketData, fetchSupportListUsers, fetchSupportTicketData, fetchVendorListtData, setSearchTerm, supportGetViewAccess, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
 import GlobalSearch from '../components/common/GlobalSearch';
 import { tableCustomStyles } from '../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
@@ -17,6 +17,7 @@ import { fetchVendorShowDetailData } from '../features/menuSlice';
 import { Form } from "react-bootstrap";
 import LoadingSpinner from '../components/LoadingSpinner';
 import Subscription from './Subscription';
+import { useLocation } from "react-router-dom";
 
 
 const initialState = {
@@ -32,7 +33,8 @@ const initialState = {
 
 const SupportTickets = () => {
   const dispatch = useDispatch();
-  const { supportTicketList, vendorSupportList, isLoading, listUsers, ticketStatus } = useSelector((state) => state.supportTickets);
+  const { viewAccess, supportTicketList, vendorSupportList, isLoading, listUsers, ticketStatus } = useSelector((state) => state.supportTickets);
+  const location = useLocation();
   const { searchTerm } = useSelector((state) => state.supportTickets)
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -51,6 +53,12 @@ const SupportTickets = () => {
     setStatus(selectedTicket?.status || '');
   }, [selectedTicket]);
 
+  useEffect(() => {
+    const keyword = location.pathname.slice(1); // Removes the leading "/"
+
+    dispatch(supportGetViewAccess({ keyword })); // Send in payload
+  }, [dispatch, location.pathname]); // Re-run if path changes
+
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -68,6 +76,7 @@ const SupportTickets = () => {
     vendor_service_name: "",
     agent_name: "",
   });
+
 
 
   const handleCloseCreateTicket = () => {
@@ -409,9 +418,9 @@ const SupportTickets = () => {
               Support Tickets - {supportTicketList?.length}
             </h1>
             <div>
-              <button className='btn btn-primary fit-content me-4' variant="primary" onClick={handleAssignShow}>
+              {viewAccess ? <button className='btn btn-primary fit-content me-4' variant="primary" onClick={handleAssignShow}>
                 Assign
-              </button>
+              </button> : <span></span>}
               <button className='btn btn-primary fit-content' variant="primary" onClick={handleShowCreateTicket}>
                 Create Support Ticket
               </button>
