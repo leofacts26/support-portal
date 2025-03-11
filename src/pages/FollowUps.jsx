@@ -22,7 +22,7 @@ import { useLocation } from "react-router-dom";
 const FollowUps = () => {
   const dispatch = useDispatch();
   const { followUpList, agentVendorCommentsList, isLoading } = useSelector((state) => state.followUps);
-  const { listUsers } = useSelector((state) => state.supportTickets);
+  const { listUsers, viewAccess } = useSelector((state) => state.supportTickets);
   const [filteredData, setFilteredData] = useState([]);
   const [editId, setEditId] = useState(null);
   const [selectedUser, setSelectedUser] = useState('');
@@ -277,7 +277,8 @@ const FollowUps = () => {
           <h1 className="header-title">
             Followups - {followUpList?.length}
           </h1>
-          <div>
+
+          {viewAccess ? <div>
             <button className='btn btn-primary fit-content me-4' variant="primary" onClick={() => {
               handleAssignShow();
               // setSelectAgent(row.id)
@@ -285,7 +286,8 @@ const FollowUps = () => {
               Assign
             </button>
 
-          </div>
+          </div> : <span></span>}
+
         </div>
       </div>
       <hr />
