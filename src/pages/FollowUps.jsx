@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSupportTicketData, fetchSupportListUsers, fetchSupportTicketData, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
+import { createSupportTicketData, fetchSupportListUsers, fetchSupportTicketData, supportGetViewAccess, updateSupportTicketData, updateSupportTicketStatus } from '../features/supportTicketSlice';
 import GlobalSearch from '../components/common/GlobalSearch';
 import { tableCustomStyles } from '../components/tableCustomStyles';
 import { FaEdit } from "react-icons/fa";
@@ -15,6 +15,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 
 
@@ -31,6 +32,7 @@ const FollowUps = () => {
   const [activeAgent, setActiveAgent] = useState([])
   const [selectedTickets, setSelectedTickets] = useState([]);
   const [checkedRows, setCheckedRows] = useState({}); // Tracks checkbox states
+  const location = useLocation();
 
 
   console.log(selectedTickets, "selectedTickets");
@@ -45,6 +47,11 @@ const FollowUps = () => {
   // console.log(agentVendorCommentsList, "agentVendorCommentsList agentVendorCommentsList");
   // console.log(activeAgent, "activeAgent activeAgent");
 
+  useEffect(() => {
+    const keyword = location.pathname.slice(1); // Removes the leading "/"
+
+    dispatch(supportGetViewAccess({ keyword })); // Send in payload
+  }, [dispatch, location.pathname]); // Re-run if path changes
 
   const [show, setShow] = useState(false);
   const handleClose = async () => {
