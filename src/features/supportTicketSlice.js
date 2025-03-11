@@ -227,7 +227,7 @@ export const supportTicketSlice = createSlice({
       })
       .addCase(supportGetViewAccess.rejected, (state, { payload }) => {
         state.isLoading = false;
-        toast.error(datavalidationerror(payload));
+        // toast.error(datavalidationerror(payload)); 
       })
   }
 })
