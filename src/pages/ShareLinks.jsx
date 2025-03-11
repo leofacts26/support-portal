@@ -224,7 +224,6 @@ const ShareLinks = () => {
                 name="email_id"
                 value={values.email_id}
                 onChange={(e) => setValues({ ...values, email_id: e.target.value })}
-                required
               />
             </div>
           </Modal.Body>
