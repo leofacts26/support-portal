@@ -253,6 +253,7 @@ const SupportTickets = () => {
     }
     await dispatch(fetchSupportTicketData());
     setValues(initialState)
+    handleCloseCreateTicket()
     handleClose()
   }
 
