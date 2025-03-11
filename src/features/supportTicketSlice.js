@@ -106,7 +106,7 @@ export const fetchSupportListUsers = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
-      const response = await api.get(`${BASE_URL}/support-list-users`, {
+      const response = await api.get(`${BASE_URL}/support-list-users?current_page=1&limit=3000`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
