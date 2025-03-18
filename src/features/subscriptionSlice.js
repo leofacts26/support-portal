@@ -12,7 +12,8 @@ const initialState = {
   discoundedData: null,
   subscribeData: null,
   activeSubscriptionList: null,
-  calculaterOrderData: {}
+  calculaterOrderData: {},
+  listVendorQuickCreateList: []
   // couponStatus: null,
 };
 
@@ -172,6 +173,30 @@ export const fetchActiveSubscription = createAsyncThunk(
 
 
 
+export const fetchListVendorQuickCreate = createAsyncThunk(
+  "homepage/fetchListVendorQuickCreate",
+  async (vendorId, thunkAPI) => {
+    // const { vendor_id } = thunkAPI.getState().user.vendorId;
+    // console.log(vendor_id, "vendorIdvendorIdvendorId");
+    const token = thunkAPI.getState().authSlice.token || localStorage.getItem('token');
+    try {
+      const response = await api.get(
+        `${BASE_URL}/rz-support-list-vendor-quick-create?vendorId=${vendorId}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response?.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+
+
 export const subscriptionSlice = createSlice({
   name: "subscription",
   initialState,
@@ -225,6 +250,18 @@ export const subscriptionSlice = createSlice({
         state.activeSubscriptionList = payload;
       })
       .addCase(fetchActiveSubscription.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(datavalidationerror(payload));
+      })
+      // fetchListVendorQuickCreate  
+      .addCase(fetchListVendorQuickCreate.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchListVendorQuickCreate.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.listVendorQuickCreateList = payload;
+      })
+      .addCase(fetchListVendorQuickCreate.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(datavalidationerror(payload));
       })

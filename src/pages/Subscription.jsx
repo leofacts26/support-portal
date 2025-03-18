@@ -10,19 +10,24 @@ import moment from 'moment';
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import TopHeader from '../components/common/TopHeader';
-import { cancelRecurringTimePayment, fetchActiveSubscription } from '../features/subscriptionSlice';
+import { cancelRecurringTimePayment, fetchActiveSubscription, fetchListVendorQuickCreate } from '../features/subscriptionSlice';
 import toast from 'react-hot-toast';
 
 
 const Subscription = () => {
-  const { activeSubscriptionList, cancelSubData } = useSelector((state) => state.subscription)
-  console.log(activeSubscriptionList, "activeSubscriptionList");
+  const { activeSubscriptionList, listVendorQuickCreateList, cancelSubData } = useSelector((state) => state.subscription)
+  // console.log(listVendorQuickCreateList, "listVendorQuickCreateList"); 
+ 
   const { id } = useParams();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchActiveSubscription(id))
+  }, [])
+
+  useEffect(() => {
+    dispatch(fetchListVendorQuickCreate(id))
   }, [])
 
   const startFormattedDate = moment(activeSubscriptionList?.activeSubscription?.start_date).format("MMM DD, YYYY");
@@ -195,6 +200,55 @@ const Subscription = () => {
               </div>
             </Grid>
           </Grid>
+
+          <div>
+            {listVendorQuickCreateList?.length > 0 && <hr className="mb-4" />}
+            {listVendorQuickCreateList?.length > 0 && (
+              <h3 className="top-header-title mb-3">Quick Created Subscriptions</h3>
+            )}
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container spacing={2}>
+                {listVendorQuickCreateList?.map((itemData) => (
+                  <Grid item xs={12} md={6} lg={4} key={itemData.id}>
+                    <div className="ct-box-details ct-box-padding">
+                      <div className="px-4">
+                        <Stack direction="row" justifyContent="space-between" alignItems="center" className="mt-3 mb-4">
+                          <p className="subscription-type">Status:</p>
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            {itemData?.status === "active" ? (
+                              <DoneIcon style={{ fontSize: "18px", color: "#459412" }} />
+                            ) : (
+                              <CloseIcon style={{ fontSize: "18px", color: "#a81e1e" }} />
+                            )}
+                            <h4 className={itemData?.status === "active" ? "subscription-green" : "subscription-red"}>
+                              {itemData?.status || "Inactive"}
+                            </h4>
+                          </Stack>
+                        </Stack>
+
+                        <Stack direction="row" justifyContent="space-between" alignItems="center" className="mt-3">
+                          <p className="subscription-type">Purchased On:</p>
+                          <h4 className="subscription-dark">
+                            {itemData?.start_date ? moment(itemData.start_date).format("MMMM DD, YYYY") : "N/A"}
+                          </h4>
+                        </Stack>
+
+                        <Stack direction="row" justifyContent="space-between" alignItems="center" className="mt-3">
+                          <p className="subscription-type">Subscription Plan:</p>
+                          <h4 className="subscription-dark">{itemData?.subscription_pattern || "N/A"}</h4>
+                        </Stack>
+
+                        <Stack direction="row" justifyContent="space-between" alignItems="center" className="my-3">
+                          <p className="subscription-type">Subscription Type:</p>
+                          <h4 className="subscription-dark">{itemData?.subscription_type_id || "N/A"}</h4>
+                        </Stack>
+                      </div>
+                    </div>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </div>
 
           <div>
             {activeSubscriptionList?.queuedSubscriptions?.length > 0 && <hr className="mb-4" />}
