@@ -3,16 +3,16 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { Link, useParams } from 'react-router-dom';
-import DoneIcon from '@mui/icons-material/Done';
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import moment from 'moment';
-import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import TopHeader from '../components/common/TopHeader';
 import { cancelRecurringTimePayment, fetchActiveSubscription, fetchListVendorQuickCreate } from '../features/subscriptionSlice';
 import toast from 'react-hot-toast';
-
+import InfoIcon from "@mui/icons-material/Info";
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Subscription = () => {
   const { activeSubscriptionList, listVendorQuickCreateList, cancelSubData } = useSelector((state) => state.subscription)
@@ -216,11 +216,21 @@ const Subscription = () => {
                           <p className="subscription-type">Status:</p>
                           <Stack direction="row" spacing={1} alignItems="center">
                             {itemData?.status === "active" ? (
-                              <DoneIcon style={{ fontSize: "18px", color: "#459412" }} />
+                              <InfoIcon style={{ fontSize: "18px", color: "#d9822b" }} /> // Yellow for active
+                            ) : itemData?.status === "paid" ? (
+                              <DoneIcon style={{ fontSize: "18px", color: "#459412" }} /> // Green for paid
                             ) : (
-                              <CloseIcon style={{ fontSize: "18px", color: "#a81e1e" }} />
+                              <CloseIcon style={{ fontSize: "18px", color: "#a81e1e" }} /> // Red for disabledfornew
                             )}
-                            <h4 className={itemData?.status === "active" ? "subscription-green" : "subscription-red"}>
+                            <h4
+                              className={
+                                itemData?.status === "active"
+                                  ? "subscription-yellow"
+                                  : itemData?.status === "paid"
+                                    ? "subscription-green"
+                                    : "subscription-red"
+                              }
+                            >
                               {itemData?.status || "Inactive"}
                             </h4>
                           </Stack>
