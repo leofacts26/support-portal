@@ -21,21 +21,16 @@ const SubscriptionPlanDetails = () => {
   const dispatch = useDispatch();
   const { subscribeData, discoundedData, couponCode, selectedSubscription, calculaterOrderData } = useSelector((state) => state.subscription);
   const [loading, setLoading] = useState(false);
-  const [recurringPayments, setRecurringPayments] = useState(true);
+  // const [recurringPayments, setRecurringPayments] = useState(true);  make recurringPayments true, uncomment below useeffect
+  const [recurringPayments, setRecurringPayments] = useState(false);
   const { vendorId, subscriptionTypeId } = useParams();
 
-  // console.log(subscribeData, "subscribeData");
-  // console.log(discoundedData, "discoundedData");
-  // console.log(recurringPayments, "recurringPayments");
 
-  // console.log(calculaterOrderData, "calculaterOrderDatacalculaterOrderData");
-
-
-  useEffect(() => {
-    if (discoundedData?.is_one_recurring_subscription_already_present === true) {
-      setRecurringPayments(discoundedData?.is_one_recurring_subscription_already_present)
-    }
-  }, [discoundedData?.is_one_recurring_subscription_already_present])
+  // useEffect(() => {
+  //   if (discoundedData?.is_one_recurring_subscription_already_present === true) {
+  //     setRecurringPayments(discoundedData?.is_one_recurring_subscription_already_present)
+  //   }
+  // }, [discoundedData?.is_one_recurring_subscription_already_present])
 
 
   useEffect(() => {
@@ -44,20 +39,7 @@ const SubscriptionPlanDetails = () => {
     }
   }, [discoundedData])
 
-  // loadScript 
-  // function loadScript(src) {
-  //   return new Promise((resolve) => {
-  //     const script = document.createElement("script");
-  //     script.src = src;
-  //     script.onload = () => {
-  //       resolve(true);
-  //     };
-  //     script.onerror = () => {
-  //       resolve(false);
-  //     };
-  //     document.body.appendChild(script);
-  //   });
-  // }
+  
 
   const onCouponCodeSubmit = async (e) => {
     e.preventDefault()
@@ -102,144 +84,6 @@ const SubscriptionPlanDetails = () => {
       console.log(error);
     }
   }
-
-  // displayRazorpay 
-  // async function displayRazorpay() {
-  //   setLoading(true);
-
-  //   if (discoundedData?.is_one_recurring_subscription_already_present === false && discoundedData?.is_recurring_subscription_pending_for_authentication) {
-  //     toast.error("Subscription Payment is Pending, After Success you can proceed with OneTime Payment")
-  //     setLoading(false)
-  //     navigate('/dashboard/subscription')
-  //     return;
-  //   }
-
-
-  //   const res = await loadScript(
-  //     "https://checkout.razorpay.com/v1/checkout.js"
-  //   );
-
-  //   if (!res) {
-  //     alert("Razorpay SDK failed to load. Are you online?");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   const { plans = [] } = subscribeData || {};
-
-  //   const planIndex = discoundedData?.subType?.toLowerCase() === 'monthly' ? 1 : 0;
-
-  //   const recurringMonthlydata = {
-  //     vendorId: vendorId,
-  //     subscription_type_id: plans[planIndex]?.subscriptionTypeId || null,
-  //     subscription_duration: plans[planIndex]?.durations?.[0] || null,
-  //     plan_id: plans[planIndex]?.id || null,
-  //   };
-
-  //   let result;
-
-  //   if (recurringPayments && discoundedData?.is_one_recurring_subscription_already_present === false) {
-  //     result = await dispatch(createRecurringTimePayment(recurringMonthlydata));
-  //   } else {
-  //     result = await dispatch(createOneTimePayment());
-  //   }
-
-
-  //   if (!result || result.payload.error || result.payload.status === "failure") {
-  //     toast.error("Server error: " + (result.payload?.error?.message || result.payload.message || "Unknown error occurred."));
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   let options;
-
-  //   if (discoundedData?.is_one_recurring_subscription_already_present === false && recurringPayments) {
-  //     const {
-  //       id: subscriptionId,
-  //       plan_id,
-  //       customer_id,
-  //       short_url,
-  //       total_count,
-  //       start_at,
-  //       end_at
-  //     } = result.payload;
-
-
-  //     options = {
-  //       key: "rzp_test_2M5D9mQwHZp8iP",
-  //       subscription_id: subscriptionId,
-  //       amount: discoundedData.finalAmount,
-  //       currency: "INR",
-  //       name: "Caterings And Tiffins",
-  //       description: "Subscription Payment",
-  //       image: "/img/catering-service-logo.png",
-  //       handler: async function (response) {
-  //         // console.log(response, "recurring response");
-  //         const data = {
-  //           subscriptionId,
-  //           razorpayPaymentId: response.razorpay_payment_id,
-  //           razorpayOrderId: response.razorpay_order_id,
-  //           razorpaySignature: response.razorpay_signature,
-  //         };
-  //         await dispatch(setCouponCode(""));
-  //         navigate('/dashboard/subscription');
-  //       },
-  //       prefill: {
-  //         name: "Caterings And Tiffins",
-  //         email: "cateringsandtiffin@example.com",
-  //         contact: "9879879879",
-  //       },
-  //       notes: {
-  //         address: "Caterings And Tiffins Corporate Office",
-  //         subscriptionId: subscriptionId,
-  //         short_url: short_url
-  //       },
-  //       options: {
-  //         label: "Pay Now",
-  //         image: "/img/catering-service-logo.png"
-  //       },
-  //       theme: {
-  //         color: "#a81e1e",
-  //       },
-  //     };
-  //   } else {
-  //     const { amount, id, currency } = result?.payload?.data?.order;
-  //     options = {
-  //       key: "rzp_test_2M5D9mQwHZp8iP",
-  //       amount: amount.toString(),
-  //       currency: currency,
-  //       name: "Caterings And Tiffins",
-  //       description: "One Time Payment",
-  //       order_id: id,
-  //       handler: async function (response) {
-  //         const data = {
-  //           orderCreationId: id,
-  //           razorpayPaymentId: response.razorpay_payment_id,
-  //           razorpayOrderId: response.razorpay_order_id,
-  //           razorpaySignature: response.razorpay_signature,
-  //         };
-  //         await dispatch(setCouponCode(""));
-  //         navigate('/dashboard/subscription');
-  //       },
-  //       prefill: {
-  //         name: "Caterings And Tiffins",
-  //         email: "cateringsandtiffin@example.com",
-  //         contact: "9879879879",
-  //       },
-  //       notes: {
-  //         address: "Caterings And Tiffins Corporate Office",
-  //       },
-  //       theme: {
-  //         color: "#a81e1e",
-  //       },
-  //     };
-  //   }
-
-  //   const paymentObject = new window.Razorpay(options);
-  //   paymentObject.open();
-
-  //   setLoading(false);
-  // }
 
 
 
@@ -343,13 +187,13 @@ const SubscriptionPlanDetails = () => {
                             <span className='coupon-text'>
                               {recurringPayments ? 'Monthly Recurring Activated' : 'One time Payment Enabled'}
                             </span>
-                            <Checkbox
+                            {/* <Checkbox
                               disabled={discoundedData?.is_one_recurring_subscription_already_present}
                               size="small" {...label}
                               checked={recurringPayments}
                               onChange={(e) => setRecurringPayments(e.target.checked)}
                               className={recurringPayments ? 'checkbox-enabled' : 'checkbox-disabled'}
-                            />
+                            /> */}
                           </div>
                           <p className="due-date"> {discoundedData?.paymentTerms ? discoundedData?.paymentTerms : 'N/A'}</p>
                         </Stack>
