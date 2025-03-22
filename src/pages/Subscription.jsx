@@ -17,7 +17,7 @@ import toast from 'react-hot-toast';
 const Subscription = () => {
   const { activeSubscriptionList, listVendorQuickCreateList, cancelSubData } = useSelector((state) => state.subscription)
   // console.log(listVendorQuickCreateList, "listVendorQuickCreateList"); 
- 
+
   const { id } = useParams();
 
   const dispatch = useDispatch();
@@ -171,7 +171,7 @@ const Subscription = () => {
                         Get Subscription
                       </Button>
                     </Link>
-                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern?.toLowerCase() === "one_time_monthly" ? (
+                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern?.toLowerCase() === "one_time_monthly" || "one_time_Yearly" ? (
                     <Link
                       to={`/dashboard/subscription-plan/${id}`}
                       className="text-decoration-none"
@@ -183,7 +183,7 @@ const Subscription = () => {
                         Upgrade Subscription
                       </Button>
                     </Link>
-                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern?.toLowerCase() === "subscription-monthly" ? (
+                  ) : activeSubscriptionList?.activeSubscription?.subscription_pattern?.toLowerCase() === "subscription-monthly" || "subscription-yearly" ? (
                     <Button
                       variant="contained"
                       className="inquiries-btn mx-auto text-center"
