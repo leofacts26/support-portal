@@ -94,8 +94,9 @@ const SubscriptionPlanDetails = () => {
     }
     try {
       const response = await dispatch(createQuickPayment(data))
-      alert(`token:- ${response.payload.token}`)
-      console.log(response, "data");
+      // alert(`token:- ${response.payload.token}`)
+      toast.success(response?.payload?.message);
+      navigate(`/dashboard/subscription/${vendorId}`);
       setLoading(false)
     } catch (error) {
       console.log(error);
