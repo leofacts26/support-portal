@@ -18,8 +18,8 @@ const initialState = {
   country: '',
   state: '',
   city: '',
+  // pincode: '', 
   pincode: '',
-  pin_code: '',
   latitude: '',
   longitude: '',
   area: '',
@@ -264,13 +264,13 @@ const AddVendor = () => {
             </Form.Group>
           </Col>
           <Col md={12}>
-            <Form.Group controlId="pin_code" className="mt-3">
+            <Form.Group controlId="pincode" className="mt-3">
               <Form.Label>Pin Code *</Form.Label>
               <Form.Control
                 type="text"
-                name="pin_code"
+                name="pincode"
                 placeholder="Enter pin code"
-                value={values.pin_code}
+                value={values.pincode}
                 onChange={handleChange}
                 required
               />
