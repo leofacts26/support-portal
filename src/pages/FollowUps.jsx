@@ -236,6 +236,7 @@ const FollowUps = () => {
       selector: (row) => row.vendor_type,
       sortable: true,
     },
+    { name: 'Created By ', selector: (row) => row.created_by, sortable: true, width: '300px' },
     {
       name: 'Date Time',
       selector: (row) => moment(row.created_at).format('DD/MMM/YYYY h:mm a'),
