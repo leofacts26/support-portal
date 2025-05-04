@@ -12,6 +12,7 @@ import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Card, CardContent, Typography, Box, Chip, Stack } from "@mui/material";
 import moment from "moment";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 
 const FollowUpsUpdateComment = () => {
@@ -71,7 +72,17 @@ const FollowUpsUpdateComment = () => {
   return (
     <>
       <div className="container-fluid my-5">
+        <div className="mb-4 cursor-pointer">
+        <button className="btn btn-success me-1"
+          // onClick={() => navigate(-1)}
+          onClick={() => window.close()}
+        >
+          <IoMdArrowRoundBack /> Back
+        </button>
+      </div>
         <h1 className="mb-4">FollowUp Updates</h1>
+
+
         <hr className="mb-3 mt-3" />
 
         {
@@ -167,7 +178,7 @@ const FollowUpsUpdateComment = () => {
                                 <p>N/A</p> // Display "N/A" if there is no comment
                               )}
                             </Typography>
-                            
+
                             <Typography variant="caption" color="textSecondary">
                               {moment(activeAgent.updated_at).format("M/D/YYYY, h:mm A")}
                             </Typography>

@@ -202,7 +202,7 @@ const Login = () => {
     if (response.payload.token) {
       dispatch(setToken(response.payload.token));
       localStorage.setItem('token', response.payload.token);
-      navigate('/')
+      navigate('/add-vendor')
     }
   };
 

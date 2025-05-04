@@ -15,6 +15,7 @@ import Cuisines from "../components/vendor-details/Cuisines";
 import Packages from "../components/vendor-details/Packages";
 import { setSearchTerm } from "../features/supportTicketSlice";
 import Subscription from "./Subscription";
+import moment from "moment";
 
 
 
@@ -265,12 +266,12 @@ const VendorDetails = ({ searchBox, companyId }) => {
                       </td>
                       <td>
                         {subscription?.subscriptionStartDate
-                          ? new Date(subscription.subscriptionStartDate).toLocaleDateString()
+                          ? moment(subscription.subscriptionStartDate).format("DD MMM, YYYY")
                           : "N/A"}
                       </td>
                       <td>
                         {subscription?.subscriptionExpiryDate
-                          ? new Date(subscription.subscriptionExpiryDate).toLocaleDateString()
+                          ? moment(subscription.subscriptionExpiryDate).format("DD MMM, YYYY")
                           : "N/A"}
                       </td>
                       <td>
