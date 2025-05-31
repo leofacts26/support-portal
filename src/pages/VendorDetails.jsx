@@ -32,24 +32,22 @@ const VendorDetails = ({ searchBox, companyId }) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
 
-  console.log(searchTerm, "searchTermsearchTermsearchTermsearchTermsearchTerm");
+  // console.log(searchTerm, "searchTermsearchTermsearchTermsearchTermsearchTerm");
 
 
-  useEffect(() => {
-    // Set up a debounce
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 1000); // Delay of 1000ms
+  // useEffect(() => {
+  //   const handler = setTimeout(() => {
+  //     setDebouncedSearchTerm(searchTerm);
+  //   }, 1000); 
 
-    // Cleanup function to clear timeout if searchTerm changes before delay
-    return () => clearTimeout(handler);
-  }, [searchTerm]);
+  //   return () => clearTimeout(handler);
+  // }, [searchTerm]);
 
-  useEffect(() => {
-    if (debouncedSearchTerm) {
-      dispatch(fetchVendorShowDetailData(debouncedSearchTerm));
-    }
-  }, [debouncedSearchTerm, dispatch]);
+  // useEffect(() => {
+  //   if (debouncedSearchTerm) {
+  //     dispatch(fetchVendorShowDetailData(debouncedSearchTerm));
+  //   }
+  // }, [debouncedSearchTerm, dispatch]);
 
 
   const [show, setShow] = useState(false);

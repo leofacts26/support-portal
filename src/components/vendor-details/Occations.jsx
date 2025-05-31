@@ -80,7 +80,7 @@ const Occations = ({ occasions, showOccation, handleOccationClose, handleOccatio
     <>
       <div className="row mx-2">
         <div className="bg-secondary text-white py-3 d-flex justify-content-between">
-          <h3 className='mb-0'>Occastions You Cater</h3>
+          <h3 className='mb-0'>Occasions You Cater</h3>
           <h3 className='mb-0 text-warning' style={{ cursor: 'pointer' }} onClick={handleOccationShow}>Edit</h3>
         </div>
 
@@ -97,7 +97,7 @@ const Occations = ({ occasions, showOccation, handleOccationClose, handleOccatio
               : 'N/A'}
             {!occasions.some((item) =>
               item.selected === "1")
-             && <h2 className="text-center">No Occastions  Found</h2>}
+             && <h2 className="text-center">No Occasions Found</h2>}
           </div>
         </div>
 

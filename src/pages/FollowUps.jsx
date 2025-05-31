@@ -236,7 +236,6 @@ const FollowUps = () => {
       selector: (row) => row.vendor_type,
       sortable: true,
     },
-    { name: 'Created By ', selector: (row) => row.created_by, sortable: true, width: '300px' },
     {
       name: 'Date Time',
       selector: (row) => moment(row.created_at).format('DD/MMM/YYYY h:mm a'),
@@ -245,9 +244,10 @@ const FollowUps = () => {
     },
     {
       name: 'Agents',
-      selector: (row) => row.assigned_agents?.map(agent => agent.admin_user_name).join(', '),
+      selector: (row) => row.assigned_agents?.map(agent => agent.admin_user_name).join(', '), width: '200px',
       sortable: true,
     },
+        { name: 'Created By ', selector: (row) => row.created_by, sortable: true, width: '150px' },
     {
       name: 'Update Comment',
       cell: (row) => (
