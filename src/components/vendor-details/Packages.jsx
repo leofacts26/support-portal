@@ -265,21 +265,41 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
               <div className='card-box-shadow px-5 pt-2 pb-4 mb-4'>
                 <Grid container spacing={2} className='mt-0'>
                   {
-                    foodTypes.length > 0 && <Grid item xs={12} lg={6}>
+                    <Grid item xs={12} lg={6}>
                       <h3 className='package-capacity mt-0'>Choose your food type Below</h3>
                       <p className='max-min-capacity-para text-center mb-3'>If you provide both Veg and Non-Veg, please check both checkboxes.</p>
 
-                      {foodTypes?.map((food, index) => (
-                        <Stack key={food.id} direction="row" alignItems="center" justifyContent="center" spacing={2} className={food.selected ? 'mb-5 green-switch' : 'mb-5'}>
-                          <h4 className={food.food_type_name === 'Veg' ? 'package-vn-title-veg' : 'package-vn-title-nonveg'}>{food.food_type_name}</h4>
+                      {foodTypes && foodTypes.length > 0 ? (
+                        foodTypes.map((food, index) => (
+                          <Stack
+                            key={food.id}
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={2}
+                            className={food.selected ? 'mb-5 green-switch' : 'mb-5'}
+                          >
+                            <h4
+                              className={
+                                food.food_type_name === 'Veg'
+                                  ? 'package-vn-title-veg'
+                                  : 'package-vn-title-nonveg'
+                              }
+                            >
+                              {food.food_type_name}
+                            </h4>
 
-                          <Switch
-                            size="small"
-                            checked={food.selected === 1}
-                            onChange={() => handleFoodSwitchToggle(index)}
-                          />
-                        </Stack>
-                      ))}
+                            <Switch
+                              size="small"
+                              checked={food.selected === 1}
+                              onChange={() => handleFoodSwitchToggle(index)}
+                            />
+                          </Stack>
+                        ))
+                      ) : (
+                        <p className="text-center text-muted">Food types not available.</p>
+                      )}
+
                     </Grid>
                   }
 
@@ -324,25 +344,36 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                 />
 
                 <Grid container spacing={2} className='mt-2'>
-                  {serviceTypes?.length > 0 && <Grid item xs={12} lg={6}>
+                  {<Grid item xs={12} lg={6}>
                     <h3 className='package-capacity mt-3'>Choose your Service type Below</h3>
                     <p className='max-min-capacity-para text-center'>If you provide both table and buffet service, please check both</p>
-                    {serviceTypes?.slice(0, 2).map((service, index) => {
-                      // console.log(`/img/icons/${service.service_type_name.toLowerCase()}.png`, "service RRR");
-                      return (
-                        <Stack key={service.id} direction="row" justifyContent="center" alignItems="center" spacing="2" className='mt-3'>
-                          <img src={`/img/package/${service.service_type_name.toLowerCase()}.png`} alt="" className='package-icons' />
-                          <p className='px-3 package-icon-title'>{service.service_type_name}</p>
+                    {serviceTypes && serviceTypes.length > 0 ? (
+                      serviceTypes.slice(0, 2).map((service, index) => (
+                        <Stack
+                          key={service.id}
+                          direction="row"
+                          justifyContent="center"
+                          alignItems="center"
+                          spacing={2}
+                          className="mt-3"
+                        >
+                          <img
+                            src={`/img/package/${service.service_type_name.toLowerCase()}.png`}
+                            alt=""
+                            className="package-icons"
+                          />
+                          <p className="px-3 package-icon-title">{service.service_type_name}</p>
                           <Switch
                             size="small"
                             checked={service.selected === 1}
                             onChange={() => handleSwitchToggle(index)}
                           />
                         </Stack>
-                      )
-                    }
-
+                      ))
+                    ) : (
+                      <p className="text-center text-muted">Service types not available.</p>
                     )}
+
                   </Grid>}
 
 
@@ -364,19 +395,35 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                   {vendorDetails?.vendor_type === "Caterer" && <Grid item xs={12} lg={6}>
                     <h3 className='package-capacity mt-3'>Choose your Serving type Below</h3>
                     <p className='max-min-capacity-para text-center'>If you provide both table and buffet service, please check both</p>
-                    {
-                      servingTypes?.map((servingType, index) => {
-                        // console.log(`/img/icons/${servingType.serving_type_name.toLowerCase().replace(/\s+/g, '-')}.png`, "servingType servingType");
-                        return (
-                          <Stack direction="row" justifyContent="center" alignItems="center" spacing="2" className='mt-3' key={index}>
-                            <img src={`/img/package/${servingType.serving_type_name.toLowerCase().replace(/\s+/g, '-')}.png`} alt="" className='package-icons' />
-                            <p className='px-3 package-icon-title'>{servingType.serving_type_name.toLowerCase().replace(/\s+/g, '-')}</p>
-                            <Switch size="small" checked={servingType.selected === 1} onChange={() => handleServingSwitchToggle(index)} />
-                          </Stack>
-                        )
-                      }
-                      )
-                    }
+                    {servingTypes && servingTypes.length > 0 ? (
+                      servingTypes.map((servingType, index) => (
+                        <Stack
+                          direction="row"
+                          justifyContent="center"
+                          alignItems="center"
+                          spacing={2}
+                          className="mt-3"
+                          key={index}
+                        >
+                          <img
+                            src={`/img/package/${servingType.serving_type_name.toLowerCase().replace(/\s+/g, '-')}.png`}
+                            alt=""
+                            className="package-icons"
+                          />
+                          <p className="px-3 package-icon-title">
+                            {servingType.serving_type_name.toLowerCase().replace(/\s+/g, '-')}
+                          </p>
+                          <Switch
+                            size="small"
+                            checked={servingType.selected === 1}
+                            onChange={() => handleServingSwitchToggle(index)}
+                          />
+                        </Stack>
+                      ))
+                    ) : (
+                      <p className="text-center text-muted">Serving types not available.</p>
+                    )}
+
                   </Grid>}
                 </Grid>
 
