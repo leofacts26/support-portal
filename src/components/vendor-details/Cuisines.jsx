@@ -60,7 +60,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 
-const Cuisines = ({ cuisines, showCuisines, handleCuisinesClose, handleCuisinesShow, searchTerm }) => {
+const Cuisines = ({ cuisines, showCuisines, handleCuisinesClose, handleCuisinesShow, searchTerm, companyId }) => {
   const dispatch = useDispatch()
   const { token } = useSelector((state) => state.authSlice);
   const [cuisinesList, setCuisinesList] = useState(cuisines)
@@ -128,7 +128,7 @@ const Cuisines = ({ cuisines, showCuisines, handleCuisinesClose, handleCuisinesS
 
     const data = {
       cuisines: JSON.stringify(cuisinesData),
-      company_id: searchTerm
+      company_id: searchTerm || companyId,
     }
 
     // console.log(data, "data");
@@ -142,7 +142,7 @@ const Cuisines = ({ cuisines, showCuisines, handleCuisinesClose, handleCuisinesS
     toast.success("Cuisines Updated Successfully...")
     setIsLoading(false)
     handleCuisinesClose()
-    dispatch(fetchVendorShowDetailData(searchTerm));
+    dispatch(fetchVendorShowDetailData(searchTerm || companyId));
   }
 
 

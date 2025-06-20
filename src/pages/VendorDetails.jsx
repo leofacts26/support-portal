@@ -29,10 +29,10 @@ const VendorDetails = ({ searchBox, companyId }) => {
   const { foodTypes, kitchenTypes, mealTimes, subscriptionDetails, occasions, cuisines, branches, serviceTypes, servingTypes } = vendorDetails;
   const [editTrigger, setEditTrigger] = useState(false);
 
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  // const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
 
-  // console.log(searchTerm, "searchTermsearchTermsearchTermsearchTermsearchTerm");
+  // console.log(foodTypes, "foodTypesfoodTypesfoodTypesfoodTypesfoodTypes");
 
 
   // useEffect(() => {
@@ -290,8 +290,7 @@ const VendorDetails = ({ searchBox, companyId }) => {
         </div>
         <hr />
 
-        <BusinessInformation vendorDetails={vendorDetails} show={show} handleClose={handleClose} handleShow={handleShow} editTrigger={editTrigger}
-          searchTerm={searchTerm} BusinessInformation={BusinessInformation} companyId={companyId} />
+        <BusinessInformation vendorDetails={vendorDetails} show={show} handleClose={handleClose} handleShow={handleShow} editTrigger={editTrigger} searchTerm={searchTerm} BusinessInformation={BusinessInformation} companyId={companyId} />
         <hr />
 
         <div className="row mx-2">
@@ -336,17 +335,17 @@ const VendorDetails = ({ searchBox, companyId }) => {
         </div>
         <hr />
 
-        <Packages uid={uuidv4()} handlePackagesClose={handlePackagesClose} handlePackagesShow={handlePackagesShow} showPackages={showPackages}
+        <Packages companyId={companyId} uid={uuidv4()} handlePackagesClose={handlePackagesClose} handlePackagesShow={handlePackagesShow} showPackages={showPackages}
           foodTypesList={foodTypes} kitchenTypesList={kitchenTypes} mealTimesList={mealTimes} serviceTypesList={serviceTypes} servingTypesList={servingTypes} vendorDetails={vendorDetails} searchTerm={searchTerm} />
         <hr />
 
         {
           // occasions?.filter((item) => item.selected === '1')?.length > 0 && 
           <Occations occasions={occasions} editTrigger={editTrigger} showOccation={showOccation} handleOccationClose={handleOccationClose}
-            handleOccationShow={handleOccationShow} uid={uuidv4()} searchTerm={searchTerm} />}
+            handleOccationShow={handleOccationShow} uid={uuidv4()} searchTerm={searchTerm} companyId={companyId} />}
 
         <Cuisines cuisines={cuisines} editTrigger={editTrigger} showCuisines={showCuisines} handleCuisinesClose={handleCuisinesClose}
-          handleCuisinesShow={handleCuisinesShow} uid={uuidv4()} searchTerm={searchTerm}
+          handleCuisinesShow={handleCuisinesShow} uid={uuidv4()} searchTerm={searchTerm} companyId={companyId}
         />
         <hr />
 

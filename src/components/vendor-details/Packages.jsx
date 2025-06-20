@@ -62,7 +62,7 @@ const CssTextFieldSmall = styled(TextField)(({ theme }) => ({
 
 
 
-const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodTypesList, serviceTypesList, servingTypesList, kitchenTypesList, mealTimesList, vendorDetails, searchTerm }) => {
+const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodTypesList, serviceTypesList, servingTypesList, kitchenTypesList, mealTimesList, vendorDetails, searchTerm, companyId }) => {
   const { token } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch()
 
@@ -143,7 +143,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
       minimumCapacity: minimum_capacity,
       maximumCapacity: maximum_capacity,
       startPrice: start_price,
-      company_id: searchTerm
+      company_id: searchTerm || companyId
     };
 
     const tiffinData = {
@@ -154,7 +154,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
       startPrice: start_price,
       minimumCapacity: minimum_capacity,
       maximumCapacity: maximum_capacity,
-      company_id: searchTerm
+      company_id: searchTerm || companyId
     }
 
     // Normalize vendor_type
@@ -181,7 +181,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
         }
       })
       toast.success(successToast(response))
-      dispatch(fetchVendorShowDetailData(searchTerm));
+      dispatch(fetchVendorShowDetailData(searchTerm || companyId));
     } catch (error) {
       console.log(error);
       toast.error(datavalidationerror(error))

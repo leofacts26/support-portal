@@ -20,7 +20,7 @@ import { fetchVendorShowDetailData } from "../../features/menuSlice";
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 
-const Occations = ({ occasions, showOccation, handleOccationClose, handleOccationShow, searchTerm }) => {
+const Occations = ({ occasions, showOccation, handleOccationClose, handleOccationShow, searchTerm, companyId }) => {
   const { token } = useSelector((state) => state.authSlice);
   const [occasionsList, setOccasionsList] = useState(occasions)
   const [isLoading, setIsLoading] = useState(false)
@@ -59,7 +59,7 @@ const Occations = ({ occasions, showOccation, handleOccationClose, handleOccatio
 
     const data = {
       occasions: JSON.stringify(occasionsData),
-      company_id: searchTerm
+      company_id: searchTerm || companyId,
     }
 
     console.log(data, "datadatadata");
@@ -72,7 +72,7 @@ const Occations = ({ occasions, showOccation, handleOccationClose, handleOccatio
     toast.success("Occasions Updated Successfully...")
     setIsLoading(false)
     handleOccationClose()
-    dispatch(fetchVendorShowDetailData(searchTerm));
+    dispatch(fetchVendorShowDetailData(searchTerm || companyId));
   }
 
 
@@ -97,7 +97,7 @@ const Occations = ({ occasions, showOccation, handleOccationClose, handleOccatio
               : 'N/A'}
             {!occasions.some((item) =>
               item.selected === "1")
-             && <h2 className="text-center">No Occasions Found</h2>}
+              && <h2 className="text-center">No Occasions Found</h2>}
           </div>
         </div>
 
