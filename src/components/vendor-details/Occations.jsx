@@ -140,7 +140,7 @@ const Occations = ({ occasions, showOccation, handleOccationClose, handleOccatio
                 <div className='card-box-shadow px-1 py-1 mb-3' key={occasion?.id}>
                   <Stack direction="row" justifyContent="space-between" >
                     <Stack direction="row" alignItems="center" spacing={1}>
-                      <p className='occasions-modal-desc'>{occasion?.occasion_name}</p>
+                      <p className='occasions-modal-desc ps-2'>{occasion?.occasion_name}</p>
                     </Stack>
                     <div>
                       <Checkbox {...label} size="small" checked={occasion?.selected === "1"} onChange={() => handleSelectChange(occasion)} />
