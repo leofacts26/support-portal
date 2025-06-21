@@ -76,27 +76,27 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
   const [start_price, setStart_price] = useState(vendorDetails?.start_price ? vendorDetails?.start_price : null)
   const [loading, setLoading] = useState(false)
 
-  console.log(vendorDetails, "vendorDetails 111");
+  // console.log(vendorDetails, "vendorDetails 111");
 
 
 
   const handleFoodSwitchToggle = (index) => {
     const updatedFoodTypes = foodTypes.map((food, i) =>
-      i === index ? { ...food, selected: food.selected === 1 ? 0 : 1 } : food
+      i === index ? { ...food, selected: food.selected === "1" ? 0 : "1" } : food
     );
     setFoodTypes(updatedFoodTypes);
   };
 
   const handleSwitchToggle = (index) => {
     const updatedServiceTypes = serviceTypes.map((service, i) =>
-      i === index ? { ...service, selected: service.selected === 1 ? 0 : 1 } : service
+      i === index ? { ...service, selected: service.selected === "1" ? 0 : "1" } : service
     );
     setServiceTypes(updatedServiceTypes);
   };
 
   const handleServingSwitchToggle = (index) => {
     const updatedServingTypes = servingTypes.map((serving, i) =>
-      i === index ? { ...serving, selected: serving.selected === 1 ? 0 : 1 } : serving
+      i === index ? { ...serving, selected: serving.selected === "1" ? 0 : "1" } : serving
     );
     setServingTypes(updatedServingTypes);
   };
@@ -270,7 +270,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                       <p className='max-min-capacity-para text-center mb-3'>If you provide both Veg and Non-Veg, please check both checkboxes.</p>
 
                       {foodTypes && foodTypes.length > 0 ? (
-                        foodTypes.map((food, index) => (
+                        foodTypes.slice(1,3).map((food, index) => (
                           <Stack
                             key={food.id}
                             direction="row"
@@ -291,7 +291,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
 
                             <Switch
                               size="small"
-                              checked={food.selected === 1}
+                              checked={food.selected === "1"}
                               onChange={() => handleFoodSwitchToggle(index)}
                             />
                           </Stack>
@@ -348,7 +348,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                     <h3 className='package-capacity mt-3'>Choose your Service type Below</h3>
                     <p className='max-min-capacity-para text-center'>If you provide both table and buffet service, please check both</p>
                     {serviceTypes && serviceTypes.length > 0 ? (
-                      serviceTypes.slice(0, 2).map((service, index) => (
+                      serviceTypes.map((service, index) => (
                         <Stack
                           key={service.id}
                           direction="row"
@@ -365,7 +365,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                           <p className="px-3 package-icon-title">{service.service_type_name}</p>
                           <Switch
                             size="small"
-                            checked={service.selected === 1}
+                            checked={service.selected === "1"}
                             onChange={() => handleSwitchToggle(index)}
                           />
                         </Stack>
@@ -415,7 +415,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                           </p>
                           <Switch
                             size="small"
-                            checked={servingType.selected === 1}
+                            checked={servingType.selected === "1"}
                             onChange={() => handleServingSwitchToggle(index)}
                           />
                         </Stack>
