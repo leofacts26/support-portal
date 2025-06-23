@@ -82,21 +82,21 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
 
   const handleFoodSwitchToggle = (index) => {
     const updatedFoodTypes = foodTypes.map((food, i) =>
-      i === index ? { ...food, selected: food.selected === "1" ? 0 : "1" } : food
+      i === index ? { ...food, selected: food.selected === "1" ? "0" : "1" } : food
     );
     setFoodTypes(updatedFoodTypes);
   };
 
   const handleSwitchToggle = (index) => {
     const updatedServiceTypes = serviceTypes.map((service, i) =>
-      i === index ? { ...service, selected: service.selected === "1" ? 0 : "1" } : service
+      i === index ? { ...service, selected: service.selected === "1" ? "0" : "1" } : service
     );
     setServiceTypes(updatedServiceTypes);
   };
 
   const handleServingSwitchToggle = (index) => {
     const updatedServingTypes = servingTypes.map((serving, i) =>
-      i === index ? { ...serving, selected: serving.selected === "1" ? 0 : "1" } : serving
+      i === index ? { ...serving, selected: serving.selected === "1" ? "0" : "1" } : serving
     );
     setServingTypes(updatedServingTypes);
   };
@@ -270,7 +270,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                       <p className='max-min-capacity-para text-center mb-3'>If you provide both Veg and Non-Veg, please check both checkboxes.</p>
 
                       {foodTypes && foodTypes.length > 0 ? (
-                        foodTypes.slice(1,3).map((food, index) => (
+                        foodTypes.map((food, index) => (
                           <Stack
                             key={food.id}
                             direction="row"
@@ -438,7 +438,8 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
                   }}
                 /> */}
 
-                {kitchenTypes?.length > 0 && <Stack direction="row" justifyContent="center" className="mt-4">
+
+                { vendorDetails.vendor_type !== "Caterer" && kitchenTypes?.length > 0 && <Stack direction="row" justifyContent="center" className="mt-4">
                   <div>
                     <h3 className='package-capacity mt-3'>Choose your Kitchen Type Below</h3>
                     <p className='max-min-capacity-para text-center'>Please Select Only One Kitchen Type below</p>
