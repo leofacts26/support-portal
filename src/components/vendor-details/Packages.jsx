@@ -205,7 +205,7 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
           <thead>
             <tr>
               <th style={{ fontSize: '10px' }}>Food Type</th>
-              <th style={{ fontSize: '10px' }}>serviceTypes</th>
+              {/* <th style={{ fontSize: '10px' }}>serviceTypes</th> */}
 
               {vendorDetails?.vendor_type === "Tiffin" && <th style={{ fontSize: '10px' }}>service Types</th>}
               {vendorDetails?.vendor_type === "Tiffin" && <th style={{ fontSize: '10px' }}>Meal Types</th>}
@@ -222,20 +222,20 @@ const Packages = ({ showPackages, handlePackagesClose, handlePackagesShow, foodT
           <tbody>
             <tr>
               <td>
-                {foodTypes?.length > 0 ? foodTypes?.map(item => item.food_type_name)?.join(', ') : 'N/A'}
+                {foodTypes?.length > 0 ? foodTypes?.filter((item)=> item.selected === "1")?.map(item => item.food_type_name)?.join(', ') : 'N/A'}
               </td>
-              <td>
+              {/* <td>
                 {serviceTypes?.length > 0 ? serviceTypes?.map(item => item.service_type_name)?.join(', ') : 'N/A'}
-              </td>
+              </td> */}
 
 
-              {vendorDetails?.vendor_type === "Tiffin" && <td> {serviceTypes?.length > 0 ? serviceTypes?.map(item => item.service_type_name)?.join(', ') : 'N/A'} </td>}
+              {vendorDetails?.vendor_type === "Tiffin" && <td> {serviceTypes?.length > 0 ? serviceTypes?.filter((item)=> item.selected === "1")?.map(item => item.service_type_name)?.join(', ') : 'N/A'} </td>}
               {vendorDetails?.vendor_type === "Tiffin" && <td>{mealTypes?.length > 0 ? mealTypes?.filter((item) => item.selected === "1").map(item => item.meal_time_name)?.join(', ') : 'N/A'}</td>}
               {vendorDetails?.vendor_type === "Tiffin" && <td> {kitchenTypes?.length > 0 ? kitchenTypes?.filter((item) => item.selected === "1").map(item => item.kitchen_type_name)?.join(', ') : 'N/A'} </td>}
 
 
 
-              {vendorDetails?.vendor_type === "Caterer" && <td>{servingTypes?.length > 0 ? servingTypes?.map(item => item.serving_type_name)?.join(', ') : 'N/A'}
+              {vendorDetails?.vendor_type === "Caterer" && <td>{servingTypes?.length > 0 ? servingTypes?.filter((item)=> item.selected === "1")?.map(item => item.serving_type_name)?.join(', ') : 'N/A'}
               </td>}
               {vendorDetails?.vendor_type === "Caterer" && <td>{vendorDetails?.minimum_capacity ? vendorDetails?.minimum_capacity : 'N/A'}</td>}
               {vendorDetails?.vendor_type === "Caterer" && <td>{vendorDetails?.maximum_capacity ? vendorDetails?.maximum_capacity : 'N/A'}</td>}
