@@ -140,7 +140,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
     getPlacePredictions,
     isPlacePredictionsLoading,
   } = usePlacesService({
-    apiKey: 'AIzaSyBf22eHEMxKk_9x0XWag-oCFTXkdClnPw8',
+    apiKey: process.env.REACT_APP_GOOGLE,
     options: {
       componentRestrictions: { country: 'in' }
     }
@@ -385,7 +385,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
                 <td>{vendorDetails?.country ? vendorDetails?.country : 'N/A'}</td>
                 <td>{vendorDetails?.longitude ? vendorDetails?.longitude : 'N/A'}</td>
                 <td>{vendorDetails?.latitude ? vendorDetails?.latitude : 'N/A'}</td>
-                <td style={{ width: '300px' }}>{`${`${vendorDetails?.street_address}, ` + `${vendorDetails?.formatted_address} - ` + vendorDetails?.pincode}` }</td>
+                <td style={{ width: '300px' }}>{`${`${vendorDetails?.street_address}, ` + `${vendorDetails?.formatted_address} - ` + vendorDetails?.pincode}`}</td>
               </tr>
             </tbody>
           </>
