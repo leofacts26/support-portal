@@ -100,7 +100,7 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
 
   useEffect(() => {
     if (vendorDetails) {
-      console.log(vendorDetails, "vendorDetailsvendorDetails");
+      // console.log(vendorDetails, "vendorDetailsvendorDetails");
 
       setStartDate(vendorDetails?.start_day);
       setEndDate(vendorDetails?.end_day);
