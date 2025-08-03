@@ -307,6 +307,7 @@ const SupportTickets = () => {
     // { name: 'User Type', selector: (row) => row.user_type, sortable: true, width: '100px' },
     {
       name: "User Type",
+
       cell: (row) => {
         let badgeClass = "badge";
 
@@ -321,8 +322,10 @@ const SupportTickets = () => {
             {row.user_type || "Unknown"}
           </span>
         );
+
       },
       selector: (row) => row.user_type,
+      width: '125px',
       sortable: true,
     },
     { name: 'Raised On', selector: (row) => new Date(row.raised_on).toLocaleDateString(), sortable: true, width: '150px' },
@@ -347,6 +350,7 @@ const SupportTickets = () => {
         );
       },
       selector: (row) => row.status,
+      width: '125px',
       sortable: true,
     },
     {
@@ -841,7 +845,7 @@ const SupportTickets = () => {
                 </Table>
               </div>
 
-              <VendorDetails searchBox={false} />
+              <VendorDetails searchBox={false} selectedTicket={selectedTicket}/>
 
 
             </>

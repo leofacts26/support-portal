@@ -592,35 +592,39 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
 
 
 
+                  {
+                    values?.vendor_type?.toLowerCase() !== "tiffin" && (
+                      <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid item xs={8} >
 
-                  <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Grid item xs={8} >
+                          <div style={values.working_days_hours ? { marginTop: '50px' } : { marginTop: '50px' }}>
+                            <p className="business-profile-name">Total No. of Staffs Approx</p>
+                            <CssTextField
+                              value={values.total_staffs_approx}
+                              onChange={handleChange}
+                              name="total_staffs_approx"
+                              variant="outlined"
+                              placeholder="Eg. 10 - 15"
+                              className='mt-0'
+                              style={{ width: '100%' }}
+                              InputLabelProps={{
+                                style: { color: '#777777', fontSize: '10px' },
+                              }}
+                              InputProps={{
+                                style: {
+                                  borderRadius: '8px',
+                                  backgroundColor: '#FFFFFF',
+                                }
+                              }}
+                            />
+                            {/* {errors.total_staffs_approx && <small className='text-danger mt-2 ms-1'>{errors.total_staffs_approx}</small>} */}
+                          </div>
 
-                      <div style={values.working_days_hours ? { marginTop: '50px' } : { marginTop: '50px' }}>
-                        <p className="business-profile-name">Total No. of Staffs Approx</p>
-                        <CssTextField
-                          value={values.total_staffs_approx}
-                          onChange={handleChange}
-                          name="total_staffs_approx"
-                          variant="outlined"
-                          placeholder="Eg. 10 - 15"
-                          className='mt-0'
-                          style={{ width: '100%' }}
-                          InputLabelProps={{
-                            style: { color: '#777777', fontSize: '10px' },
-                          }}
-                          InputProps={{
-                            style: {
-                              borderRadius: '8px',
-                              backgroundColor: '#FFFFFF',
-                            }
-                          }}
-                        />
-                        {/* {errors.total_staffs_approx && <small className='text-danger mt-2 ms-1'>{errors.total_staffs_approx}</small>} */}
-                      </div>
+                        </Grid>
+                      </Grid>
+                    )
+                  }
 
-                    </Grid>
-                  </Grid>
 
                   <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
                     <Grid item xs={8} >

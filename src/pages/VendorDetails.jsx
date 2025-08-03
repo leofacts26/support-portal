@@ -20,7 +20,7 @@ import moment from "moment";
 
 
 
-const VendorDetails = ({ searchBox, companyId }) => {
+const VendorDetails = ({ searchBox, companyId, selectedTicket }) => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -191,6 +191,29 @@ const VendorDetails = ({ searchBox, companyId }) => {
 
 
         <div className="row mx-2">
+
+          <div className="row mx-2">
+            <div className="bg-secondary text-white py-3 d-flex justify-content-between">
+              <h3 className='mb-0'>Vendor Details</h3>
+            </div>
+            <Table responsive="xl" className='m-0'>
+              <thead>
+                <tr>
+                  <th style={{ fontSize: '10px' }}>Company ID</th>
+                  <th style={{ fontSize: '10px' }}>Vendor Type</th>
+                  <th style={{ fontSize: '10px' }}>Created By</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{selectedTicket?.company_id ? selectedTicket?.company_id : searchTerm}</td>
+                  <td>{vendorDetails?.vendor_type ? vendorDetails?.vendor_type : 'N/A'}</td>
+                  <td>------</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+          <hr />
 
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
             <h3 className='mb-0'>Subscription Details</h3>

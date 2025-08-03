@@ -134,7 +134,9 @@ const AddVendor = () => {
 
   return (
     <Container>
-      <h3 className="mt-4 mb-4">+ Add New Vendor</h3>
+      <h1 className="header-title mt-4 mb-4">
+        + Add New Vendor
+      </h1>
       <Form onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Col md={6}>
