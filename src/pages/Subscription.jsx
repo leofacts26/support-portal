@@ -50,7 +50,7 @@ const Subscription = () => {
 
     try {
       const response = await dispatch(cancelRecurringTimePayment(data)).unwrap();
-      console.log(response, "chiru");
+      // console.log(response, "chiru");
 
       // Check if the cancellation was successful
       if (response.status === "cancelled") {

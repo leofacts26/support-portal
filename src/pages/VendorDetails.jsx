@@ -32,7 +32,9 @@ const VendorDetails = ({ searchBox, companyId, selectedTicket }) => {
   // const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
 
-  // console.log(foodTypes, "foodTypesfoodTypesfoodTypesfoodTypesfoodTypes");
+  // console.log(searchTerm, "searchTermsear");
+  // console.log(selectedTicket, "selectedTicket");
+  // console.log(companyId, "companyId");
 
 
   // useEffect(() => {
@@ -206,7 +208,7 @@ const VendorDetails = ({ searchBox, companyId, selectedTicket }) => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{selectedTicket?.company_id ? selectedTicket?.company_id : searchTerm}</td>
+                  <td>{selectedTicket?.company_id ? selectedTicket?.company_id : searchTerm || companyId}</td>
                   <td>{vendorDetails?.vendor_type ? vendorDetails?.vendor_type : 'N/A'}</td>
                   <td>------</td>
                 </tr>

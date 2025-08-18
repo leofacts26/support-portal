@@ -15,12 +15,14 @@ const YearlyPlan = () => {
     const { subscriptionData, isLoading } = useSelector((state) => state.subscription);
     const dispatch = useDispatch();
     const { id } = useParams();
+    const { vendorDetails } = useSelector((state) => state.menu)
+    const vendor_type = vendorDetails?.vendor_type || ""
 
     // console.log(subscriptionData, "subscriptionDatasubscriptionData");
 
 
     useEffect(() => {
-        dispatch(fetchSubscriptionTypes());
+        dispatch(fetchSubscriptionTypes(vendor_type));
     }, []);
 
     // onHandleSubscribe 
@@ -52,7 +54,7 @@ const YearlyPlan = () => {
                         .map((item, index) => {
                             let color = '';
                             const subscriptionType = item?.subscriptionType?.toLowerCase();
-    
+
                             if (subscriptionType === 'normal') {
                                 color = 'normal-color';
                             } else if (subscriptionType === 'popular') {
@@ -60,7 +62,7 @@ const YearlyPlan = () => {
                             } else if (subscriptionType === 'branded') {
                                 color = 'branded-color';
                             }
-    
+
                             return (
                                 <Grid
                                     item
@@ -129,7 +131,7 @@ const YearlyPlan = () => {
             )}
         </>
     );
-    
+
 }
 
 export default YearlyPlan

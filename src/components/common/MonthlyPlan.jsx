@@ -17,11 +17,21 @@ const MonthlyPlan = () => {
     const { id } = useParams();
 
     const { activeSubscriptionList } = useSelector((state) => state.subscription)
+    const { vendorDetails } = useSelector((state) => state.menu)
+      const { searchTerm } = useSelector((state) => state.supportTickets)
+    
+
+    // console.log(vendorDetails, "vendorDetailsvendorDetails");
+    // console.log(searchTerm, "searchTermsearchTerm");
+    
+
+    const vendor_type = vendorDetails?.vendor_type || ""
 
 
     useEffect(() => {
-        dispatch(fetchSubscriptionTypes());
+        dispatch(fetchSubscriptionTypes(vendor_type));
     }, []);
+
 
     // onHandleSubscribe 
     const onHandleSubscribe = async (item) => {
