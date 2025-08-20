@@ -194,7 +194,6 @@ const VendorDetails = ({ searchBox, companyId, selectedTicket }) => {
 
         <div className="row mx-2">
 
-          <div className="row mx-2">
             <div className="bg-secondary text-white py-3 d-flex justify-content-between">
               <h3 className='mb-0'>Vendor Details</h3>
             </div>
@@ -210,11 +209,10 @@ const VendorDetails = ({ searchBox, companyId, selectedTicket }) => {
                 <tr>
                   <td>{selectedTicket?.company_id ? selectedTicket?.company_id : searchTerm || companyId}</td>
                   <td>{vendorDetails?.vendor_type ? vendorDetails?.vendor_type : 'N/A'}</td>
-                  <td>------</td>
+                  <td>{vendorDetails?.created_by ? vendorDetails?.created_by : 'N/A'}</td>
                 </tr>
               </tbody>
             </Table>
-          </div>
           <hr />
 
           <div className="bg-secondary text-white py-3 d-flex justify-content-between">
