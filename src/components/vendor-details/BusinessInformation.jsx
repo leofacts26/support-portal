@@ -699,6 +699,33 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
                   </Grid>
 
 
+                  <Grid className="mb-4" container spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Grid item xs={8} >
+                      <div style={{ marginTop: '50px' }}>
+                        <p className="business-profile-name">Pincode</p>
+                        <CssTextField
+                          value={values.pincode}
+                          onChange={handleChange}
+                          name="pincode"
+                          variant="outlined"
+                          placeholder="Enter Pincode"
+                          className='mt-0'
+                          style={{ width: '100%' }}
+                          InputLabelProps={{
+                            style: { color: '#777777', fontSize: '10px' },
+                          }}
+                          InputProps={{
+                            style: {
+                              borderRadius: '8px',
+                              backgroundColor: '#FFFFFF',
+                            }
+                          }}
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+
+
 
                   <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center' }} className={`${!selectedLocation && 'mt-5'}`}>
                     <Grid item xs={8} >
@@ -715,6 +742,8 @@ const BusinessInformation = ({ vendorDetails, show, handleClose, handleShow, edi
                       </div>
                     </Grid>
                   </Grid>
+
+
 
 
                   <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
