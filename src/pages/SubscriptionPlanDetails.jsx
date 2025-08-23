@@ -50,6 +50,7 @@ const SubscriptionPlanDetails = () => {
     const subscriptionDuration = discoundedData?.subType.toLowerCase();
     const newItem = {
       ...subscribeData,
+      vendorId,
       subscriptionDuration
     }
     const response = await dispatch(calculateOrderTotal(newItem));
@@ -63,6 +64,7 @@ const SubscriptionPlanDetails = () => {
     const subscriptionDuration = discoundedData?.subType.toLowerCase();
     const newItem = {
       ...subscribeData,
+      vendorId,
       subscriptionDuration
     }
     const response = await dispatch(calculateOrderTotal(newItem));
@@ -215,7 +217,7 @@ const SubscriptionPlanDetails = () => {
                         <p className="sub-text">Coupon Code:</p> <p className="sub-text"> {discoundedData?.couponDetails?.code ? discoundedData?.couponDetails?.code : 'N/A'} </p>
                       </Stack>
                       <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2} className="mb-3 mt-2">
-                        <p className="sub-text">Discount Percent:</p> <p className="sub-text"> {discoundedData?.couponDetails?.discountPercent ? discoundedData?.couponDetails?.discountPercent  : 'N/A'}</p>
+                        <p className="sub-text">Discount Percent:</p> <p className="sub-text"> {discoundedData?.couponDetails?.discountPercent ? discoundedData?.couponDetails?.discountPercent : 'N/A'}</p>
                       </Stack>
 
                       <hr />
